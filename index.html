@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>绘图计算器（开发中v1.82）</title>
+    <title>绘图计算器（开发中v1.822）</title>
     <style type="text/css">
         ::-webkit-scrollbar {
             display: none;
@@ -148,7 +148,7 @@ sin(10x+time/100)/10</textarea>
             <details style="word-wrap:break-word">
                 <summary style="font-size:20px;font-weight:bold;">简要说明</summary>
                 <p>本程序正在开发中，目前还处于极度不完善状态，可能会有很多bug。开发者：烧风
-                    <br>支持的运算符，请参考：https://mathjs.org/docs/expressions/syntax.html
+                    <br>支持的算符，请参考：https://mathjs.org/docs/expressions/syntax.html
                     <br>支持的常量，请参考：https://mathjs.org/docs/reference/constants.html
                     <br>支持的函数，请参考：https://mathjs.org/docs/reference/functions.html
                     <br>图像的绘制范围固定在区间[-1,1]中，可通过函数的平移和缩放得到你想要的效果
@@ -180,9 +180,9 @@ sin(10x+time/100)/10</textarea>
                     [k*(-0.5k+mp[1])+0.5,k*(-0.5k+mp[2])+0.5]
                     <h4>Logistic映射（有多种实现方式）</h4>
                     2x*y*(1-y)+0.1
-                    <br>Logistic(4x,0.1,100) 这个式子等价于下面的式子，但是计算更快
+                    <br>Logistic(4x,0.1,100) 这个式子计算更快，等价于下面的式子
                     <br>[μ=4x,a=0.1,f(a)=μ*a*(1-a),g(n)=n==1?f(a):f(g(n-1)),g(100)][5]
-                    <br>你还可以写成多行：（使用>在行头表示这一行只计算而不绘图）
+                    <br>你还可以写成多行：（在行头使用>表示这一行只计算而不绘图）
                     <br>a=mp[2]
                     <br>>f(a)=5x*a*(1-a)
                     <br>>g(n)=n&lt;=1?f(a):f(g(n-1))
@@ -202,9 +202,9 @@ sin(10x+time/100)/10</textarea>
                     <br>ls /*线粗细*/= 0.3;
                     <br>[k,(floor(66000k)&(floor(66000k) >> 8))/290]
                     <br>或者 (floor(66000x)&(floor(66000x) >> 8))/290
-                    <h4>累乘求π（tip：使用“>”，只计算而不绘图，提升效率）</h4>
+                    <h4>累乘求π（tip：在行头使用>，只计算而不绘图，提升效率）</h4>
                     >2*Π('n%2==0?n/(n+1):(n+1)/n',1:10000)
-                    <h4>时钟（没有校准时间）</h4>
+                    <h4>时钟（北京时间）</h4>
                     fps /*帧率*/= 60;
                     <br>color /*颜色*/= ["black","blue","black", "green","red"];
                     <br>p_b /*点精度*/= 200;
@@ -214,14 +214,13 @@ sin(10x+time/100)/10</textarea>
                     <br>def /*定义*/= {love: 520, you: 1314/520};
                     <br>
                     <br>ρ=0.8
-                    <br>[0.8sin(2pi*time/1000+0.1k),0.8cos(2pi*time/1000+0.1k)]
-                    <br>[0.7sin(2pi*time/60000)*k,0.7cos(2pi*time/60000)*k]
-                    <br>[0.5sin(2pi*time/3600000)*k,0.5cos(2pi*time/3600000)*k]
-                    <br>[0.4sin(2pi*time/86400000)*k,0.4cos(2pi*time/86400000)*k]
+                    <br>[0.8sin(2pi*time/1e3+0.1k),0.8cos(2pi*time/1e3+0.1k)]
+                    <br>[0.7sin(2pi*time/6e4)*k,0.7cos(2pi*time/6e4)*k]
+                    <br>[0.5sin(2pi*time/36e5)*k,0.5cos(2pi*time/36e5)*k]
+                    <br>[0.4sin(2pi*(time+288e5)/432e5)*k,0.4cos(2pi*(time+288e5)/432e5)*k]
                     <h4>螺旋线</h4>
                     ρθ(2k,20*sin(time/1000)k)/4
-                    <h4>万花筒</h4>
-                    θ=frame*ρ
+                    <br>θ=frame*ρ
                     <h4>选色器</h4>
                     p_b /*点精度*/= 50;
                     <br>ps /*点大小*/= 2;
@@ -233,9 +232,31 @@ sin(10x+time/100)/10</textarea>
                     [(sin(frame*ρ)+1)/2,0,0]
                     <h4>复数幂迭代（相当于 i^i^i^i^i^...）</h4>
                     [f(z,n)=n&lt;1?z:z^f(z,n-1),f(i,100k)][2]
-                    <br>或者写成两行：
+                    <br>也可以写成两行：
                     <br>f(z,n)=n&lt;1?z:z^f(z,n-1)
                     <br>f(i,100k)
+                    <h4>万花筒</h4>
+                    fps/*帧率*/=60;
+                    <br>color/*颜色*/=["blue"];
+                    <br>p_b/*点精度*/=100;
+                    <br>ps/*点大小*/=1;
+                    <br>p_n/*线精度*/=1;
+                    <br>ls/*线粗细*/=1;
+                    <br>def/*定义*/={love: 520, you: 1314/520,Q};
+                    <br>function Q(x, y, t) {
+                    <br>let uv = [x, y];
+                    <br>let rot = [Math.sin(t / 100), Math.cos(t / 100)];
+                    <br>let l = 0;
+                    <br>for (let i = 0; i &lt; 2000; i++) {
+                    <br>uv = [1.1*(uv[0]*rot[0]-uv[1]*rot[1]),1.1*(uv[0]*rot[1]+uv[1]*rot[0])];
+                    <br>if (uv[1] > 10) { break; }
+                    <br>l++;
+                    <br>}
+                    <br>let c = l % 2;
+                    <br>return math.matrix([c, c, c]);
+                    <br>}
+                    <br>
+                    <br>Q(x,y,frame)
                 </code>
             </details>
         </div>
