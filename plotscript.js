@@ -1,3 +1,21 @@
+function audiocontrol(bu) {
+    if (bu.innerText == "play") {
+        audioCtx = new AudioContext();
+        oscillator = audioCtx.createOscillator();
+        gainNode = audioCtx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.start(audioCtx.currentTime);
+        gainNode.gain.value = 0;
+        bu.innerText = "stop"
+    } else {
+        audioCtx.close();
+        delete audioCtx;
+        bu.innerText = "play"
+    }
+    inChange(true);
+}
+
 function insertText(str) {
     if (document.selection) {
         let sel = document.selection.createRange();
@@ -84,10 +102,50 @@ math.import({
     ρθ: function (ρ, θ) {
         return math.matrix([ρ * Math.cos(θ), ρ * Math.sin(θ)]);
     },
-    line: function (k, m1, m2) {
+    Line: function (k, m1, m2) {
         let a = m1._data;
         let b = m2._data;
         return math.matrix([a[0] + k * (b[0] - a[0]), a[1] + k * (b[1] - a[1])]);
+    },
+    Play: function (f, v, m) {
+        if (typeof audioCtx != "undefined") {
+            oscillator.frequency.value = f;
+            gainNode.gain.value = v;
+            switch (m) {
+                case 0:
+                    oscillator.type = 'sine';
+                    break;
+                case 1:
+                    oscillator.type = 'square';
+                    break;
+                case 2:
+                    oscillator.type = 'triangle';
+                    break;
+                case 3:
+                    oscillator.type = 'sawtooth';
+                    break;
+                default:
+                    oscillator.type = 'sine';
+                    break;
+            }
+            return oscillator.type + " wave";
+        } else {
+            return "undefined";
+        }
+    },
+    PlayS: function (f, v, m, t, x) {
+        switch (m) {
+            case 0:
+                return v * Math.sin(f * x / 20 + t / 1000);
+            case 1:
+                return v * Math.sign(Math.sin(f * x / 20 + t / 1000));
+            case 2:
+                return 2 * Math.abs(v * (f * x / 50 + t / 2000) % (2 * v) - v) - v;
+            case 3:
+                return 2 * v * (f * x / 100 + t / 2000) % (2 * v) - v;
+            default:
+                return v * Math.sin(f * x / 20 + t / 1000);
+        }
     },
     Julia,
     Mandelbrot,
@@ -452,7 +510,7 @@ function splot(exs) {
             let type = typeof outeval;
             if (type != "function") {
                 omes += outeval + "<br>";
-                if (exs[i][0] != '>') {
+                if (exs[i][0] != '>' && typeof outeval != "string") {
                     col = color[ci++];
                     plot(exs[i], exc, outeval);
                 }
@@ -511,7 +569,7 @@ function inChange(isD = false) {
         } else {
             ined.style.border = "dashed red";
             showLaTex("");
-            changeOm("Undefined");
+            changeOm("undefined");
         }
     }
     let t2 = new Date().getTime();

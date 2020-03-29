@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>绘图计算器（开发中v1.822）</title>
+    <title>绘图计算器（开发中v1.83）</title>
     <style type="text/css">
         ::-webkit-scrollbar {
             display: none;
@@ -12,8 +12,7 @@
         button {
             font-family: Consolas;
             font-size: 26px;
-            height: 40px;
-            width: 50px;
+            width: 8.44%;
             margin-left: -6px;
             margin-top: -1px;
         }
@@ -146,6 +145,14 @@ sin(10x+time/100)/10</textarea>
             </div>
             <h3 id="fpsm" style="position:fixed; bottom:0px; right:20px"></h3>
             <details style="word-wrap:break-word">
+                <summary style="font-size:20px;font-weight:bold;">高级</summary>
+                <br>
+                <a style="font-size:16px;font-weight:bold;">音频&nbsp;&nbsp;</a>
+                <button onclick="audiocontrol(this)" style="width: auto;font-size:20px">play</button>
+                使用 Play(音调,响度,波形) PlayS(音调,响度,波形,time,x)
+                <br><br>
+            </details>
+            <details style="word-wrap:break-word">
                 <summary style="font-size:20px;font-weight:bold;">简要说明</summary>
                 <p>本程序正在开发中，目前还处于极度不完善状态，可能会有很多bug。开发者：烧风
                     <br>支持的算符，请参考：https://mathjs.org/docs/expressions/syntax.html
@@ -176,16 +183,32 @@ sin(10x+time/100)/10</textarea>
             <details style="word-wrap:break-word">
                 <summary style="font-size:20px;font-weight:bold">一些实例</summary>
                 <code style="font-family: Consolas;font-size: 16px">
+                    <h4>波形可视化</h4>
+                    >f=800sin(frame/100)
+                    <br>>v=0.2
+                    <br>>m=0
+                    <br>Play(f,v,m)
+                    <br>PlayS(f,v,m,time,x)
+                    <h4>连线</h4>
+                    >a=[-0.5,0.5]
+                    <br>>b=mp
+                    <br>>c=[0.3,0.2]
+                    <br>Line(k,a,b)
+                    <br>Line(k,b,c)
+                    <br>Line(k,c,a)
                     <h4>二阶贝塞尔曲线</h4>
-                    [k*(-0.5k+mp[1])+0.5,k*(-0.5k+mp[2])+0.5]
+                    >p0=[-0.5,0.5]
+                    <br>>p1=[0.5,0.5]
+                    <br>>p2=mp
+                    <br>(1-k)^2*p0+2k*(1-k)*p1+k^2*p2
                     <h4>Logistic映射（有多种实现方式）</h4>
                     2x*y*(1-y)+0.1
                     <br>Logistic(4x,0.1,100) 这个式子计算更快，等价于下面的式子
                     <br>[μ=4x,a=0.1,f(a)=μ*a*(1-a),g(n)=n==1?f(a):f(g(n-1)),g(100)][5]
                     <br>你还可以写成多行：（在行头使用>表示这一行只计算而不绘图）
                     <br>a=mp[2]
-                    <br>>f(a)=5x*a*(1-a)
-                    <br>>g(n)=n&lt;=1?f(a):f(g(n-1))
+                    <br>f(a)=5x*a*(1-a)
+                    <br>g(n)=n&lt;=1?f(a):f(g(n-1))
                     <br>g(10mp[1])
                     <h4>分叉图</h4>
                     p_n /*线精度*/= 400;
@@ -230,11 +253,12 @@ sin(10x+time/100)/10</textarea>
                     <br>
                     <h4>光环</h4>
                     [(sin(frame*ρ)+1)/2,0,0]
-                    <h4>复数幂迭代（相当于 i^i^i^i^i^...）</h4>
-                    [f(z,n)=n&lt;1?z:z^f(z,n-1),f(i,100k)][2]
-                    <br>也可以写成两行：
-                    <br>f(z,n)=n&lt;1?z:z^f(z,n-1)
-                    <br>f(i,100k)
+                    <h4>复数幂递归（相当于 i^i^i^i^i^...）</h4>
+                    p_n /*线精度*/= 0.3;
+                    <br>
+                    <br>>f(z,n)=n&lt;1?z:z^f(z,n-1)
+                    <br>>c=complex(mp[1],mp[2])
+                    <br>f(c,300k)
                     <h4>万花筒</h4>
                     fps/*帧率*/=60;
                     <br>color/*颜色*/=["blue"];
