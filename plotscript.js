@@ -7,11 +7,11 @@ function audiocontrol(bu) {
         gainNode.connect(audioCtx.destination);
         oscillator.start(audioCtx.currentTime);
         gainNode.gain.value = 0;
-        bu.innerText = "stop"
+        bu.innerText = "stop";
     } else {
         audioCtx.close();
         delete audioCtx;
-        bu.innerText = "play"
+        bu.innerText = "play";
     }
     refresh(true);
 }
@@ -200,7 +200,7 @@ window.onload = function () {
     interval = 0;
     inChange2();
     reData();
-    intmp = ""
+    intmp = "";
     col = color[0];
     window.onresize();
     canv.addEventListener("mousemove", mouseMove);
@@ -257,6 +257,7 @@ function reData() {
     x = 0;
     y = 0;
     mg = {};
+    ltime = new Date().getTime();
 }
 
 function reCanvas() {
@@ -576,18 +577,15 @@ function refresh(isD = false) {
             changeOm("Undefined");
         }
     }
-    let t2 = new Date().getTime();
-    if (t2 % 500 < 5) {
-        fpsm.innerHTML = Math.round(1000 / (t2 - t1)) + " fps";
-    }
-    t1 = t2;
+
+    fpsm.innerHTML = Math.round(1000 / (time - ltime)) + " fps";
+    ltime = time;
 }
 
 function inChange() {
     intmp = ined.value;
     ined.style.height = 0;
     ined.style.height = ined.scrollHeight - 2 + "px";
-    let t1 = new Date().getTime();
     reData();
 }
 
