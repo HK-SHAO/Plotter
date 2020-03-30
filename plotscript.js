@@ -1,5 +1,5 @@
 function audiocontrol(bu) {
-    if (bu.innerText == "play") {
+    if (bu.innerText === "play") {
         audioCtx = new AudioContext();
         oscillator = audioCtx.createOscillator();
         gainNode = audioCtx.createGain();
@@ -13,7 +13,7 @@ function audiocontrol(bu) {
         delete audioCtx;
         bu.innerText = "play"
     }
-    inChange(true);
+    refresh(true);
 }
 
 function insertText(str) {
@@ -130,7 +130,7 @@ math.import({
             }
             return oscillator.type + " wave";
         } else {
-            return "undefined";
+            return "Undefined";
         }
     },
     PlayS: function (f, v, m, t, x) {
@@ -215,8 +215,12 @@ window.onresize = function () {
     canv.height = size;
     canv2.width = size;
     canv2.height = size;
+    ined.style.height = 0;
+    ined.style.height = ined.scrollHeight - 2 + "px";
+    ined2.style.height = 0;
+    ined2.style.height = ined2.scrollHeight - 2 + "px";
     reCanvas2();
-    inChange(true);
+    this.refresh(true);
 }
 
 function mouseMove(e) {
@@ -239,7 +243,7 @@ function mouseMove(e) {
     ctx2.stroke();
     ctx2.fillText("(" + mxf.toFixed(8) + ", " + myf.toFixed(8) + ")", 4, 14);
     if (ined.value.search(/(\b|\d)mp\b/g) != -1) {
-        inChange(true);
+        refresh(true);
     }
 }
 
@@ -266,10 +270,10 @@ function reCanvas2() {
     ctx2.stroke();
 }
 
-function plot(ex, exc, outeval) {
+function plot(ex, exc, outeval, type) {
     ctx.fillStyle = col;
     let ins2 = ex.substring(0, 2);
-    if (ins2 == "x=") {
+    if (ins2 === "x=") {
         for (let i = -p_n * size; i <= p_n * size; i++) {
             y = i / (p_n * size);
             Object.assign(mg, {
@@ -285,7 +289,7 @@ function plot(ex, exc, outeval) {
             let py = 0.004 * size * ls;
             ctx.fillRect((x + 1) / 2 * size - 1, (1 - y) * size / 2 - 1, py, py);
         }
-    } else if (ins2 == "ρ=") {
+    } else if (ins2 === "ρ=") {
         for (let i = 0; i <= 2 * p_n * size; i++) {
             let θ = Math.PI * i / (p_n * size);
             Object.assign(mg, {
@@ -303,7 +307,7 @@ function plot(ex, exc, outeval) {
             let py = 0.004 * size * ls;
             ctx.fillRect((x + 1) / 2 * size - 1, (1 - y) * size / 2 - 1, py, py);
         }
-    } else if (ins2 == "θ=") {
+    } else if (ins2 === "θ=") {
         for (let i = 0; i <= 2 * p_n * size; i++) {
             let ρ = Math.SQRT2 * i / (2 * p_n * size);
             Object.assign(mg, {
@@ -321,7 +325,7 @@ function plot(ex, exc, outeval) {
             let py = 0.004 * size * ls;
             ctx.fillRect((x + 1) / 2 * size - 1, (1 - y) * size / 2 - 1, py, py);
         }
-    } else if (ins2 == "y=" || typeof outeval == "number") {
+    } else if (ins2 === "y=" || type === "number") {
         for (let i = -p_n * size; i <= p_n * size; i++) {
             x = i / (p_n * size);
             Object.assign(mg, {
@@ -337,7 +341,7 @@ function plot(ex, exc, outeval) {
             let py = 0.004 * size * ls;
             ctx.fillRect((x + 1) / 2 * size - 1, (1 - y) * size / 2 - 1, py, py);
         }
-    } else if (typeof outeval == "boolean") {
+    } else if (type === "boolean") {
         let jd = size / p_b;
         for (let i = 0; i <= size; i += jd) {
             for (let j = 0; j <= size; j += jd) {
@@ -350,13 +354,13 @@ function plot(ex, exc, outeval) {
                     θ: Math.atan2(y, x)
                 });
                 let ans = exc.evaluate(mg);
-                if (ans == true) {
+                if (ans === true) {
                     let py = jd * ps;
                     ctx.fillRect(i, j, py + 1, py + 1);
                 }
             }
         }
-    } else if (typeof outeval == "object") {
+    } else if (type === "object") {
         if (outeval.im != undefined) {
             for (let i = 0; i <= 2 * p_n * size; i++) {
                 let t = i / (2 * p_n * size);
@@ -376,87 +380,89 @@ function plot(ex, exc, outeval) {
                 let py = 0.004 * size * ls;
                 ctx.fillRect((x + 1) / 2 * size - 1, (1 - y) * size / 2 - 1, py, py);
             }
-        } else if ((outeval._data.length == 1 || outeval._data.length > 3) && outeval._data[0].length == undefined) {
-            for (let i = 0; i < outeval._data.length; i++) {
-                let px = size / outeval._data.length;
-                let py = outeval._data[i] * size / 2;
-                let m = i * px;
-                let n = 0.5 * size - py;
-                ctx.fillRect(m, n, px + 1, py + 1);
-            }
-        } else if (outeval._data[0].length != undefined && outeval._data[0][0].length == 3) {
-            for (let i = 0; i < outeval._data.length; i++) {
-                for (let j = 0; j < outeval._data[0].length; j++) {
-                    let px = size / outeval._data[0].length;
-                    let py = size / outeval._data.length;
-                    let m = px * j;
-                    let n = py * i;
-                    let r = outeval._data[i][j][0] * 255;
-                    let g = outeval._data[i][j][1] * 255;
-                    let b = outeval._data[i][j][2] * 255;
-                    if (isNaN(r) || isNaN(g) || isNaN(b)) {
-                        continue;
-                    }
-                    ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+        } else if (outeval._data != undefined) {
+            if ((outeval._data.length === 1 || outeval._data.length > 3) && outeval._data[0].length === undefined) {
+                for (let i = 0; i < outeval._data.length; i++) {
+                    let px = size / outeval._data.length;
+                    let py = outeval._data[i] * size / 2;
+                    let m = i * px;
+                    let n = 0.5 * size - py;
                     ctx.fillRect(m, n, px + 1, py + 1);
                 }
-            }
-        } else if (outeval._data[0].length != undefined && outeval._data[0][0].length == undefined) {
-            for (let i = 0; i < outeval._data.length; i++) {
-                for (let j = 0; j < outeval._data[0].length; j++) {
-                    let px = size / outeval._data[0].length;
-                    let py = size / outeval._data.length;
-                    let m = px * j;
-                    let n = py * i;
-                    let c = outeval._data[i][j] * 255;
-                    if (isNaN(c)) {
-                        continue;
+            } else if (outeval._data[0].length != undefined && outeval._data[0][0].length === 3) {
+                for (let i = 0; i < outeval._data.length; i++) {
+                    for (let j = 0; j < outeval._data[0].length; j++) {
+                        let px = size / outeval._data[0].length;
+                        let py = size / outeval._data.length;
+                        let m = px * j;
+                        let n = py * i;
+                        let r = outeval._data[i][j][0] * 255;
+                        let g = outeval._data[i][j][1] * 255;
+                        let b = outeval._data[i][j][2] * 255;
+                        if (isNaN(r) || isNaN(g) || isNaN(b)) {
+                            continue;
+                        }
+                        ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+                        ctx.fillRect(m, n, px + 1, py + 1);
                     }
-                    ctx.fillStyle = "rgb(" + c + "," + c + "," + c + ")";
-                    ctx.fillRect(m, n, px + 1, py + 1);
                 }
-            }
-        } else if (outeval._data.length == 2 && outeval._data[0].length == undefined) {
-            for (let i = 0; i <= 2 * p_n * size; i++) {
-                let t = i / (2 * p_n * size);
-                Object.assign(mg, {
-                    x,
-                    y,
-                    ρ: Math.sqrt(x * x + y * y),
-                    θ: Math.atan2(y, x),
-                    k: t
-                });
-                let ob = exc.evaluate(mg);
-                x = ob._data[0];
-                y = ob._data[1];
-                if (y > 1 || y < -1 || x > 1 || x < -1 || isNaN(x) || isNaN(y)) {
-                    continue;
+            } else if (outeval._data[0].length != undefined && outeval._data[0][0].length === undefined) {
+                for (let i = 0; i < outeval._data.length; i++) {
+                    for (let j = 0; j < outeval._data[0].length; j++) {
+                        let px = size / outeval._data[0].length;
+                        let py = size / outeval._data.length;
+                        let m = px * j;
+                        let n = py * i;
+                        let c = outeval._data[i][j] * 255;
+                        if (isNaN(c)) {
+                            continue;
+                        }
+                        ctx.fillStyle = "rgb(" + c + "," + c + "," + c + ")";
+                        ctx.fillRect(m, n, px + 1, py + 1);
+                    }
                 }
-                let py = 0.004 * size * ls;
-                ctx.fillRect((x + 1) / 2 * size - 1, (1 - y) * size / 2 - 1, py, py);
-            }
-        } else if (outeval._data.length == 3 && outeval._data[0].length == undefined) {
-            let jd = size / p_b;
-            for (let i = 0; i <= size; i += jd) {
-                for (let j = 0; j <= size; j += jd) {
-                    x = (2 * i - size) / size;
-                    y = -(2 * j - size) / size;
+            } else if (outeval._data.length === 2 && outeval._data[0].length === undefined) {
+                for (let i = 0; i <= 2 * p_n * size; i++) {
+                    let t = i / (2 * p_n * size);
                     Object.assign(mg, {
                         x,
                         y,
                         ρ: Math.sqrt(x * x + y * y),
-                        θ: Math.atan2(y, x)
+                        θ: Math.atan2(y, x),
+                        k: t
                     });
                     let ob = exc.evaluate(mg);
-                    let r = ob._data[0] * 255;
-                    let g = ob._data[1] * 255;
-                    let b = ob._data[2] * 255;
-                    if (isNaN(r) || isNaN(g) || isNaN(b)) {
+                    x = ob._data[0];
+                    y = ob._data[1];
+                    if (y > 1 || y < -1 || x > 1 || x < -1 || isNaN(x) || isNaN(y)) {
                         continue;
                     }
-                    ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-                    let py = jd * ps;
-                    ctx.fillRect(i, j, py + 1, py + 1);
+                    let py = 0.004 * size * ls;
+                    ctx.fillRect((x + 1) / 2 * size - 1, (1 - y) * size / 2 - 1, py, py);
+                }
+            } else if (outeval._data.length === 3 && outeval._data[0].length === undefined) {
+                let jd = size / p_b;
+                for (let i = 0; i <= size; i += jd) {
+                    for (let j = 0; j <= size; j += jd) {
+                        x = (2 * i - size) / size;
+                        y = -(2 * j - size) / size;
+                        Object.assign(mg, {
+                            x,
+                            y,
+                            ρ: Math.sqrt(x * x + y * y),
+                            θ: Math.atan2(y, x)
+                        });
+                        let ob = exc.evaluate(mg);
+                        let r = ob._data[0] * 255;
+                        let g = ob._data[1] * 255;
+                        let b = ob._data[2] * 255;
+                        if (isNaN(r) || isNaN(g) || isNaN(b)) {
+                            continue;
+                        }
+                        ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+                        let py = jd * ps;
+                        ctx.fillRect(i, j, py + 1, py + 1);
+                    }
                 }
             }
         }
@@ -471,10 +477,10 @@ function changeOm(str) {
 
 function splot(exs) {
     let omes = "";
-    if (excs.length == 0) {
+    if (excs.length === 0) {
         for (let i = 0; i < exs.length; i++) {
             try {
-                if (exs[i][0] == '>') {
+                if (exs[i][0] === '>') {
                     excs.push(math.compile(exs[i].substring(1)));
                 } else {
                     excs.push(math.compile(exs[i]));
@@ -510,9 +516,9 @@ function splot(exs) {
             let type = typeof outeval;
             if (type != "function") {
                 omes += outeval + "<br>";
-                if (exs[i][0] != '>' && typeof outeval != "string") {
+                if (exs[i][0] != '>' && type != "string") {
                     col = color[ci++];
-                    plot(exs[i], exc, outeval);
+                    plot(exs[i], exc, outeval, type);
                 }
             } else {
                 omes += "function" + "<br>";
@@ -535,22 +541,16 @@ function showLaTex(str) {
     }
 }
 
-function inChange(isD = false) {
+function refresh(isD = false) {
     if (ined.value != intmp || ined.value.search(/(\b|\d)time\b/g) != -1 || ined.value.search(/(\b|\d)frame\b/g) !=
-        -1 || isD || excs.length == 0) {
-        if (ined.value != intmp) {
-            let t1 = new Date().getTime();
-            reData();
-        }
-        intmp = ined.value;
-        reCanvas();
+        -1 || isD || excs.length === 0) {
         if (ined.value != "") {
             try {
                 let str = ined.value.replace(/\('/g, "(").replace(/\("/g, "(")
                     .replace(/'\)/g, "(").replace(/"\)/g, "(")
                     .replace(/',/g, ",").replace(/",/g, ",")
                     .replace(/\n>/g, '\n');
-                if (str[0] == '>') {
+                if (str[0] === '>') {
                     str = str.substring(1);
                 }
                 showLaTex(math.parse(str).toTex());
@@ -558,30 +558,39 @@ function inChange(isD = false) {
                 showLaTex("");
                 //console.log(err);
             }
-            if (ined.value == "0/0" || ined.value == "NaN") {
+            if (ined.value === "0/0" || ined.value === "NaN") {
                 changeOm("NaN");
-                return;
+            } else {
+                reCanvas();
+                let exs = ined.value.split("\n");
+                let omes = splot(exs);
+                changeOm(omes);
             }
-            let exs = ined.value.split("\n");
-            ined.rows = exs.length;
-            let omes = splot(exs);
-            changeOm(omes);
         } else {
             ined.style.border = "dashed red";
             showLaTex("");
-            changeOm("undefined");
+            changeOm("Undefined");
         }
     }
     let t2 = new Date().getTime();
-    if (t2 % 500 < 10) {
+    if (t2 % 500 < 5) {
         fpsm.innerHTML = Math.round(1000 / (t2 - t1)) + " fps";
     }
     t1 = t2;
 }
 
+function inChange() {
+    intmp = ined.value;
+    ined.style.height = 0;
+    ined.style.height = ined.scrollHeight - 2 + "px";
+    let t1 = new Date().getTime();
+    reData();
+}
+
 function inChange2() {
     ined2.style.border = "dashed green";
-    ined2.rows = ined2.value.split("\n").length;
+    ined2.style.height = 0;
+    ined2.style.height = ined2.scrollHeight - 2 + "px";
     try {
         eval(ined2.value);
         excs = [];
@@ -591,7 +600,7 @@ function inChange2() {
     }
     window.clearInterval(interval);
     if (fps != 0) {
-        interval = setInterval("inChange()", Math.ceil(1000 / fps));
+        interval = setInterval("refresh()", 1000 / fps);
     } else {
         fpsm.innerHTML = "0 fps";
     }
