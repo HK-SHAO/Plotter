@@ -2,25 +2,12 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>绘图计算器（开发中v1.835）</title>
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        name="viewport">
+    <title>绘图计算器（开发中v1.84）</title>
     <style type="text/css">
         ::-webkit-scrollbar {
             display: none;
-        }
-
-        button {
-            font-family: Consolas;
-            font-size: 26px;
-            width: 8.44%;
-            margin-left: -6px;
-            margin-top: -1px;
-        }
-
-        #father {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%)
         }
 
         #father #gc {
@@ -35,17 +22,73 @@
             z-index: 1;
         }
 
-        .container {
-            display: flex;
+        button {
+            height: 1.5em;
+            width: 2em;
+            padding: 0;
+            margin: 0;
+            font-family: Consolas;
+            font-size: 24px;
+            margin-left: -6px;
+            margin-top: -1px;
         }
 
-        .right {
-            width: 32%;
+        @media(min-width:900px) {
+
+
+            #father {
+                position: fixed;
+                top: 50%;
+                transform: translateY(-50%)
+            }
+
+            #ed {
+                font-size: 24px;
+                font-weight: bold;
+                width: 80%;
+                resize: vertical;
+                font-family: 'Times New Roman', Times, serif;
+            }
+
+            #ed2 {
+                font-size: 20px;
+                font-weight: bold;
+                width: 80%;
+                resize: vertical;
+            }
+
+            .container {
+                display: flex;
+            }
+
+            .right {
+                width: 32%;
+                margin-left: 20px;
+            }
+
+            .out {
+                flex: 1;
+                width: 18%;
+            }
         }
 
-        .out {
-            flex: 1;
-            width: 18%;
+        @media(max-width:900px) {
+
+
+            #ed {
+                font-size: 24px;
+                font-weight: bold;
+                width: 95%;
+                resize: vertical;
+                font-family: 'Times New Roman', Times, serif;
+            }
+
+            #ed2 {
+                font-size: 20px;
+                font-weight: bold;
+                width: 95%;
+                resize: vertical;
+            }
         }
     </style>
 </head>
@@ -58,11 +101,12 @@
                 <canvas id="gc2"></canvas>
             </div>
         </div>
-        <div class="right" style="margin-left: 20px">
+        <div class="right">
             <div style="width: 100%;">
-                <h2>脚本</h2>
-                <textarea id="ed2" oninput="inChange2()"
-                    style="font-size:20px;font-weight:bold;width:80%;resize:vertical">
+                <details open>
+                    <summary style="font-size:24px;font-weight:bold;margin-top: 20px;">脚本</summary>
+                    <br>
+                    <textarea id="ed2" oninput="inChange2()">
 fps /*帧率*/= 60;
 color /*颜色*/= ["blue"];
 p_b /*点精度*/= 200;
@@ -70,11 +114,16 @@ ps /*点大小*/= 0.2;
 p_n /*线精度*/= 1;
 ls /*线粗细*/= 1;
 def /*定义*/= {love: 520, you: 1314/520};</textarea>
-                <h2>表达式</h2>
-                <textarea id="ed" oninput="inChange()"
-                    style="font-size:24px;font-weight:bold;width:80%;resize:vertical;font-family:'Times New Roman', Times, serif">
+                </details>
+                <details open>
+                    <summary style="font-size:24px;font-weight:bold;">表达式</summary>
+                    <br>
+                    <textarea id="ed" oninput="inChange()">
 sin(10x+time/100)/10</textarea>
-                <div style="margin-left: 6px;">
+                </details>
+                <details style="word-wrap:break-word" open>
+                    <summary style="font-size:20px;font-weight:bold;">键盘</summary>
+                    <br>
                     <button onclick="insertText('0')">0</button>
                     <button onclick="insertText('1')">1</button>
                     <button onclick="insertText('2')">2</button>
@@ -140,7 +189,7 @@ sin(10x+time/100)/10</textarea>
                     <button onclick="insertText(' or ')">or</button>
                     <button onclick="insertText('not ')">nt</button>
                     <button onclick="insertText(' xor ')">xr</button>
-                </div>
+                </details>
                 <img id="img" style="max-width: 100%;height: auto;margin-top: 10px;margin-bottom: 10px" />
             </div>
             <h3 id="fpsm" style="position:fixed; bottom:0px; right:20px"></h3>

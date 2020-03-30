@@ -207,7 +207,11 @@ window.onload = function () {
 }
 
 window.onresize = function () {
-    size = Math.min(window.innerWidth / 2, window.innerHeight * 0.95);
+    if (window.innerWidth >= 900) {
+        size = Math.min(window.innerWidth / 2, window.innerHeight * 0.95);
+    } else {
+        size = Math.min(window.innerWidth - 20, window.innerHeight * 0.95);
+    }
     lft.style.width = size + 16 + "px";
     cfa.style.width = size + "px";
     cfa.style.height = size + "px";
