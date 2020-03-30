@@ -203,7 +203,8 @@ window.onload = function () {
     intmp = "";
     col = color[0];
     window.onresize();
-    canv.addEventListener("mousemove", mouseMove);
+    cfa.addEventListener("mousemove", mouseMove);
+    cfa.addEventListener("mousewheel", mouseWheel);
 }
 
 window.onresize = function () {
@@ -227,24 +228,58 @@ window.onresize = function () {
     this.refresh(true);
 }
 
+function mouseWheel(e) {
+    if (e.wheelDelta < 0) {
+        scale *= 1.1;
+    } else {
+        scale /= 1.1;
+    }
+    mouseMove(e);
+    refresh(true);
+}
+
 function mouseMove(e) {
     let cRect = canv2.getBoundingClientRect();
     let mx = Math.round(e.clientX - cRect.left);
     let my = Math.round(e.clientY - cRect.top);
     canv2.width = canv2.height;
+
+    ctx2.beginPath();
+    ctx2.lineWidth = 0.3;
+    for (let i = 1; i <= 9; i++) {
+        ctx2.moveTo(size * i / 10, 0);
+        ctx2.lineTo(size * i / 10, size);
+        ctx2.moveTo(0, size * i / 10);
+        ctx2.lineTo(size, size * i / 10);
+        if (i != 5) {
+            ctx2.fillText((scale * (1 - i / 5)).toPrecision(1), size / 2 + 2, size * i / 10 - 3);
+        }
+        ctx2.fillText((scale * (1 - i / 5)).toPrecision(1), size * i / 10 + 3, size / 2 + 12);
+    }
     ctx2.strokeStyle = 'gray';
-    ctx2.setLineDash([size / 201, size / 201]);
+    ctx2.stroke();
+
+    ctx2.strokeStyle = 'black';
+    ctx2.beginPath();
+    ctx2.lineWidth = 2;
+    ctx2.setLineDash([size / 101, size / 101]);
     ctx2.moveTo(size / 2, 0);
     ctx2.lineTo(size / 2, size);
     ctx2.moveTo(0, size / 2);
     ctx2.lineTo(size, size / 2);
+    ctx2.stroke();
+
+    ctx2.beginPath();
+    ctx2.lineWidth = 1;
+    ctx2.setLineDash([size / 201, size / 201]);
     ctx2.moveTo(size / 2, my);
     ctx2.lineTo(mx, my);
     ctx2.moveTo(mx, size / 2);
     ctx2.lineTo(mx, my);
-    mxf = (2 * mx / size) - 1;
-    myf = (-2 * my / size) + 1;
     ctx2.stroke();
+
+    mxf = ((2 * mx / size) - 1) * scale;
+    myf = ((-2 * my / size) + 1) * scale;
     ctx2.fillText("(" + mxf.toFixed(8) + ", " + myf.toFixed(8) + ")", 4, 14);
     if (ined.value.search(/(\b|\d)mp\b/g) != -1) {
         refresh(true);
@@ -257,6 +292,7 @@ function reData() {
     x = 0;
     y = 0;
     mg = {};
+    scale = 1;
     ltime = new Date().getTime();
 }
 
@@ -266,12 +302,13 @@ function reCanvas() {
 
 function reCanvas2() {
     canv2.width = canv2.height;
-    ctx2.strokeStyle = 'gray';
+    ctx2.beginPath();
     ctx2.setLineDash([size / 101, size / 101]);
     ctx2.moveTo(size / 2, 0);
     ctx2.lineTo(size / 2, size);
     ctx2.moveTo(0, size / 2);
     ctx2.lineTo(size, size / 2);
+    ctx2.strokeStyle = 'gray';
     ctx2.stroke();
 }
 
@@ -280,7 +317,8 @@ function plot(ex, exc, outeval, type) {
     let ins2 = ex.substring(0, 2);
     if (ins2 === "x=") {
         for (let i = -p_n * size; i <= p_n * size; i++) {
-            y = i / (p_n * size);
+            let ty = i / (p_n * size);
+            y = scale * ty;
             Object.assign(mg, {
                 x,
                 y,
@@ -288,11 +326,12 @@ function plot(ex, exc, outeval, type) {
                 θ: Math.atan2(y, x)
             });
             x = exc.evaluate(mg);
-            if (x > 1 || x < -1 || isNaN(x)) {
+            let tx = x / scale;
+            if (tx > 1 || tx < -1 || isNaN(tx)) {
                 continue;
             }
             let py = 0.004 * size * ls;
-            ctx.fillRect((x + 1) / 2 * size - 1, (1 - y) * size / 2 - 1, py, py);
+            ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
         }
     } else if (ins2 === "ρ=") {
         for (let i = 0; i <= 2 * p_n * size; i++) {
@@ -306,33 +345,38 @@ function plot(ex, exc, outeval, type) {
             let ρ = exc.evaluate(mg);
             x = ρ * Math.cos(θ);
             y = ρ * Math.sin(θ);
-            if (y > 1 || y < -1 || x > 1 || x < -1 || isNaN(x) || isNaN(y)) {
+            let tx = x / scale;
+            let ty = y / scale;
+            if (ty > 1 || ty < -1 || tx > 1 || tx < -1 || isNaN(tx) || isNaN(ty)) {
                 continue;
             }
             let py = 0.004 * size * ls;
-            ctx.fillRect((x + 1) / 2 * size - 1, (1 - y) * size / 2 - 1, py, py);
+            ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
         }
     } else if (ins2 === "θ=") {
         for (let i = 0; i <= 2 * p_n * size; i++) {
-            let ρ = Math.SQRT2 * i / (2 * p_n * size);
+            let ρ = scale * Math.SQRT2 * i / (2 * p_n * size);
             Object.assign(mg, {
                 x,
                 y,
-                ρ,
+                ρ: ρ,
                 θ: Math.atan2(y, x)
             });
             let θ = exc.evaluate(mg);
             x = ρ * Math.cos(θ);
             y = ρ * Math.sin(θ);
-            if (y > 1 || y < -1 || x > 1 || x < -1 || isNaN(x) || isNaN(y)) {
+            let tx = x / scale;
+            let ty = y / scale;
+            if (ty > 1 || ty < -1 || tx > 1 || tx < -1 || isNaN(tx) || isNaN(ty)) {
                 continue;
             }
             let py = 0.004 * size * ls;
-            ctx.fillRect((x + 1) / 2 * size - 1, (1 - y) * size / 2 - 1, py, py);
+            ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
         }
     } else if (ins2 === "y=" || type === "number") {
         for (let i = -p_n * size; i <= p_n * size; i++) {
-            x = i / (p_n * size);
+            let tx = i / (p_n * size);
+            x = scale * tx;
             Object.assign(mg, {
                 x,
                 y,
@@ -340,18 +384,19 @@ function plot(ex, exc, outeval, type) {
                 θ: Math.atan2(y, x)
             });
             y = exc.evaluate(mg);
-            if (y > 1 || y < -1 || isNaN(y)) {
+            let ty = y / scale;
+            if (ty > 1 || ty < -1 || isNaN(ty)) {
                 continue;
             }
             let py = 0.004 * size * ls;
-            ctx.fillRect((x + 1) / 2 * size - 1, (1 - y) * size / 2 - 1, py, py);
+            ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
         }
     } else if (type === "boolean") {
         let jd = size / p_b;
         for (let i = 0; i <= size; i += jd) {
             for (let j = 0; j <= size; j += jd) {
-                x = (2 * i - size) / size;
-                y = -(2 * j - size) / size;
+                x = scale * (2 * i - size) / size;
+                y = scale * -(2 * j - size) / size;
                 Object.assign(mg, {
                     x,
                     y,
@@ -379,17 +424,19 @@ function plot(ex, exc, outeval, type) {
                 let ob = exc.evaluate(mg);
                 x = ob.re;
                 y = ob.im;
-                if (y > 1 || y < -1 || x > 1 || x < -1 || isNaN(x) || isNaN(y)) {
+                let tx = x / scale;
+                let ty = y / scale;
+                if (ty > 1 || ty < -1 || tx > 1 || tx < -1 || isNaN(tx) || isNaN(ty)) {
                     continue;
                 }
                 let py = 0.004 * size * ls;
-                ctx.fillRect((x + 1) / 2 * size - 1, (1 - y) * size / 2 - 1, py, py);
+                ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
             }
         } else if (outeval._data != undefined) {
             if ((outeval._data.length === 1 || outeval._data.length > 3) && outeval._data[0].length === undefined) {
                 for (let i = 0; i < outeval._data.length; i++) {
                     let px = size / outeval._data.length;
-                    let py = outeval._data[i] * size / 2;
+                    let py = outeval._data[i] * size / (2 * nn);
                     let m = i * px;
                     let n = 0.5 * size - py;
                     ctx.fillRect(m, n, px + 1, py + 1);
@@ -439,18 +486,20 @@ function plot(ex, exc, outeval, type) {
                     let ob = exc.evaluate(mg);
                     x = ob._data[0];
                     y = ob._data[1];
-                    if (y > 1 || y < -1 || x > 1 || x < -1 || isNaN(x) || isNaN(y)) {
+                    let tx = x / scale;
+                    let ty = y / scale;
+                    if (ty > 1 || ty < -1 || tx > 1 || tx < -1 || isNaN(tx) || isNaN(ty)) {
                         continue;
                     }
                     let py = 0.004 * size * ls;
-                    ctx.fillRect((x + 1) / 2 * size - 1, (1 - y) * size / 2 - 1, py, py);
+                    ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
                 }
             } else if (outeval._data.length === 3 && outeval._data[0].length === undefined) {
                 let jd = size / p_b;
                 for (let i = 0; i <= size; i += jd) {
                     for (let j = 0; j <= size; j += jd) {
-                        x = (2 * i - size) / size;
-                        y = -(2 * j - size) / size;
+                        x = scale * (2 * i - size) / size;
+                        y = scale * -(2 * j - size) / size;
                         Object.assign(mg, {
                             x,
                             y,
