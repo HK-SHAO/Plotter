@@ -4,7 +4,7 @@
 <head>
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
         name="viewport">
-    <title>绘图计算器（开发中v1.85）</title>
+    <title>绘图计算器（开发中v1.852）</title>
     <style type="text/css">
         ::-webkit-scrollbar {
             display: none;
@@ -67,6 +67,12 @@
             .out {
                 flex: 1;
                 width: 18%;
+            }
+
+            #fpsm {
+                position: fixed;
+                bottom: 0px;
+                right: 20px;
             }
         }
 
@@ -188,7 +194,6 @@ sin(10x+time/100)/10</textarea>
                 </details>
                 <img id="img" style="max-width: 100%;height: auto;margin-top: 10px;margin-bottom: 10px" />
             </div>
-            <h3 id="fpsm" style="position:fixed; bottom:0px; right:20px"></h3>
             <details style="word-wrap:break-word">
                 <summary style="font-size:20px;font-weight:bold;">高级</summary>
                 <br>
@@ -334,6 +339,7 @@ sin(10x+time/100)/10</textarea>
             <h3 id="outm" style="word-wrap:break-word;font-family: Consolas"></h3>
         </div>
     </div>
+    <h3 id="fpsm"></h3>
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.6.1/math.min.js"></script>
