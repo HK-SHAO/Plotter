@@ -4,8 +4,13 @@
 <head>
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
         name="viewport">
-    <title>绘图计算器（开发中v1.855）</title>
+    <title>绘图计算器（开发中v1.856）</title>
     <style type="text/css">
+        @font-face {
+            font-family: MathFont;
+            src: url(https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/fonts/KaTeX_Main-Regular.woff2);
+        }
+
         ::-webkit-scrollbar {
             display: none;
         }
@@ -22,18 +27,18 @@
             z-index: 1;
         }
 
-        button {
-            height: 1.8em;
-            width: 2.4em;
-            padding: 0;
-            margin: 0;
-            font-family: Consolas;
-            font-size: 20px;
-            margin-left: -6px;
-            margin-top: -1px;
-        }
-
         @media(min-width:700px) {
+            button {
+                height: 1.8em;
+                width: 2.4em;
+                padding: 0;
+                margin: 0;
+                font-family: Consolas;
+                font-size: 20px;
+                margin-left: -6px;
+                margin-top: -1px;
+            }
+
             #father {
                 position: fixed;
                 top: 50%;
@@ -41,11 +46,11 @@
             }
 
             #ed {
-                font-size: 24px;
+                font-size: 22px;
                 font-weight: bold;
                 width: 80%;
                 resize: vertical;
-                font-family: 'Times New Roman', Times, serif;
+                font-family: MathFont;
             }
 
             #ed2 {
@@ -77,16 +82,27 @@
         }
 
         @media(max-width:700px) {
+            button {
+                height: 1.4em;
+                width: 1.8em;
+                padding: 0;
+                margin: 0;
+                font-family: Consolas;
+                font-size: 20px;
+                margin-left: -6px;
+                margin-top: -1px;
+            }
+
             #ed {
-                font-size: 24px;
+                font-size: 20px;
                 font-weight: bold;
                 width: 95%;
                 resize: vertical;
-                font-family: 'Times New Roman', Times, serif;
+                font-family: MathFont;
             }
 
             #ed2 {
-                font-size: 20px;
+                font-size: 14px;
                 font-weight: bold;
                 width: 95%;
                 resize: vertical;
@@ -123,74 +139,76 @@ def /*定义*/= {love: 520, you: 1314/520};</textarea>
                     <textarea id="ed" oninput="inChange()">
 sin(10x+time/100)/10</textarea>
                 </details>
-                <details style="word-wrap:break-word" open>
+                <details style="word-wrap:break-word">
                     <summary style="font-size:20px;font-weight:bold;">键盘</summary>
-                    <br>
-                    <button onclick="insertText('0')">0</button>
-                    <button onclick="insertText('1')">1</button>
-                    <button onclick="insertText('2')">2</button>
-                    <button onclick="insertText('3')">3</button>
-                    <button onclick="insertText('4')">4</button>
-                    <button onclick="insertText('5')">5</button>
-                    <button onclick="insertText('6')">6</button>
-                    <button onclick="insertText('7')">7</button>
-                    <button onclick="insertText('8')">8</button>
-                    <button onclick="insertText('9')">9</button>
-                    <br>
-                    <button onclick="insertText('+')">+</button>
-                    <button onclick="insertText('-')">-</button>
-                    <button onclick="insertText('*')">×</button>
-                    <button onclick="insertText('/')">÷</button>
-                    <button onclick="insertText('^')">^</button>
-                    <button onclick="insertText('sqrt(')">√</button>
-                    <button onclick="insertText('\'')">'</button>
-                    <button onclick="insertText('(')">(</button>
-                    <button onclick="insertText(',')">,</button>
-                    <button onclick="insertText(')')">)</button>
-                    <br>
-                    <button onclick="insertText('.')">.</button>
-                    <button onclick="insertText('&')">&</button>
-                    <button onclick="insertText('|')">|</button>
-                    <button onclick="insertText('~')">~</button>
-                    <button onclick="insertText('<')">&lt;</button>
-                    <button onclick="insertText('==')">≡</button>
-                    <button onclick="insertText('>')">&gt;</button>
-                    <button onclick="insertText('[')">[</button>
-                    <button onclick="insertText(':')">:</button>
-                    <button onclick="insertText(']')">]</button>
-                    <br>
-                    <button onclick="insertText('!')">!</button>
-                    <button onclick="insertText('Infinity')">∞</button>
-                    <button onclick="insertText(' mod ')">%</button>
-                    <button onclick="insertText('!=')">≠</button>
-                    <button onclick="insertText('<=')">≤</button>
-                    <button onclick="insertText('=')">=</button>
-                    <button onclick="insertText('>=')">≥</button>
-                    <button onclick="insertText('{')">{</button>
-                    <button onclick="insertText(';')">;</button>
-                    <button onclick="insertText('}')">}</button>
-                    <br>
-                    <button onclick="insertText('e')">e</button>
-                    <button onclick="insertText('π')">π</button>
-                    <button onclick="insertText('τ')">τ</button>
-                    <button onclick="insertText('φ')">φ</button>
-                    <button onclick="insertText('Σ(')">Σ</button>
-                    <button onclick="insertText('Π(')">Π</button>
-                    <button onclick="insertText('Γ(')">Γ</button>
-                    <button onclick="insertText('<<')">←</button>
-                    <button onclick="insertText('^|')">bx</button>
-                    <button onclick="insertText('>>')">→</button>
-                    <br>
-                    <button onclick="insertText('ρ')">ρ</button>
-                    <button onclick="insertText('θ')">θ</button>
-                    <button onclick="insertText('i')">i</button>
-                    <button onclick="insertText('k')">k</button>
-                    <button onclick="insertText('x')">x</button>
-                    <button onclick="insertText('y')">y</button>
-                    <button onclick="insertText(' and ')">ad</button>
-                    <button onclick="insertText(' or ')">or</button>
-                    <button onclick="insertText('not ')">nt</button>
-                    <button onclick="insertText(' xor ')">xr</button>
+                    <div style="margin-left: 6px">
+                        <br>
+                        <button onclick="insertText('0')">0</button>
+                        <button onclick="insertText('1')">1</button>
+                        <button onclick="insertText('2')">2</button>
+                        <button onclick="insertText('3')">3</button>
+                        <button onclick="insertText('4')">4</button>
+                        <button onclick="insertText('5')">5</button>
+                        <button onclick="insertText('6')">6</button>
+                        <button onclick="insertText('7')">7</button>
+                        <button onclick="insertText('8')">8</button>
+                        <button onclick="insertText('9')">9</button>
+                        <br>
+                        <button onclick="insertText('+')">+</button>
+                        <button onclick="insertText('-')">-</button>
+                        <button onclick="insertText('*')">×</button>
+                        <button onclick="insertText('/')">÷</button>
+                        <button onclick="insertText('^')">^</button>
+                        <button onclick="insertText('sqrt(')">√</button>
+                        <button onclick="insertText('\'')">'</button>
+                        <button onclick="insertText('(')">(</button>
+                        <button onclick="insertText(',')">,</button>
+                        <button onclick="insertText(')')">)</button>
+                        <br>
+                        <button onclick="insertText('.')">.</button>
+                        <button onclick="insertText('&')">&</button>
+                        <button onclick="insertText('|')">|</button>
+                        <button onclick="insertText('~')">~</button>
+                        <button onclick="insertText('<')">&lt;</button>
+                        <button onclick="insertText('==')">≡</button>
+                        <button onclick="insertText('>')">&gt;</button>
+                        <button onclick="insertText('[')">[</button>
+                        <button onclick="insertText(':')">:</button>
+                        <button onclick="insertText(']')">]</button>
+                        <br>
+                        <button onclick="insertText('!')">!</button>
+                        <button onclick="insertText('Infinity')">∞</button>
+                        <button onclick="insertText(' mod ')">%</button>
+                        <button onclick="insertText('!=')">≠</button>
+                        <button onclick="insertText('<=')">≤</button>
+                        <button onclick="insertText('=')">=</button>
+                        <button onclick="insertText('>=')">≥</button>
+                        <button onclick="insertText('{')">{</button>
+                        <button onclick="insertText(';')">;</button>
+                        <button onclick="insertText('}')">}</button>
+                        <br>
+                        <button onclick="insertText('e')">e</button>
+                        <button onclick="insertText('π')">π</button>
+                        <button onclick="insertText('τ')">τ</button>
+                        <button onclick="insertText('φ')">φ</button>
+                        <button onclick="insertText('Σ(')">Σ</button>
+                        <button onclick="insertText('Π(')">Π</button>
+                        <button onclick="insertText('Γ(')">Γ</button>
+                        <button onclick="insertText('<<')">←</button>
+                        <button onclick="insertText('^|')">bx</button>
+                        <button onclick="insertText('>>')">→</button>
+                        <br>
+                        <button onclick="insertText('ρ')">ρ</button>
+                        <button onclick="insertText('θ')">θ</button>
+                        <button onclick="insertText('i')">i</button>
+                        <button onclick="insertText('k')">k</button>
+                        <button onclick="insertText('x')">x</button>
+                        <button onclick="insertText('y')">y</button>
+                        <button onclick="insertText(' and ')">ad</button>
+                        <button onclick="insertText(' or ')">or</button>
+                        <button onclick="insertText('not ')">nt</button>
+                        <button onclick="insertText(' xor ')">xr</button>
+                    </div>
                 </details>
                 <img id="img" style="max-width: 100%;height: auto;margin-top: 10px;margin-bottom: 10px" />
             </div>
@@ -198,8 +216,11 @@ sin(10x+time/100)/10</textarea>
                 <summary style="font-size:20px;font-weight:bold;">高级</summary>
                 <br>
                 <a style="font-size:16px;font-weight:bold;">音频&nbsp;&nbsp;</a>
-                <button onclick="audiocontrol(this)" style="width: auto;font-size:20px">play</button>
-                使用 Play(音调,响度,波形) PlayS(音调,响度,波形,time,x)
+                <button onclick="audiocontrol(this)" style="font-size:20px;width: 60px;height: 40px;">play</button>
+                使用 Play(音调,响度,波形) PlayS(音调,响度,波形,time,x)<br>
+                <a style="font-size:16px;font-weight:bold;">画布&nbsp;&nbsp;</a>
+                <button onclick="zoom(true);" style="font-size:18px;width: 60px;height: 40px;">放大</button>
+                <button onclick="zoom(false);" style="font-size:18px;width: 60px;height: 40px;">缩小</button>
                 <br><br>
             </details>
             <details style="word-wrap:break-word">
@@ -239,13 +260,15 @@ sin(10x+time/100)/10</textarea>
                     <br>>m=0
                     <br>Play(f,v,m)
                     <br>PlayS(f,v,m,time,x)
-                    <h4>连线</h4>
+                    <h4>基础几何</h4>
                     >a=[-0.5,0.5]
                     <br>>b=mp
                     <br>>c=[0.3,0.2]
+                    <br>>d=(a+b)/2
                     <br>Line(k,a,b)
                     <br>Line(k,b,c)
                     <br>Line(k,c,a)
+                    <br>Circle(k,d,distance(a,d))
                     <h4>二阶贝塞尔曲线</h4>
                     >p0=[-0.5,0.5]
                     <br>>p1=[0.5,0.5]
@@ -257,8 +280,8 @@ sin(10x+time/100)/10</textarea>
                     <br>[μ=4x,a=0.1,f(a)=μ*a*(1-a),g(n)=n==1?f(a):f(g(n-1)),g(100)][5]
                     <br>你还可以写成多行：（在行头使用>表示这一行只计算而不绘图）
                     <br>a=mp[2]
-                    <br>f(a)=5x*a*(1-a)
-                    <br>g(n)=n&lt;=1?f(a):f(g(n-1))
+                    <br>>f(a)=5x*a*(1-a)
+                    <br>>g(n)=n&lt;=1?f(a):f(g(n-1))
                     <br>g(10mp[1])
                     <h4>分叉图</h4>
                     p_n /*线精度*/= 400;
@@ -276,7 +299,7 @@ sin(10x+time/100)/10</textarea>
                     <br>[k,(floor(66000k)&(floor(66000k) >> 8))/290]
                     <br>或者 (floor(66000x)&(floor(66000x) >> 8))/290
                     <h4>累乘求π（tip：在行头使用>，只计算不绘图，提升效率）</h4>
-                    >2*Π('n%2==0?n/(n+1):(n+1)/n',1:10000)
+                    >2Π('n%2==0?n/(n+1):(n+1)/n',1:10000)
                     <h4>时钟（北京时间）</h4>
                     fps /*帧率*/= 60;
                     <br>color /*颜色*/= ["black","blue","black", "green","red"];

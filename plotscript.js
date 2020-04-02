@@ -106,10 +106,15 @@ math.import({
     rgb: function (r, g, b) {
         return math.matrix([r, g, b]);
     },
-    Line: function (k, m1, m2) {
-        let a = m1._data;
-        let b = m2._data;
+    Line: function (k, p1, p2) {
+        let a = p1._data;
+        let b = p2._data;
         return math.matrix([a[0] + k * (b[0] - a[0]), a[1] + k * (b[1] - a[1])]);
+    },
+    Circle: function (k, p, r) {
+        let x0 = p._data[0];
+        let y0 = p._data[1];
+        return math.matrix([x0 + r * Math.cos(2 * Math.PI * k), y0 + r * Math.sin(2 * Math.PI * k)]);
     },
     Play: function (f, v, m) {
         if (typeof audioCtx != "undefined") {
@@ -204,6 +209,7 @@ window.onload = function () {
     this.inChange2();
     this.reData();
     window.onresize();
+    reLaTeX();
     col = color[0];
     cfa.addEventListener("mousemove", mouseMove);
     cfa.addEventListener("mousewheel", mouseWheel);
@@ -226,19 +232,23 @@ window.onresize = function () {
     ined.style.height = ined.scrollHeight - 2 + "px";
     ined2.style.height = 0;
     ined2.style.height = ined2.scrollHeight - 2 + "px";
-    this.reCanvas2()
+    this.reCanvas2();
     this.refresh(true);
+}
+
+function zoom(b) {
+    if (b) {
+        scale /= 1.05;
+    } else {
+        scale *= 1.05;
+    }
+    mouseMove(e);
+    refresh(true);
 }
 
 function mouseWheel(e) {
     e.preventDefault();
-    if (e.wheelDelta < 0) {
-        scale *= 1.05;
-    } else {
-        scale /= 1.05;
-    }
-    mouseMove(e);
-    refresh(true);
+    zoom(e.wheelDelta > 0);
 }
 
 function mouseMove(e) {
@@ -627,6 +637,21 @@ function refresh(isD = false) {
     ltime = time;
 }
 
+function reLaTeX() {
+    let str = ined.value.replace(/\('/g, "(").replace(/\("/g, "(")
+        .replace(/'\)/g, "(").replace(/"\)/g, "(")
+        .replace(/',/g, ",").replace(/",/g, ",")
+        .replace(/\n>/g, '\n');
+    if (str[0] === '>') {
+        str = str.substring(1);
+    }
+    try {
+        showLaTex(math.parse(str).toTex());
+    } catch (err) {
+        showLaTex("");
+    }
+}
+
 function inChange() {
     ined.style.height = 0;
     ined.style.height = ined.scrollHeight - 2 + "px";
@@ -640,18 +665,7 @@ function inChange() {
             reCanvas();
         }
     } else {
-        let str = ined.value.replace(/\('/g, "(").replace(/\("/g, "(")
-            .replace(/'\)/g, "(").replace(/"\)/g, "(")
-            .replace(/',/g, ",").replace(/",/g, ",")
-            .replace(/\n>/g, '\n');
-        if (str[0] === '>') {
-            str = str.substring(1);
-        }
-        try {
-            showLaTex(math.parse(str).toTex());
-        } catch (err) {
-            showLaTex("");
-        }
+        reLaTeX();
     }
 }
 
