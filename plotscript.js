@@ -103,6 +103,9 @@ math.import({
     ρθ: function (ρ, θ) {
         return math.matrix([ρ * Math.cos(θ), ρ * Math.sin(θ)]);
     },
+    rgb: function (r, g, b) {
+        return math.matrix([r, g, b]);
+    },
     Line: function (k, m1, m2) {
         let a = m1._data;
         let b = m2._data;
@@ -159,11 +162,10 @@ math.import({
         let s = 0;
         let md = m._data;
         let exc = math.compile(ex);
-        for (let i = 0; i < md.length; i++) {
-            Object.assign(mg, {
-                n: md[i],
-            });
-            let ans = exc.evaluate(mg);
+        for (let i = md.length - 1; i > -1; i--) {
+            let ans = exc.evaluate(Object.assign({
+                n: md[i]
+            }, mg));
             s += ans;
         }
         return s;
@@ -172,11 +174,10 @@ math.import({
         let s = 1;
         let md = m._data;
         let exc = math.compile(ex);
-        for (let i = 0; i < md.length; i++) {
-            Object.assign(mg, {
-                n: md[i],
-            });
-            let ans = exc.evaluate(mg);
+        for (let i = md.length - 1; i > -1; i--) {
+            let ans = exc.evaluate(Object.assign({
+                n: md[i]
+            }, mg));
             s *= ans;
         }
         return s;
@@ -200,10 +201,10 @@ window.onload = function () {
     myf = 0;
     interval = 0;
     scale = 1;
-    inChange2();
-    reData();
-    col = color[0];
+    this.inChange2();
+    this.reData();
     window.onresize();
+    col = color[0];
     cfa.addEventListener("mousemove", mouseMove);
     cfa.addEventListener("mousewheel", mouseWheel);
 }
@@ -225,7 +226,7 @@ window.onresize = function () {
     ined.style.height = ined.scrollHeight - 2 + "px";
     ined2.style.height = 0;
     ined2.style.height = ined2.scrollHeight - 2 + "px";
-    reCanvas2();
+    this.reCanvas2()
     this.refresh(true);
 }
 
@@ -249,7 +250,7 @@ function mouseMove(e) {
 
     ctx2.beginPath();
     ctx2.lineWidth = 0.3;
-    for (let i = 1; i <= 9; i++) {
+    for (let i = 1; i < 10; i++) {
         let sid10 = size * i / 10;
         ctx2.moveTo(sid10, 0);
         ctx2.lineTo(sid10, size);
@@ -319,8 +320,9 @@ function plot(ex, exc, outeval, type) {
     ctx.fillStyle = col;
     let ins2 = ex.substring(0, 2);
     if (ins2 === "x=") {
-        for (let i = -p_n * size; i <= p_n * size; i++) {
-            let ty = i / (p_n * size);
+        let pmp = p_n * size;
+        for (let i = -pmp; i < pmp; i++) {
+            let ty = i / pmp;
             y = scale * ty;
             Object.assign(mg, {
                 x,
@@ -337,8 +339,9 @@ function plot(ex, exc, outeval, type) {
             ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
         }
     } else if (ins2 === "ρ=") {
-        for (let i = 0; i <= 2 * p_n * size; i++) {
-            let θ = Math.PI * i / (p_n * size);
+        let pmp = 2 * p_n * size;
+        for (let i = 0; i < pmp; i++) {
+            let θ = 2 * Math.PI * i / pmp;
             Object.assign(mg, {
                 x,
                 y,
@@ -357,8 +360,9 @@ function plot(ex, exc, outeval, type) {
             ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
         }
     } else if (ins2 === "θ=") {
-        for (let i = 0; i <= 2 * p_n * size; i++) {
-            let ρ = scale * Math.SQRT2 * i / (2 * p_n * size);
+        let pmp = 2 * p_n * size;
+        for (let i = 0; i < pmp; i++) {
+            let ρ = scale * Math.SQRT2 * i / pmp;
             Object.assign(mg, {
                 x,
                 y,
@@ -377,8 +381,9 @@ function plot(ex, exc, outeval, type) {
             ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
         }
     } else if (ins2 === "y=" || type === "number") {
-        for (let i = -p_n * size; i <= p_n * size; i++) {
-            let tx = i / (p_n * size);
+        let pmp = p_n * size;
+        for (let i = -pmp; i < pmp; i++) {
+            let tx = i / pmp;
             x = scale * tx;
             Object.assign(mg, {
                 x,
@@ -396,8 +401,8 @@ function plot(ex, exc, outeval, type) {
         }
     } else if (type === "boolean") {
         let jd = size / p_b;
-        for (let i = 0; i <= size; i += jd) {
-            for (let j = 0; j <= size; j += jd) {
+        for (let i = 0; i < size; i += jd) {
+            for (let j = 0; j < size; j += jd) {
                 x = scale * (2 * i - size) / size;
                 y = scale * -(2 * j - size) / size;
                 Object.assign(mg, {
@@ -415,8 +420,9 @@ function plot(ex, exc, outeval, type) {
         }
     } else if (type === "object") {
         if (outeval.im != undefined) {
-            for (let i = 0; i <= 2 * p_n * size; i++) {
-                let t = i / (2 * p_n * size);
+            let pmp = 2 * p_n * size;
+            for (let i = 0; i < pmp; i++) {
+                let t = i / pmp;
                 Object.assign(mg, {
                     x,
                     y,
@@ -437,7 +443,7 @@ function plot(ex, exc, outeval, type) {
             }
         } else if (outeval._data != undefined) {
             if ((outeval._data.length === 1 || outeval._data.length > 3) && outeval._data[0].length === undefined) {
-                for (let i = 0; i < outeval._data.length; i++) {
+                for (let i = outeval._data.length - 1; i > -1; i--) {
                     let px = size / outeval._data.length;
                     let py = outeval._data[i] * size / (2 * scale);
                     let m = i * px;
@@ -445,8 +451,8 @@ function plot(ex, exc, outeval, type) {
                     ctx.fillRect(m, n, px + 1, py + 1);
                 }
             } else if (outeval._data[0].length != undefined && outeval._data[0][0].length === 3) {
-                for (let i = 0; i < outeval._data.length; i++) {
-                    for (let j = 0; j < outeval._data[0].length; j++) {
+                for (let i = outeval._data.length - 1; i > -1; i--) {
+                    for (let j = outeval._data[0].length - 1; j > -1; j--) {
                         let px = size / outeval._data[0].length;
                         let py = size / outeval._data.length;
                         let m = px * j;
@@ -462,8 +468,8 @@ function plot(ex, exc, outeval, type) {
                     }
                 }
             } else if (outeval._data[0].length != undefined && outeval._data[0][0].length === undefined) {
-                for (let i = 0; i < outeval._data.length; i++) {
-                    for (let j = 0; j < outeval._data[0].length; j++) {
+                for (let i = outeval._data.length - 1; i > -1; i--) {
+                    for (let j = outeval._data[0].length - 1; j > -1; j--) {
                         let px = size / outeval._data[0].length;
                         let py = size / outeval._data.length;
                         let m = px * j;
@@ -477,8 +483,9 @@ function plot(ex, exc, outeval, type) {
                     }
                 }
             } else if (outeval._data.length === 2 && outeval._data[0].length === undefined) {
-                for (let i = 0; i <= 2 * p_n * size; i++) {
-                    let t = i / (2 * p_n * size);
+                let pmp = 2 * p_n * size;
+                for (let i = 0; i < pmp; i++) {
+                    let t = i / pmp;
                     Object.assign(mg, {
                         x,
                         y,
@@ -499,8 +506,8 @@ function plot(ex, exc, outeval, type) {
                 }
             } else if (outeval._data.length === 3 && outeval._data[0].length === undefined) {
                 let jd = size / p_b;
-                for (let i = 0; i <= size; i += jd) {
-                    for (let j = 0; j <= size; j += jd) {
+                for (let i = 0; i < size; i += jd) {
+                    for (let j = 0; j < size; j += jd) {
                         x = scale * (2 * i - size) / size;
                         y = scale * -(2 * j - size) / size;
                         Object.assign(mg, {
@@ -527,15 +534,17 @@ function plot(ex, exc, outeval, type) {
 }
 
 function changeOm(str) {
-    if (str != outm.innerHTML) {
-        outm.innerHTML = str;
+    if (str != outm.innerText) {
+        outm.innerText = str;
     }
 }
 
 function splot(exs) {
     let omes = "";
-    if (excs.length === 0) {
-        for (let i = 0; i < exs.length; i++) {
+    let exsl = exs.length;
+    let excsl = excs.length;
+    if (excsl === 0) {
+        for (let i = 0; i < exsl; i++) {
             try {
                 let ins2 = exs[i].substring(0, 2);
                 if (exs[i][0] === '>') {
@@ -546,9 +555,8 @@ function splot(exs) {
                     excs.push(math.compile(exs[i]));
                 }
             } catch (err) {
-                omes += "CompileError: Line " + (i + 1) + "<br>";
+                omes += "CompileError: Line " + (i + 1) + "\n";
                 ined.style.border = "dashed red";
-                //console.log(err);
             }
         }
     }
@@ -559,7 +567,8 @@ function splot(exs) {
         frame,
         mp: math.matrix([mxf, myf])
     }, def);
-    for (let i = 0; i < excs.length; i++) {
+    excsl = excs.length;
+    for (let i = 0; i < excsl; i++) {
         let exc = excs[i];
         ined.style.border = "dashed green";
         Object.assign(mg, {
@@ -573,18 +582,17 @@ function splot(exs) {
             let outeval = exc.evaluate(mg);
             let type = typeof outeval;
             if (type != "function") {
-                omes += outeval + "<br>";
+                omes += outeval + "\n";
                 if (exs[i][0] != '>' && type != "string") {
                     col = color[ci++];
                     plot(exs[i], exc, outeval, type);
                 }
             } else {
-                omes += "function" + "<br>";
+                omes += "function" + "\n";
             }
         } catch (err) {
-            omes += "PlotError: Line " + (i + 1) + "<br>";
+            omes += "PlotError: Line " + (i + 1) + "\n";
             ined.style.border = "dashed red";
-            //console.log(err);
         }
     }
     return omes;
@@ -599,31 +607,23 @@ function showLaTex(str) {
     }
 }
 
+function changefm(str) {
+    if (str != fpsm.innerText) {
+        fpsm.innerText = str;
+    }
+}
+
 function refresh(isD = false) {
     time = new Date().getTime();
     if (ined.value.search(/(\b|\d)time\b/g) != -1 || ined.value.search(/(\b|\d)frame\b/g) !=
         -1 || isD || excs.length === 0) {
         if (ined.value.length != 0) {
-            try {
-                let str = ined.value.replace(/\('/g, "(").replace(/\("/g, "(")
-                    .replace(/'\)/g, "(").replace(/"\)/g, "(")
-                    .replace(/',/g, ",").replace(/",/g, ",")
-                    .replace(/\n>/g, '\n');
-                if (str[0] === '>') {
-                    str = str.substring(1);
-                }
-                showLaTex(math.parse(str).toTex());
-            } catch (err) {
-                showLaTex("");
-                //console.log(err);
-            }
             reCanvas();
             let exs = ined.value.split('\n');
-            let omes = splot(exs);
-            changeOm(omes);
+            changeOm(splot(exs));
         }
     }
-    fpsm.innerHTML = Math.round(1000 / (time - ltime)) + " fps";
+    changefm(Math.round(1000 / (time - ltime)) + " fps");
     ltime = time;
 }
 
@@ -639,6 +639,19 @@ function inChange() {
             changeOm("Undefined");
             reCanvas();
         }
+    } else {
+        let str = ined.value.replace(/\('/g, "(").replace(/\("/g, "(")
+            .replace(/'\)/g, "(").replace(/"\)/g, "(")
+            .replace(/',/g, ",").replace(/",/g, ",")
+            .replace(/\n>/g, '\n');
+        if (str[0] === '>') {
+            str = str.substring(1);
+        }
+        try {
+            showLaTex(math.parse(str).toTex());
+        } catch (err) {
+            showLaTex("");
+        }
     }
 }
 
@@ -651,12 +664,11 @@ function inChange2() {
         excs = [];
     } catch (err) {
         ined2.style.border = "dashed red";
-        //console.log(err);
     }
     window.clearInterval(interval);
     if (fps != 0) {
         interval = setInterval(refresh, 1000 / fps);
     } else {
-        fpsm.innerHTML = "0 fps";
+        fpsm.innerText = "0 fps";
     }
 }
