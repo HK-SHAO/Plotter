@@ -4,10 +4,11 @@
 <head>
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
         name="viewport">
-    <title>绘图计算器（开发中v1.856）</title>
+    <title>绘图计算器（开发中v1.857）</title>
     <style type="text/css">
         @font-face {
             font-family: MathFont;
+            font-weight: 700;
             src: url(https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/fonts/KaTeX_Main-Regular.woff2);
         }
 
@@ -47,14 +48,13 @@
 
             #ed {
                 font-size: 22px;
-                font-weight: bold;
                 width: 80%;
                 resize: vertical;
-                font-family: MathFont;
+                font-family: MathFont, Georgia, serif;
             }
 
             #ed2 {
-                font-size: 20px;
+                font-size: 18px;
                 font-weight: bold;
                 width: 80%;
                 resize: vertical;
@@ -95,10 +95,9 @@
 
             #ed {
                 font-size: 20px;
-                font-weight: bold;
                 width: 95%;
                 resize: vertical;
-                font-family: MathFont;
+                font-family: MathFont, Georgia, serif;
             }
 
             #ed2 {
@@ -253,108 +252,93 @@ sin(10x+time/100)/10</textarea>
             </details>
             <details style="word-wrap:break-word">
                 <summary style="font-size:20px;font-weight:bold">一些实例</summary>
-                <code style="font-family: Consolas;font-size: 16px">
-                    <h4>波形播放并可视化（在高级中点击play）</h4>
-                    >f=800sin(frame/100)
-                    <br>>v=0.2
-                    <br>>m=0
-                    <br>Play(f,v,m)
-                    <br>PlayS(f,v,m,time,x)
-                    <h4>基础几何</h4>
-                    >a=[-0.5,0.5]
-                    <br>>b=mp
-                    <br>>c=[0.3,0.2]
-                    <br>>d=(a+b)/2
-                    <br>Line(k,a,b)
-                    <br>Line(k,b,c)
-                    <br>Line(k,c,a)
-                    <br>Circle(k,d,distance(a,d))
-                    <h4>二阶贝塞尔曲线</h4>
-                    >p0=[-0.5,0.5]
-                    <br>>p1=[0.5,0.5]
-                    <br>>p2=mp
-                    <br>(1-k)^2*p0+2k*(1-k)*p1+k^2*p2
-                    <h4>Logistic映射（有多种实现方式）</h4>
-                    2x*y*(1-y)+0.1
-                    <br>Logistic(4x,0.1,100) 这个式子计算更快，等价于下面的式子
-                    <br>[μ=4x,a=0.1,f(a)=μ*a*(1-a),g(n)=n==1?f(a):f(g(n-1)),g(100)][5]
-                    <br>你还可以写成多行：（在行头使用>表示这一行只计算而不绘图）
-                    <br>a=mp[2]
-                    <br>>f(a)=5x*a*(1-a)
-                    <br>>g(n)=n&lt;=1?f(a):f(g(n-1))
-                    <br>g(10mp[1])
-                    <h4>分叉图</h4>
-                    p_n /*线精度*/= 400;
-                    <br>ls /*线粗细*/= 0.2;
-                    <br>
-                    <br>sin((x-1.7)*(y+0.4))+0.4
-                    <br>erf((x-2)*(y+0.5)*(1-y))+0.3
-                    <br>这是“隐式”迭代，其中的y是绘图过程中上一次计算所得的y值。
-                    <h4>朱利亚集、曼德勃罗集（点大小改为1，增加点精度，显示效果更好）</h4>
-                    Mandelbrot(2x,2y,100) Julia(2x,2y,mp[1],mp[2],6)
-                    <br>彩色渲染：MandelbrotC(2x,2y,100) JuliaC(2x,2y,mp[1],mp[2],6)
-                    <h4>谢尔宾斯基三角形</h4>
-                    p_n /*线精度*/= 100;
-                    <br>ls /*线粗细*/= 0.3;
-                    <br>[k,(floor(66000k)&(floor(66000k) >> 8))/290]
-                    <br>或者 (floor(66000x)&(floor(66000x) >> 8))/290
-                    <h4>累乘求π（tip：在行头使用>，只计算不绘图，提升效率）</h4>
-                    >2Π('n%2==0?n/(n+1):(n+1)/n',1:10000)
-                    <h4>时钟（北京时间）</h4>
-                    fps /*帧率*/= 60;
-                    <br>color /*颜色*/= ["black","blue","black", "green","red"];
-                    <br>p_b /*点精度*/= 200;
-                    <br>ps /*点大小*/= 0.5;
-                    <br>p_n /*线精度*/= 0.1;
-                    <br>ls /*线粗细*/= 2;
-                    <br>def /*定义*/= {love: 520, you: 1314/520};
-                    <br>
-                    <br>ρ=0.8
-                    <br>[0.8sin(2pi*time/1e3+0.1k),0.8cos(2pi*time/1e3+0.1k)]
-                    <br>[0.7sin(2pi*time/6e4)*k,0.7cos(2pi*time/6e4)*k]
-                    <br>[0.5sin(2pi*time/36e5)*k,0.5cos(2pi*time/36e5)*k]
-                    <br>[0.4sin(2pi*(time+288e5)/432e5)*k,0.4cos(2pi*(time+288e5)/432e5)*k]
-                    <h4>螺旋线</h4>
-                    ρθ(2k,20*sin(time/1000)k)/4
-                    <br>θ=frame*ρ
-                    <h4>选色器</h4>
-                    p_b /*点精度*/= 100;
-                    <br>ps /*点大小*/= 1;
-                    <br>
-                    <br>(x>0 and y>0)?[x,y,0]:[0,0,0]
-                    <br>(x&lt;0 and y&lt;0)?[mp[1],mp[2],0]:[NaN,0,0]
-                    <br>
-                    <h4>红色光环（点大小改为1，点精度改小一些）</h4>
-                    [(sin(frame*ρ)+1)/2,0,0]
-                    <h4>复数幂递归（相当于 i^i^i^i^i^...）</h4>
-                    p_n /*线精度*/= 0.3;
-                    <br>
-                    <br>>f(z,n)=n&lt;1?z:z^f(z,n-1)
-                    <br>>c=complex(mp[1],mp[2])
-                    <br>f(c,300k)
-                    <h4>万花筒</h4>
-                    fps/*帧率*/=60;
-                    <br>color/*颜色*/=["blue"];
-                    <br>p_b/*点精度*/=100;
-                    <br>ps/*点大小*/=1;
-                    <br>p_n/*线精度*/=1;
-                    <br>ls/*线粗细*/=1;
-                    <br>def/*定义*/={love: 520, you: 1314/520,Q};
-                    <br>function Q(x, y, t) {
-                    <br>let uv = [x, y];
-                    <br>let rot = [Math.sin(t / 100), Math.cos(t / 100)];
-                    <br>let l = 0;
-                    <br>for (let i = 0; i &lt; 2000; i++) {
-                    <br>uv = [1.1*(uv[0]*rot[0]-uv[1]*rot[1]),1.1*(uv[0]*rot[1]+uv[1]*rot[0])];
-                    <br>if (uv[1] > 10) { break; }
-                    <br>l++;
-                    <br>}
-                    <br>let c = l % 2;
-                    <br>return math.matrix([c, c, c]);
-                    <br>}
-                    <br>
-                    <br>Q(x,y,frame)
-                </code>
+                <pre style="font-family: Consolas;font-size: 16px">
+<h4>波形播放并可视化（在高级中点击play）</h4>>f=800sin(frame/100)
+>v=0.2
+>m=0
+Play(f,v,m)
+PlayS(f,v,m,time,x)
+<h4>基础几何</h4>>a=[-0.5,0.5]
+>b=mp
+>c=[0.3,0.2]
+>d=(a+b)/2
+Line(k,a,b)
+Line(k,b,c)
+Line(k,c,a)
+Circle(k,d,distance(a,d))
+<h4>二阶贝塞尔曲线</h4>>p0=[-0.5,0.5]
+>p1=[0.5,0.5]
+>p2=mp
+(1-k)^2*p0+2k*(1-k)*p1+k^2*p2
+<h4>Logistic映射（有多种实现方式）</h4>2x*y*(1-y)+0.1
+Logistic(4x,0.1,100) 这个式子计算更快，等价于下面的式子
+[μ=4x,a=0.1,f(a)=μ*a*(1-a),g(n)=n==1?f(a):f(g(n-1)),g(100)][5]
+你还可以写成多行：（在行头使用>表示这一行只计算而不绘图）
+a=mp[2]
+>f(a)=5x*a*(1-a)
+>g(n)=n&lt;=1?f(a):f(g(n-1))
+g(10mp[1])
+<h4>分叉图</h4>p_n /*线精度*/= 400;
+ls /*线粗细*/= 0.2;
+
+sin((x-1.7)*(y+0.4))+0.4
+erf((x-2)*(y+0.5)*(1-y))+0.3
+这是“隐式”迭代，其中的y是绘图过程中上一次计算所得的y值。
+<h4>朱利亚集、曼德勃罗集（点大小改为1，增加点精度，显示效果更好）</h4>Mandelbrot(2x,2y,100) Julia(2x,2y,mp[1],mp[2],6)
+单色渲染：Mandelbrot(2x,2y,100)[3]&lt;2 Julia(2x,2y,mp[1],mp[2],6)[3]&lt;2
+<h4>谢尔宾斯基三角形</h4>p_n /*线精度*/= 100;
+ls /*线粗细*/= 0.3;
+[k,(floor(66000k)&(floor(66000k) >> 8))/290]
+或者 (floor(66000x)&(floor(66000x) >> 8))/290
+<h4>累乘求π（tip：在行头使用>，只计算不绘图，提升效率）</h4>>2Π('n%2==0?n/(n+1):(n+1)/n',1:10000)
+<h4>时钟（北京时间）</h4>fps /*帧率*/= 60;
+color /*颜色*/= ["black","blue","black", "green","red"];
+p_b /*点精度*/= 200;
+ps /*点大小*/= 0.5;
+p_n /*线精度*/= 0.1;
+ls /*线粗细*/= 2;
+def /*定义*/= {love: 520, you: 1314/520};
+
+>t=time
+ρ=0.8
+[0.8sin(2pi*t/1e3+0.1k),0.8cos(2pi*t/1e3+0.1k)]
+[0.7sin(2pi*t/6e4)*k,0.7cos(2pi*t/6e4)*k]
+[0.5sin(2pi*t/36e5)*k,0.5cos(2pi*t/36e5)*k]
+[0.4sin(2pi*(t+288e5)/432e5)*k,0.4cos(2pi*(t+288e5)/432e5)*k]
+<h4>螺旋线</h4>ρθ(2k,20*sin(time/1000)k)/4
+θ=frame*ρ
+<h4>选色器</h4>p_b /*点精度*/= 100;
+ps /*点大小*/= 1;
+
+(x>0 and y>0)?[x,y,0]:[0,0,0]
+(x&lt;0 and y&lt;0)?[mp[1],mp[2],0]:[NaN,0,0]
+<h4>红色光环（点大小改为1，点精度改小一些）</h4>[(sin(frame*ρ)+1)/2,0,0]
+<h4>复数幂递归（相当于 i^i^i^i^i^...）</h4>p_n /*线精度*/= 0.3;
+
+>f(z,n)=n&lt;1?z:z^f(z,n-1)
+>c=complex(mp[1],mp[2])
+f(c,300k)
+<h4>万花筒</h4>fps/*帧率*/=60;
+color/*颜色*/=["blue"];
+p_b/*点精度*/=100;
+ps/*点大小*/=1;
+p_n/*线精度*/=1;
+ls/*线粗细*/=1;
+def/*定义*/={love: 520, you: 1314/520,Q};
+function Q(x, y, t) {
+let uv = [x, y];
+let rot = [Math.sin(t / 100), Math.cos(t / 100)];
+let l = 0;
+for (let i = 0; i &lt; 2000; i++) {
+uv = [1.1*(uv[0]*rot[0]-uv[1]*rot[1]),1.1*(uv[0]*rot[1]+uv[1]*rot[0])];
+if (uv[1] > 10) { break; }
+l++;
+}
+let c = l % 2;
+return math.matrix([c, c, c]);
+}
+
+Q(x,y,frame)</pre>
             </details>
         </div>
         <div class="out">

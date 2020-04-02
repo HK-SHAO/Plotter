@@ -50,30 +50,10 @@ function Mandelbrot(x, y, n) {
         z = cadd(csqr(z), c);
     }
     let abs = Math.sqrt(z[0] * z[0] + z[1] * z[1]);
-    return abs < 2;
-}
-
-function MandelbrotC(x, y, n) {
-    let c = [x, y];
-    let z = [0, 0];
-    for (let i = 0; i < n; i++) {
-        z = cadd(csqr(z), c);
-    }
-    let abs = Math.sqrt(z[0] * z[0] + z[1] * z[1]);
     return math.matrix([z[0], z[1], abs]);
 }
 
 function Julia(x, y, a, b, n) {
-    let z = [x, y];
-    let c = [a, b];
-    for (let i = 0; i < n; i++) {
-        z = cadd(csqr(z), c);
-    }
-    let abs = Math.sqrt(z[0] * z[0] + z[1] * z[1]);
-    return abs < 2;
-}
-
-function JuliaC(x, y, a, b, n) {
     let z = [x, y];
     let c = [a, b];
     for (let i = 0; i < n; i++) {
@@ -158,8 +138,6 @@ math.import({
     },
     Julia,
     Mandelbrot,
-    JuliaC,
-    MandelbrotC,
     Logistic,
     Γ: math.gamma,
     φ: math.phi,
