@@ -48,9 +48,12 @@ function Mandelbrot(x, y, n) {
     let z = [0, 0];
     for (let i = 0; i < n; i++) {
         z = cadd(csqr(z), c);
+        if (Math.abs(z[0]) > 1 && Math.abs(z[1]) > 1) {
+            z = [NaN, NaN];
+            break;
+        }
     }
-    let abs = Math.sqrt(z[0] * z[0] + z[1] * z[1]);
-    return math.matrix([z[0], z[1], abs]);
+    return math.matrix([z[0], z[1], Math.sqrt(z[0] * z[0] + z[1] * z[1])]);
 }
 
 function Julia(x, y, a, b, n) {
@@ -58,9 +61,12 @@ function Julia(x, y, a, b, n) {
     let c = [a, b];
     for (let i = 0; i < n; i++) {
         z = cadd(csqr(z), c);
+        if (Math.abs(z[0]) > 1 && Math.abs(z[1]) > 1) {
+            z = [NaN, NaN];
+            break;
+        }
     }
-    let abs = Math.sqrt(z[0] * z[0] + z[1] * z[1]);
-    return math.matrix([z[0], z[1], abs]);
+    return math.matrix([z[0], z[1], Math.sqrt(z[0] * z[0] + z[1] * z[1])]);
 }
 
 function Logistic(u, x0, n) {
@@ -220,13 +226,15 @@ function zoom(b) {
     } else {
         scale *= 1.05;
     }
-    mouseMove(e);
-    refresh(true);
+    if (ined.value.search(/(\b|\d)mp\b/g) == -1) {
+        refresh(true);
+    }
 }
 
 function mouseWheel(e) {
     e.preventDefault();
     zoom(e.wheelDelta > 0);
+    mouseMove(e);
 }
 
 function mouseMove(e) {
@@ -304,14 +312,14 @@ function reCanvas2() {
     ctx2.stroke();
 }
 
-function plot(ex, exc, outeval, type) {
+function plot(ex, exc, outeval, type, sc) {
     ctx.fillStyle = col;
     let ins2 = ex.substring(0, 2);
     if (ins2 === "x=") {
         let pmp = p_n * size;
         for (let i = -pmp; i < pmp; i++) {
             let ty = i / pmp;
-            y = scale * ty;
+            y = sc * ty;
             Object.assign(mg, {
                 x,
                 y,
@@ -319,7 +327,7 @@ function plot(ex, exc, outeval, type) {
                 θ: Math.atan2(y, x)
             });
             x = exc.evaluate(mg);
-            let tx = x / scale;
+            let tx = x / sc;
             if (tx > 1 || tx < -1 || isNaN(tx)) {
                 continue;
             }
@@ -339,8 +347,8 @@ function plot(ex, exc, outeval, type) {
             let ρ = exc.evaluate(mg);
             x = ρ * Math.cos(θ);
             y = ρ * Math.sin(θ);
-            let tx = x / scale;
-            let ty = y / scale;
+            let tx = x / sc;
+            let ty = y / sc;
             if (ty > 1 || ty < -1 || tx > 1 || tx < -1 || isNaN(tx) || isNaN(ty)) {
                 continue;
             }
@@ -350,7 +358,7 @@ function plot(ex, exc, outeval, type) {
     } else if (ins2 === "θ=") {
         let pmp = 2 * p_n * size;
         for (let i = 0; i < pmp; i++) {
-            let ρ = scale * Math.SQRT2 * i / pmp;
+            let ρ = sc * Math.SQRT2 * i / pmp;
             Object.assign(mg, {
                 x,
                 y,
@@ -360,8 +368,8 @@ function plot(ex, exc, outeval, type) {
             let θ = exc.evaluate(mg);
             x = ρ * Math.cos(θ);
             y = ρ * Math.sin(θ);
-            let tx = x / scale;
-            let ty = y / scale;
+            let tx = x / sc;
+            let ty = y / sc;
             if (ty > 1 || ty < -1 || tx > 1 || tx < -1 || isNaN(tx) || isNaN(ty)) {
                 continue;
             }
@@ -372,7 +380,7 @@ function plot(ex, exc, outeval, type) {
         let pmp = p_n * size;
         for (let i = -pmp; i < pmp; i++) {
             let tx = i / pmp;
-            x = scale * tx;
+            x = sc * tx;
             Object.assign(mg, {
                 x,
                 y,
@@ -380,7 +388,7 @@ function plot(ex, exc, outeval, type) {
                 θ: Math.atan2(y, x)
             });
             y = exc.evaluate(mg);
-            let ty = y / scale;
+            let ty = y / sc;
             if (ty > 1 || ty < -1 || isNaN(ty)) {
                 continue;
             }
@@ -391,8 +399,8 @@ function plot(ex, exc, outeval, type) {
         let jd = size / p_b;
         for (let i = 0; i < size; i += jd) {
             for (let j = 0; j < size; j += jd) {
-                x = scale * (2 * i - size) / size;
-                y = scale * -(2 * j - size) / size;
+                x = sc * (2 * i - size) / size;
+                y = sc * -(2 * j - size) / size;
                 Object.assign(mg, {
                     x,
                     y,
@@ -421,8 +429,8 @@ function plot(ex, exc, outeval, type) {
                 let ob = exc.evaluate(mg);
                 x = ob.re;
                 y = ob.im;
-                let tx = x / scale;
-                let ty = y / scale;
+                let tx = x / sc;
+                let ty = y / sc;
                 if (ty > 1 || ty < -1 || tx > 1 || tx < -1 || isNaN(tx) || isNaN(ty)) {
                     continue;
                 }
@@ -433,7 +441,7 @@ function plot(ex, exc, outeval, type) {
             if ((outeval._data.length === 1 || outeval._data.length > 3) && outeval._data[0].length === undefined) {
                 for (let i = outeval._data.length - 1; i > -1; i--) {
                     let px = size / outeval._data.length;
-                    let py = outeval._data[i] * size / (2 * scale);
+                    let py = outeval._data[i] * size / (2 * sc);
                     let m = i * px;
                     let n = 0.5 * size - py;
                     ctx.fillRect(m, n, px + 1, py + 1);
@@ -484,8 +492,8 @@ function plot(ex, exc, outeval, type) {
                     let ob = exc.evaluate(mg);
                     x = ob._data[0];
                     y = ob._data[1];
-                    let tx = x / scale;
-                    let ty = y / scale;
+                    let tx = x / sc;
+                    let ty = y / sc;
                     if (ty > 1 || ty < -1 || tx > 1 || tx < -1 || isNaN(tx) || isNaN(ty)) {
                         continue;
                     }
@@ -496,8 +504,8 @@ function plot(ex, exc, outeval, type) {
                 let jd = size / p_b;
                 for (let i = 0; i < size; i += jd) {
                     for (let j = 0; j < size; j += jd) {
-                        x = scale * (2 * i - size) / size;
-                        y = scale * -(2 * j - size) / size;
+                        x = sc * (2 * i - size) / size;
+                        y = sc * -(2 * j - size) / size;
                         Object.assign(mg, {
                             x,
                             y,
@@ -573,7 +581,7 @@ function splot(exs) {
                 omes += outeval + "\n";
                 if (exs[i][0] != '>' && type != "string") {
                     col = color[ci++];
-                    plot(exs[i], exc, outeval, type);
+                    plot(exs[i], exc, outeval, type, scale);
                 }
             } else {
                 omes += "function" + "\n";

@@ -4,7 +4,7 @@
 <head>
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
         name="viewport">
-    <title>绘图计算器（开发中v1.857）</title>
+    <title>绘图计算器（开发中v1.858）</title>
     <style type="text/css">
         @font-face {
             font-family: MathFont;
@@ -65,13 +65,13 @@
             }
 
             .right {
-                width: 32%;
+                width: 30%;
                 margin-left: 20px;
             }
 
             .out {
                 flex: 1;
-                width: 18%;
+                width: 16%;
             }
 
             #fpsm {
@@ -318,23 +318,24 @@ ps /*点大小*/= 1;
 >f(z,n)=n&lt;1?z:z^f(z,n-1)
 >c=complex(mp[1],mp[2])
 f(c,300k)
-<h4>万花筒</h4>fps/*帧率*/=60;
-color/*颜色*/=["blue"];
-p_b/*点精度*/=100;
-ps/*点大小*/=1;
-p_n/*线精度*/=1;
-ls/*线粗细*/=1;
-def/*定义*/={love: 520, you: 1314/520,Q};
+<h4>万花筒</h4>fps /*帧率*/= 60;
+color /*颜色*/= ["blue"];
+p_b /*点精度*/= 100;
+ps /*点大小*/= 1;
+p_n /*线精度*/= 1;
+ls /*线粗细*/= 1;
+def/*定义*/={love: 520, you: 1314/520, Q};
 function Q(x, y, t) {
-let uv = [x, y];
-let rot = [Math.sin(t / 100), Math.cos(t / 100)];
-let l = 0;
-for (let i = 0; i &lt; 2000; i++) {
-uv = [1.1*(uv[0]*rot[0]-uv[1]*rot[1]),1.1*(uv[0]*rot[1]+uv[1]*rot[0])];
-if (uv[1] > 10) { break; }
+let uv=[x, y];
+let rot=[Math.sin(t/100), Math.cos(t/100)];
+let l=0;
+for(let i=0;i&lt;2000;i++){
+uv=[1.1*(uv[0]*rot[0]-uv[1]*rot[1]),
+1.1*(uv[0]*rot[1]+uv[1]*rot[0])];
+if(uv[1]>2){break;}
 l++;
 }
-let c = l % 2;
+let c=l%2;
 return math.matrix([c, c, c]);
 }
 
