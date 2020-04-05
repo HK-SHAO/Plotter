@@ -97,10 +97,26 @@ math.import({
         let b = p2._data;
         return math.matrix([a[0] + k * (b[0] - a[0]), a[1] + k * (b[1] - a[1])]);
     },
+    B2: function (k, p0, p1, p2) {
+        let a = p0._data;
+        let b = p1._data;
+        let c = p2._data;
+        return math.matrix([(1 - k) ** 2 * a[0] + 2 * k * (1 - k) * b[0] + k ** 2 * c[0], (1 - k) ** 2 * a[1] + 2 * k * (1 - k) * b[1] + k ** 2 * c[1]]);
+    },
     Circle: function (k, p, r) {
         let x0 = p._data[0];
         let y0 = p._data[1];
         return math.matrix([x0 + r * Math.cos(2 * Math.PI * k), y0 + r * Math.sin(2 * Math.PI * k)]);
+    },
+    Polygon: function (k) {
+        let n = arguments.length - 1;
+        let m = k * n;
+        let a = arguments[Math.floor(m) % n + 1]._data;
+        let b = arguments[(Math.floor(m) + 1) % n + 1]._data;
+        return math.matrix([a[0] + m % 1 * (b[0] - a[0]), a[1] + m % 1 * (b[1] - a[1])]);
+    },
+    C2M: function (z) {
+        return math.matrix([z.re, z.im]);
     },
     Play: function (f, v, m) {
         if (typeof audioCtx != "undefined") {
@@ -152,9 +168,9 @@ math.import({
         let md = m._data;
         let exc = math.compile(ex);
         for (let i = md.length - 1; i > -1; i--) {
-            let ans = exc.evaluate(Object.assign({
+            let ans = exc.evaluate({
                 n: md[i]
-            }, mg));
+            });
             s += ans;
         }
         return s;
@@ -164,13 +180,34 @@ math.import({
         let md = m._data;
         let exc = math.compile(ex);
         for (let i = md.length - 1; i > -1; i--) {
-            let ans = exc.evaluate(Object.assign({
+            let ans = exc.evaluate({
                 n: md[i]
-            }, mg));
+            });
             s *= ans;
         }
         return s;
-    }
+    },
+    Diff: function (ex, mx, n = 0.000001) {
+        let exc = math.compile(ex);
+        let a1 = exc.evaluate({
+            x: mx
+        });
+        let a2 = exc.evaluate({
+            x: mx + n
+        });
+        return (a2 - a1) / n;
+    },
+    Integ: function (ex, s, e, n = 100000) {
+        let inc = (e - s) / n;
+        let totalHeight = 0;
+        let exc = math.compile(ex);
+        for (let i = s; i < e; i += inc) {
+            totalHeight += exc.evaluate({
+                x: i
+            });
+        }
+        return totalHeight * inc;
+    },
 });
 
 const cfa = document.getElementById("father");
@@ -226,7 +263,7 @@ function zoom(b) {
     } else {
         scale *= 1.05;
     }
-    if (ined.value.search(/(\b|\d)mp\b/g) == -1) {
+    if (ined.value.search(/(\b|\d)mp\b/g) === -1) {
         refresh(true);
     }
 }
@@ -281,7 +318,7 @@ function mouseMove(e) {
 
     mxf = ((2 * mx / size) - 1) * scale;
     myf = ((-2 * my / size) + 1) * scale;
-    ctx2.fillText("(" + mxf.toFixed(8) + ", " + myf.toFixed(8) + ")", 4, 14);
+    ctx2.fillText("( " + mxf.toFixed(8) + " , " + myf.toFixed(8) + " )", 4, 14);
     if (ined.value.search(/(\b|\d)mp\b/g) != -1) {
         refresh(true);
     }
@@ -553,6 +590,7 @@ function splot(exs) {
             } catch (err) {
                 omes += "CompileError: Line " + (i + 1) + "\n";
                 ined.style.border = "dashed red";
+                console.log(err);
             }
         }
     }
@@ -589,6 +627,7 @@ function splot(exs) {
         } catch (err) {
             omes += "PlotError: Line " + (i + 1) + "\n";
             ined.style.border = "dashed red";
+            console.log(err);
         }
     }
     return omes;
@@ -597,8 +636,7 @@ function splot(exs) {
 function showLaTex(str) {
     if (img.alt != str) {
         img.alt = str;
-        let s = str.replace(/\\;\\;/g, "\\\\")
-            .replace(/\\textasciicircum{}/g, "^");
+        let s = str.replace(/\\;\\;/g, "\\\\");
         img.src = "https://www.zhihu.com/equation?tex=" + encodeURIComponent(s);
     }
 }
@@ -635,6 +673,7 @@ function reLaTeX() {
         showLaTex(math.parse(str).toTex());
     } catch (err) {
         showLaTex("");
+        console.log(err);
     }
 }
 
@@ -664,10 +703,11 @@ function inChange2() {
         excs = [];
     } catch (err) {
         ined2.style.border = "dashed red";
+        console.log(err);
     }
     window.clearInterval(interval);
     if (fps != 0) {
-        interval = setInterval(refresh, 1000 / fps);
+        interval = window.setInterval(refresh, 1000 / fps);
     } else {
         fpsm.innerText = "0 fps";
     }
