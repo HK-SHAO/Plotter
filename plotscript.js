@@ -266,18 +266,16 @@ function zoom(b) {
     } else {
         scale *= 1.05;
     }
-    if (ined.value.search(/(\b|\d)mp\b/g) === -1) {
-        refresh(true);
-    }
+    refresh(true);
 }
 
 function mouseWheel(e) {
     e.preventDefault();
     zoom(e.wheelDelta > 0);
-    mouseMove(e);
+    mouseMove(e, false);
 }
 
-function mouseMove(e) {
+function mouseMove(e, isR = true) {
     e.preventDefault();
     let cRect = canv2.getBoundingClientRect();
     let mx = Math.round(e.clientX - cRect.left);
@@ -322,7 +320,7 @@ function mouseMove(e) {
     mxf = ((2 * mx / size) - 1) * scale;
     myf = ((-2 * my / size) + 1) * scale;
     ctx2.fillText("( " + mxf.toFixed(8) + " , " + myf.toFixed(8) + " )", 4, 14);
-    if (ined.value.search(/(\b|\d)mp\b/g) != -1) {
+    if (ined.value.search(/(\b|\d)mp\b/g) != -1 && isR) {
         refresh(true);
     }
 }
