@@ -163,6 +163,9 @@ math.import({
     Logistic,
     Γ: math.gamma,
     φ: math.phi,
+    ln: function (mx) {
+        return math.log(mx);
+    },
     Σ: function (ex, m) {
         let s = 0;
         let md = m._data;

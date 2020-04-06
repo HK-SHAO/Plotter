@@ -113,7 +113,7 @@
 <body>
     <div class="container">
         <div class="left" id="lft">
-            <div id="father">
+            <div id="father" onmouseout="reCanvas2()">
                 <canvas id="gc"></canvas>
                 <canvas id="gc2"></canvas>
             </div>
@@ -266,7 +266,7 @@ Line(k,a,b)
 Line(k,b,c)
 Line(k,c,a)
 Circle(k,d,distance(a,d))
-Polygon(k,mp,[0.5,0.5],[0.5,-0.5],[-0.5,-0.5])
+Polygon(k,b,[0.5,0.5],[0.5,-0.5],[-0.5,-0.5])
 <h4>二阶贝塞尔曲线</h4>>p0=[-0.5,0.5]
 >p1=[0.5,0.5]
 >p2=mp
