@@ -4,7 +4,7 @@
 <head>
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
         name="viewport">
-    <title>绘图计算器（开发中v1.861）</title>
+    <title>绘图计算器（开发中v1.863）</title>
     <style type="text/css">
         @font-face {
             font-family: MathFont;
@@ -127,7 +127,7 @@
 fps /*帧率*/= 60;
 color /*颜色*/= ["blue"];
 p_b /*点精度*/= 200;
-ps /*点大小*/= 0.2;
+ps /*点大小*/= 1;
 p_n /*线精度*/= 1;
 ls /*线粗细*/= 1;
 def /*定义*/= {love: 520, you: 1314/520};</textarea>
@@ -219,7 +219,10 @@ sin(10x+time/100)/10</textarea>
                 使用 Play(音调,响度,波形) PlayS(音调,响度,波形,time,x)<br>
                 <a style="font-size:16px;font-weight:bold;">画布&nbsp;&nbsp;</a>
                 <button onclick="zoom(true)" style="font-size:18px;width: 60px;height: 40px;">放大</button>
-                <button onclick="zoom(false)" style="font-size:18px;width: 60px;height: 40px;">缩小</button>
+                <button onclick="zoom(false)" style="font-size:18px;width: 60px;height: 40px;">缩小</button><br>
+                <a style="font-size:16px;font-weight:bold;">视频&nbsp;&nbsp;</a>
+                <button onclick="exportCanvas()" style="font-size:18px;width: 60px;height: 40px;">截图</button>
+                <button onclick="recordCanvas(this)" style="font-size:18px;width: 60px;height: 40px;">录制</button>
                 <br><br>
             </details>
             <details style="word-wrap:break-word">
@@ -234,7 +237,7 @@ sin(10x+time/100)/10</textarea>
                     <br>回车换行输入可绘制多个图像，使用 help() 获取参考，例 help(pi) help(erf)
                     <br>
                     <br> ● 支持绘制多种函数曲线，例 sin(x) x^x e^x Γ(10x)/10 x%0.5
-                    <br> ★ 特点：多种函数绘图，例 isPrime(x) x=sin(pi*y) ρ=cos(2θ) θ=ρ^ρ
+                    <br> ● 特点：多种函数绘图，例 isPrime(x) x=sin(pi*y) ρ=cos(2θ) θ=ρ^ρ
                     <br> ● 支持分段函数，使用三元运算符 x&lt;0?x:x^2-x 或者 min() max() 等
                     <br> ● 支持参数方程（参数k从0到1），例 k+k*i [k,k^2]/2-0.25 ρθ(k,k) xy(k,k)
                     <br> ● 支持输入不等式绘制平面区域（支持与或运算），例 sin(x)&lt;y and y&lt;-0.2
@@ -252,7 +255,7 @@ sin(10x+time/100)/10</textarea>
             </details>
             <details style="word-wrap:break-word">
                 <summary style="font-size:20px;font-weight:bold">一些实例</summary>
-                <pre style="font-family: Consolas;font-size: 16px">
+                <pre style="font-family: Consolas;font-size: 16px;white-space: pre-wrap;word-wrap: break-word;">
 <h4>波形播放并可视化（在高级中点击play）</h4>>f=800sin(frame/100)
 >v=0.2
 >m=0
@@ -303,10 +306,10 @@ def /*定义*/= {love: 520, you: 1314/520};
 
 >t=time
 ρ=0.8
-[0.8sin(2pi*t/1e3+0.1k),0.8cos(2pi*t/1e3+0.1k)]
-[0.7sin(2pi*t/6e4)*k,0.7cos(2pi*t/6e4)*k]
-[0.5sin(2pi*t/36e5)*k,0.5cos(2pi*t/36e5)*k]
-[0.4sin(2pi*(t+288e5)/432e5)*k,0.4cos(2pi*(t+288e5)/432e5)*k]
+0.8*[sin(2pi*t/1e3+0.1k),cos(2pi*t/1e3+0.1k)]
+0.7*[sin(2pi*t/6e4),cos(2pi*t/6e4)]*k
+0.5*[sin(2pi*t/36e5),cos(2pi*t/36e5)]*k
+0.4*[sin(2pi*(t+288e5)/432e5),cos(2pi*(t+288e5)/432e5)]*k
 <h4>螺旋线</h4>ρθ(2k,20*sin(time/1000)k)/4
 θ=frame*ρ
 <h4>选色器</h4>p_b /*点精度*/= 100;
@@ -320,6 +323,13 @@ ps /*点大小*/= 1;
 >f(z,n)=n&lt;1?z:z^f(z,n-1)
 >c=complex(mp[1],mp[2])
 f(c,300k)
+<h4>旋转“弹簧”线</h4>Polygon(5k*(sin(time/1000)+1),[0,2k],[2,2k],[1,2k-1],[-1,2k-1])
+
+>n=20(sin(time/1000)+1)
+[2cos(n*k),sin(n*k)+3k]
+
+<h4>三色图</h4>(x^2+(y-0.3)^2&lt;0.3?[1,0,0]:[0,0,0])+((x-0.3)^2+(y+0.3)^2&lt;0.3?[0,1,0]:[0,0,0])+((x+0.3)^2+(y+0.3)^2&lt;0.3?[0,0,1]:[0,0,0])
+（tip:这是RGB的效果，使用 1-整个式子 可以获得CYMK的效果）
 <h4>万花筒</h4>fps /*帧率*/= 60;
 color /*颜色*/= ["blue"];
 p_b /*点精度*/= 100;

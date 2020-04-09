@@ -1,3 +1,50 @@
+function exportCanvas() {
+    let MIME_TYPE = "image/png";
+    let imgURL = canv.toDataURL(MIME_TYPE);
+    let a = document.createElement('a');
+    a.download = "Plotter_Image";
+    a.href = imgURL;
+    a.dataset.downloadurl = [MIME_TYPE, a.download, a.href].join(':');
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+mediaRecord = undefined;
+function createRecord() {
+    let chunks = [];
+    mediaRecord = new MediaRecorder(canv.captureStream(fps), {
+        videoBitsPerSecond: 8500000
+    });
+    mediaRecord.ondataavailable = (e) => {
+        chunks.push(e.data);
+    }
+    mediaRecord.onstop = function () {
+        let a = document.createElement('a');
+        a.href = window.URL.createObjectURL(new Blob(chunks));
+        chunks = [];
+        a.download = 'Plotter_Record.webm';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+}
+
+function recordCanvas(bu) {
+    if (bu.innerText === "录制") {
+        if (mediaRecord === undefined) {
+            createRecord();
+        }
+        mediaRecord.start();
+        bu.innerText = "结束";
+    } else {
+        mediaRecord.stop();
+        bu.innerText = "录制";
+    }
+}
+
 function audiocontrol(bu) {
     if (bu.innerText === "play") {
         audioCtx = new AudioContext();
