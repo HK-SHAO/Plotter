@@ -17,14 +17,14 @@ function createRecord() {
     mediaRecord = new MediaRecorder(canv.captureStream(fps), {
         videoBitsPerSecond: 8500000
     });
-    mediaRecord.ondataavailable = (e) => {
+    mediaRecord.ondataavailable = function (e) {
         chunks.push(e.data);
     }
     mediaRecord.onstop = function () {
         let a = document.createElement('a');
-        a.href = window.URL.createObjectURL(new Blob(chunks));
+        a.href = window.URL.createObjectURL(new Blob(chunks, { 'type': 'video/webm' }));
         chunks = [];
-        a.download = 'Plotter_Record.webm';
+        a.download = 'Plotter_Record';
         a.style.display = 'none';
         document.body.appendChild(a);
         a.click();
@@ -90,7 +90,7 @@ function cadd(z1, z2) {
     return [z1[0] + z2[0], z1[1] + z2[1]];
 }
 
-function Mandelbrot(x, y, n) {
+function Mandelbrot(x, y, n = 100) {
     let c = [x, y];
     let z = [0, 0];
     for (let i = 0; i < n; i++) {
@@ -103,7 +103,7 @@ function Mandelbrot(x, y, n) {
     return math.matrix([z[0], z[1], Math.sqrt(z[0] * z[0] + z[1] * z[1])]);
 }
 
-function Julia(x, y, a, b, n) {
+function Julia(x, y, a, b, n = 100) {
     let z = [x, y];
     let c = [a, b];
     for (let i = 0; i < n; i++) {
@@ -116,7 +116,7 @@ function Julia(x, y, a, b, n) {
     return math.matrix([z[0], z[1], Math.sqrt(z[0] * z[0] + z[1] * z[1])]);
 }
 
-function Logistic(u, x0, n) {
+function Logistic(u, x0, n = 100) {
     let x = x0;
     for (let i = 0; i < n; i++) {
         x *= u * (1 - x);
@@ -165,7 +165,7 @@ math.import({
     C2M: function (z) {
         return math.matrix([z.re, z.im]);
     },
-    Play: function (f, v, m) {
+    Play: function (f, v, m = 0) {
         if (typeof audioCtx != "undefined") {
             oscillator.frequency.value = f;
             gainNode.gain.value = v;
@@ -188,10 +188,10 @@ math.import({
             }
             return oscillator.type + " wave";
         } else {
-            return "Undefined";
+            return "undefined";
         }
     },
-    PlayS: function (f, v, m, t, x) {
+    PlayS: function (f, v, m = 0, t, x) {
         switch (m) {
             case 0:
                 return v * Math.sin(f * x / 20 + t / 1000);
@@ -252,9 +252,14 @@ math.import({
         let totalHeight = 0;
         let exc = math.compile(ex);
         for (let i = s; i < e; i += inc) {
-            totalHeight += exc.evaluate({
+            let ans = exc.evaluate({
                 x: i
             });
+            totalHeight += ans;
+
+            let px = i / scale;
+            let py = ans * size / (2 * scale);
+            ctx.fillRect((px + 1) / 2 * size, size / 2 - py, inc * size / (2 * scale) + 1, py + 1);
         }
         return totalHeight * inc;
     },
@@ -281,7 +286,6 @@ window.onload = function () {
     this.reData();
     window.onresize();
     reLaTeX();
-    col = color[0];
     cfa.addEventListener("mousemove", mouseMove);
     cfa.addEventListener("mousewheel", mouseWheel);
 }
@@ -528,7 +532,7 @@ function plot(ex, exc, outeval, type, sc) {
                     let px = size / outeval._data.length;
                     let py = outeval._data[i] * size / (2 * sc);
                     let m = i * px;
-                    let n = 0.5 * size - py;
+                    let n = size / 2 - py;
                     ctx.fillRect(m, n, px + 1, py + 1);
                 }
             } else if (outeval._data[0].length != undefined && outeval._data[0][0].length === 3) {
@@ -635,6 +639,7 @@ function splot(exs) {
                 } else {
                     excs.push(math.compile(exs[i]));
                 }
+                ined.style.border = "dashed green";
             } catch (err) {
                 omes += "CompileError: Line " + (i + 1) + "\n";
                 ined.style.border = "dashed red";
@@ -652,7 +657,6 @@ function splot(exs) {
     excsl = excs.length;
     for (let i = 0; i < excsl; i++) {
         let exc = excs[i];
-        ined.style.border = "dashed green";
         Object.assign(mg, {
             x: 0,
             y: 0,
@@ -666,7 +670,7 @@ function splot(exs) {
             if (type != "function") {
                 omes += outeval + "\n";
                 if (exs[i][0] != '>' && type != "string") {
-                    col = color[ci++];
+                    col = color[ci++ % color.length];
                     plot(exs[i], exc, outeval, type, scale);
                 }
             } else {
@@ -681,7 +685,7 @@ function splot(exs) {
     return omes;
 }
 
-function showLaTex(str) {
+function showLaTeX(str) {
     if (img.alt != str) {
         img.alt = str;
         let s = str.replace(/\\;\\;/g, "\\\\");
@@ -718,9 +722,9 @@ function reLaTeX() {
         str = str.substring(1);
     }
     try {
-        showLaTex(math.parse(str).toTex());
+        showLaTeX(math.parse(str).toTex());
     } catch (err) {
-        showLaTex("");
+        showLaTeX("");
         console.log(err);
     }
 }
@@ -733,8 +737,8 @@ function inChange() {
     if (ined.value.length === 0) {
         {
             ined.style.border = "dashed red";
-            showLaTex("");
-            changeOm("Undefined");
+            showLaTeX("");
+            changeOm("undefined");
             reCanvas();
         }
     } else {

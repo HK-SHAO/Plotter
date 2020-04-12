@@ -4,16 +4,12 @@
 <head>
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
         name="viewport">
-    <title>绘图计算器（开发中v1.863）</title>
+    <title>绘图计算器（开发中v1.864）</title>
     <style type="text/css">
         @font-face {
             font-family: MathFont;
             font-weight: 700;
             src: url(https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/fonts/KaTeX_Main-Regular.woff2);
-        }
-
-        ::-webkit-scrollbar {
-            display: none;
         }
 
         #father #gc {
@@ -48,7 +44,7 @@
 
             #ed {
                 font-size: 22px;
-                width: 80%;
+                width: 85%;
                 resize: vertical;
                 font-family: MathFont, Georgia, serif;
             }
@@ -56,7 +52,7 @@
             #ed2 {
                 font-size: 18px;
                 font-weight: bold;
-                width: 80%;
+                width: 85%;
                 resize: vertical;
             }
 
@@ -214,13 +210,13 @@ sin(10x+time/100)/10</textarea>
             <details style="word-wrap:break-word">
                 <summary style="font-size:20px;font-weight:bold;">高级</summary>
                 <br>
-                <a style="font-size:16px;font-weight:bold;">音频&nbsp;&nbsp;</a>
+                <b style="font-size:16px;">音频&nbsp;&nbsp;</b>
                 <button onclick="audiocontrol(this)" style="font-size:20px;width: 60px;height: 40px;">play</button>
                 使用 Play(音调,响度,波形) PlayS(音调,响度,波形,time,x)<br>
-                <a style="font-size:16px;font-weight:bold;">画布&nbsp;&nbsp;</a>
+                <b style="font-size:16px;">画布&nbsp;&nbsp;</b>
                 <button onclick="zoom(true)" style="font-size:18px;width: 60px;height: 40px;">放大</button>
                 <button onclick="zoom(false)" style="font-size:18px;width: 60px;height: 40px;">缩小</button><br>
-                <a style="font-size:16px;font-weight:bold;">视频&nbsp;&nbsp;</a>
+                <b style="font-size:16px;">视频&nbsp;&nbsp;</b>
                 <button onclick="exportCanvas()" style="font-size:18px;width: 60px;height: 40px;">截图</button>
                 <button onclick="recordCanvas(this)" style="font-size:18px;width: 60px;height: 40px;">录制</button>
                 <br><br>
@@ -244,11 +240,11 @@ sin(10x+time/100)/10</textarea>
                     <br> ● 支持极坐标绘制曲线或者平面区域（使用ρ和θ），例 ρ&lt;0.5 ρ&lt;θ ρ-0.1
                     <br> ● 支持自定义变量和函数，例 [n=2,f(x,y)=x^y,f(x,n)][3]
                     <br> ● 支持累乘和累加，例 Π('n',1:6) Σ('n',1:100) Σ('(n+1)/2',[1,3,5,7,9])
-                    <br> ● 支持简单的求导数值和求黎曼积分，例 >Diff('x^2',2) >Integ('x',0,1)
+                    <br> ● 求导数值和求黎曼积分，例 >Diff('x^2',2,0.1) >Integ('x',0,1,100)
                     <br> ● 使用 time 返回当前时间戳，一般的使用方法是 sin(time/1000)
                     <br> ● 使用 frame 返回帧数。使用 mp 返回光标位置，例 (x-mp[1])^2+mp[2]
                     <br> ● 1×N矩阵绘制柱状图（N=1或N>3），例 [-0.1,0.4,-0.2,0.4,0.6,0.7]
-                    <br> ● 1×3矩阵进行着色（建议将点大小改为1），例 [x,y^2,x*y] rgb(ρ,x,y)
+                    <br> ● 1×3矩阵进行着色，例 [x,y^2,x*y] rgb(ρ,x,y) 或参考下面的实例
                     <br> ● X×Y矩阵绘制灰度图，例 [0.1,0.2;0.3,0.4] identity(4) zeros(2,2)
                     <br> ● X×Y×3矩阵绘制RGB图，例 [[1,0,0];[0,1,0];[0,0,1]] zeros(2,2,3)
                 </p>
@@ -274,6 +270,9 @@ Polygon(k,b,[0.5,0.5],[0.5,-0.5],[-0.5,-0.5])
 >p1=[0.5,0.5]
 >p2=mp
 B2(k,p0,p1,p2) 等价于 (1-k)^2*p0+2k*(1-k)*p1+k^2*p2
+<h4>爱心</h4>color /*颜色*/= ["red"];
+
+(x^2+y^2-1)^3&lt;x^2y^3
 <h4>Logistic映射（有多种实现方式）</h4>2x*y*(1-y)+0.1
 Logistic(4x,0.1,100) 这个式子计算更快，等价于下面的式子
 [μ=4x,a=0.1,f(a)=μ*a*(1-a),g(n)=n==1?f(a):f(g(n-1)),g(100)][5]
@@ -282,17 +281,20 @@ a=mp[2]
 >f(a)=5x*a*(1-a)
 >g(n)=n&lt;=1?f(a):f(g(n-1))
 g(10mp[1])
+<h4>类周期函数</h4>f(x)=0&lt;=x&lt;1?e^x:f(-0.5*x)
+y=f(x)
 <h4>分叉图</h4>p_n /*线精度*/= 400;
 ls /*线粗细*/= 0.2;
 
 sin((x-1.7)*(y+0.4))+0.4
 erf((x-2)*(y+0.5)*(1-y))+0.3
 这是“隐式”迭代，其中的y是绘图过程中上一次计算所得的y值。
-<h4>朱利亚集、曼德勃罗集（点大小改为1，增加点精度，显示效果更好）</h4>Mandelbrot(2x,2y,100) Julia(2x,2y,mp[1],mp[2],6)
+<h4>朱利亚集、曼德勃罗集（增加点精度显示效果更好）</h4>Mandelbrot(2x,2y,100) Julia(2x,2y,mp[1],mp[2],6)
 单色渲染：
 Mandelbrot(2x,2y,100)[3]&lt;2 Julia(2x,2y,mp[1],mp[2],6)[3]&lt;2
 <h4>谢尔宾斯基三角形</h4>p_n /*线精度*/= 100;
 ls /*线粗细*/= 0.3;
+
 [k,(floor(66000k)&(floor(66000k) >> 8))/290]
 或者 (floor(66000x)&(floor(66000x) >> 8))/290
 <h4>累乘求π（tip：在行头使用>，只计算不绘图，提升效率）</h4>>2Π('n%2==0?n/(n+1):(n+1)/n',1:10000)
@@ -317,7 +319,7 @@ ps /*点大小*/= 1;
 
 (x>0 and y>0)?[x,y,0]:[0,0,0]
 (x&lt;0 and y&lt;0)?[mp[1],mp[2],0]:[NaN,0,0]
-<h4>红色光环（点大小改为1，点精度改小一些）</h4>[(sin(frame*ρ)+1)/2,0,0]
+<h4>红色光环（点精度改小一些不会很卡）</h4>[(sin(frame*ρ)+1)/2,0,0]
 <h4>复数幂递归（相当于 i^i^i^i^i^...）</h4>p_n /*线精度*/= 0.3;
 
 >f(z,n)=n&lt;1?z:z^f(z,n-1)
@@ -327,6 +329,14 @@ f(c,300k)
 
 >n=20(sin(time/1000)+1)
 [2cos(n*k),sin(n*k)+3k]
+
+<h4>摆线可视化</h4>color /*颜色*/= ["red","blue","cyan"];
+p_n /*线精度*/= 0.2;
+
+>t=(1+sin(time/1000))π
+[t*k-sin(t*k),1-cos(t*k)]-[π,0]
+Circle(k,[t,1],1)-[π,0]
+Line(k,[t,1],[t-sin(t),1-cos(t)])-[π,0]
 
 <h4>三色图</h4>(x^2+(y-0.3)^2&lt;0.3?[1,0,0]:[0,0,0])+((x-0.3)^2+(y+0.3)^2&lt;0.3?[0,1,0]:[0,0,0])+((x+0.3)^2+(y+0.3)^2&lt;0.3?[0,0,1]:[0,0,0])
 （tip:这是RGB的效果，使用 1-整个式子 可以获得CYMK的效果）
@@ -355,7 +365,7 @@ Q(x,y,frame)</pre>
             </details>
         </div>
         <div class="out">
-            <h2>输出</h2>
+            <h2 style="font-size:24px;font-weight:bold;margin-top: 20px;">输出</h2>
             <h3 id="outm" style="word-wrap:break-word;font-family: Consolas"></h3>
         </div>
     </div>
