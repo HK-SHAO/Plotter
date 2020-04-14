@@ -126,7 +126,45 @@ function Logistic(u, x0, n = 100) {
 
 math.import({
     hkshao: function () {
-        return "恭喜你发现这个彩蛋！";
+        return "你发现了这个彩蛋！";
+    },
+    pb: function (n) {
+        p_b = n;
+        return 0;
+    },
+    ps: function (n) {
+        ps = n;
+        return 0;
+    },
+    pn: function (n) {
+        p_n = n;
+        return 0;
+    },
+    ls: function (n) {
+        ls = n;
+        return 0;
+    },
+    Scale: function (sc = 1) {
+        scale = sc;
+        return "zoomed to " + sc;
+    },
+    Color: function (co) {
+        if (typeof co === "string") {
+            color = [co];
+        } else if (arguments.length === 3) {
+            color = ["rgb(" + arguments[0] * 255 + "," + arguments[1] * 255 + "," + arguments[2] * 255 + ")"];
+        } else {
+            color = ["rgb(" + arguments._data[0] * 255 + "," + arguments._data[1] * 255 + "," + arguments._data[2] * 255 + ")"];
+        }
+        return "colored to " + color[0];
+    },
+    color: function (r = 1, g, b) {
+        if (arguments.length === 3) {
+            ctx.fillStyle = "rgb(" + r * 255 + "," + g * 255 + "," + b * 255 + ")";
+        } else {
+            ctx.fillStyle = "rgb(" + arguments[0]._data[0] * 255 + "," + arguments[0]._data[1] * 255 + "," + arguments[0]._data[2] * 255 + ")";
+        }
+        return 0;
     },
     π: this.Math.PI,
     τ: math.tau,
@@ -137,7 +175,7 @@ math.import({
         return math.matrix([ρ * Math.cos(θ), ρ * Math.sin(θ)]);
     },
     rgb: function (r, g, b) {
-        return math.matrix([r, g, b]);
+        return math.matrix([r / 255, g / 255, b / 255]);
     },
     Line: function (k, p1, p2) {
         let a = p1._data;
@@ -643,7 +681,6 @@ function splot(exs) {
             } catch (err) {
                 omes += "CompileError: Line " + (i + 1) + "\n";
                 ined.style.border = "dashed red";
-                console.log(err);
             }
         }
     }
@@ -679,7 +716,6 @@ function splot(exs) {
         } catch (err) {
             omes += "PlotError: Line " + (i + 1) + "\n";
             ined.style.border = "dashed red";
-            console.log(err);
         }
     }
     return omes;
@@ -725,7 +761,6 @@ function reLaTeX() {
         showLaTeX(math.parse(str).toTex());
     } catch (err) {
         showLaTeX("");
-        console.log(err);
     }
 }
 
@@ -747,15 +782,14 @@ function inChange() {
 }
 
 function inChange2() {
-    ined2.style.border = "dashed green";
     ined2.style.height = 0;
     ined2.style.height = ined2.scrollHeight - 2 + "px";
     try {
         eval(ined2.value);
         excs = [];
+        ined2.style.border = "dashed green";
     } catch (err) {
         ined2.style.border = "dashed red";
-        console.log(err);
     }
     window.clearInterval(interval);
     if (fps != 0) {
