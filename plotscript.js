@@ -2,7 +2,7 @@ function exportCanvas() {
     let MIME_TYPE = "image/png";
     let imgURL = canv.toDataURL(MIME_TYPE);
     let a = document.createElement('a');
-    a.download = "Plotter_Image";
+    a.download = "Plotter_Image.png";
     a.href = imgURL;
     a.dataset.downloadurl = [MIME_TYPE, a.download, a.href].join(':');
     a.style.display = 'none';
@@ -24,7 +24,7 @@ function createRecord() {
         let a = document.createElement('a');
         a.href = window.URL.createObjectURL(new Blob(chunks, { 'type': 'video/webm' }));
         chunks = [];
-        a.download = 'Plotter_Record';
+        a.download = 'Plotter_Record.webm';
         a.style.display = 'none';
         document.body.appendChild(a);
         a.click();
@@ -96,8 +96,7 @@ function Mandelbrot(x, y, n = 100) {
     for (let i = 0; i < n; i++) {
         z = cadd(csqr(z), c);
         if (Math.abs(z[0]) > 1 && Math.abs(z[1]) > 1) {
-            z = [NaN, NaN];
-            break;
+            return math.matrix([NaN, NaN, NaN]);
         }
     }
     return math.matrix([z[0], z[1], Math.sqrt(z[0] * z[0] + z[1] * z[1])]);
@@ -109,8 +108,7 @@ function Julia(x, y, a, b, n = 100) {
     for (let i = 0; i < n; i++) {
         z = cadd(csqr(z), c);
         if (Math.abs(z[0]) > 1 && Math.abs(z[1]) > 1) {
-            z = [NaN, NaN];
-            break;
+            return math.matrix([NaN, NaN, NaN]);
         }
     }
     return math.matrix([z[0], z[1], Math.sqrt(z[0] * z[0] + z[1] * z[1])]);
@@ -251,56 +249,31 @@ math.import({
     ln: function (mx) {
         return math.log(mx);
     },
-    Σ: function (ex, m) {
+    Σ: function (k, n, f) {
         let s = 0;
-        let md = m._data;
-        let exc = math.compile(ex);
-        for (let i = md.length - 1; i > -1; i--) {
-            let ans = exc.evaluate({
-                n: md[i]
-            });
-            s += ans;
+        for (let i = k; i <= n; i++) {
+            s += f(i);
         }
         return s;
     },
-    Π: function (ex, m) {
+    Π: function (k, n, f) {
         let s = 1;
-        let md = m._data;
-        let exc = math.compile(ex);
-        for (let i = md.length - 1; i > -1; i--) {
-            let ans = exc.evaluate({
-                n: md[i]
-            });
-            s *= ans;
+        for (let i = k; i <= n; i++) {
+            s *= f(i);
         }
         return s;
     },
-    Diff: function (ex, mx, n = 0.000001) {
-        let exc = math.compile(ex);
-        let a1 = exc.evaluate({
-            x: mx
-        });
-        let a2 = exc.evaluate({
-            x: mx + n
-        });
-        return (a2 - a1) / n;
+    Diff: function (f, mx, n = 0.00000001) {
+        return (f(mx + n) - f(mx)) / n;
     },
-    Integ: function (ex, s, e, n = 100000) {
+    Integ: function (s, e, f, n = 100000) {
         let inc = (e - s) / n;
         let totalHeight = 0;
-        let exc = math.compile(ex);
         for (let i = s; i < e; i += inc) {
-            let ans = exc.evaluate({
-                x: i
-            });
-            totalHeight += ans;
-
-            let px = i / scale;
-            let py = ans * size / (2 * scale);
-            ctx.fillRect((px + 1) / 2 * size, size / 2 - py, inc * size / (2 * scale) + 1, py + 1);
+            totalHeight += f(i);
         }
         return totalHeight * inc;
-    },
+    }
 });
 
 const cfa = document.getElementById("father");
@@ -315,6 +288,45 @@ const fpsm = document.getElementById("fpsm");
 const img = document.getElementById("img");
 const lft = document.getElementById("lft");
 
+const customLaTeX = {
+    'mod': function (node, options) {
+        return "\\mathrm{mod}\\left(" + node.args[0].toTex(options) + "," + node.args[1].toTex(options) + "\\right)";
+    },
+    'Σ': function (node, options) {
+        let n2tex = node.args[2].toTex(options);
+        let index = n2tex.indexOf(":=");
+        if (index === -1) {
+            return "\\sum_{" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + n2tex + "}";
+        } else {
+            return "\\sum_{" + node.args[2].params[0] + "=" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + n2tex.substring(index + 2) + "}";
+        }
+    },
+    'Π': function (node, options) {
+        let n2tex = node.args[2].toTex(options);
+        let index = n2tex.indexOf(":=");
+        if (index === -1) {
+            return "\\prod_{" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + n2tex + "}";
+        } else {
+            return "\\prod_{" + node.args[2].params[0] + "=" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + n2tex.substring(index + 2) + "}";
+        }
+    },
+    'Diff': function (node, options) {
+        let n2tex = node.args[0].toTex(options);
+        let index = n2tex.indexOf(":=");
+        if (index === -1) {
+            return undefined;
+        }
+        else {
+            return "\\left.\\dfrac{\\mathrm{d}" + n2tex.substring(index + 2) + "}{\\mathrm{d}" + node.args[0].params[0] + "}\\right|_{" + node.args[0].params[0] + "=" + node.args[1].toTex(options) + "}";
+        }
+    },
+    'Integ': function (node, options) {
+        let n2tex = node.args[2].toTex(options);
+        let index = n2tex.indexOf(":=");
+        let a3 = index === -1 ? n2tex : n2tex.substring(index + 2);
+        return "\\int_{" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + a3 + "}";
+    }
+};
 window.onload = function () {
     mxf = 0;
     myf = 0;
@@ -750,15 +762,12 @@ function refresh(isD = false) {
 }
 
 function reLaTeX() {
-    let str = ined.value.replace(/\('/g, "(").replace(/\("/g, "(")
-        .replace(/'\)/g, "(").replace(/"\)/g, "(")
-        .replace(/',/g, ",").replace(/",/g, ",")
-        .replace(/\n>/g, '\n');
+    let str = ined.value.replace(/\n>/g, '\n');
     if (str[0] === '>') {
         str = str.substring(1);
     }
     try {
-        showLaTeX(math.parse(str).toTex());
+        showLaTeX(math.parse(str).toTex({ handler: customLaTeX }));
     } catch (err) {
         showLaTeX("");
     }
