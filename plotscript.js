@@ -323,8 +323,12 @@ const customLaTeX = {
     'Integ': function (node, options) {
         let n2tex = node.args[2].toTex(options);
         let index = n2tex.indexOf(":=");
-        let a3 = index === -1 ? n2tex : n2tex.substring(index + 2);
-        return "\\int_{" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + a3 + "}";
+        if (index === -1) {
+            return undefined;
+        }
+        else {
+            return "\\int_{" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + n2tex.substring(index + 2) + "}\\mathrm{d}" + node.args[2].params[0];
+        }
     }
 };
 window.onload = function () {
