@@ -4,7 +4,7 @@
 <head>
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
         name="viewport">
-    <title>Plotter v1.874</title>
+    <title>Plotter v1.879</title>
     <style type="text/css">
         @font-face {
             font-family: MathFont;
@@ -155,7 +155,7 @@ sin(10x+time/100)/10</textarea>
                         <button onclick="insertText('*')">×</button>
                         <button onclick="insertText('/')">÷</button>
                         <button onclick="insertText('^')">^</button>
-                        <button onclick="insertText('sqrt(')">√</button>
+                        <button onclick="insertText('sqrt()')">√</button>
                         <button onclick="insertText('\'')">'</button>
                         <button onclick="insertText('(')">(</button>
                         <button onclick="insertText(',')">,</button>
@@ -187,9 +187,9 @@ sin(10x+time/100)/10</textarea>
                         <button onclick="insertText('π')">π</button>
                         <button onclick="insertText('τ')">τ</button>
                         <button onclick="insertText('φ')">φ</button>
-                        <button onclick="insertText('Σ(')">Σ</button>
-                        <button onclick="insertText('Π(')">Π</button>
-                        <button onclick="insertText('Γ(')">Γ</button>
+                        <button onclick="insertText('Σ')">Σ</button>
+                        <button onclick="insertText('Π')">Π</button>
+                        <button onclick="insertText('Γ')">Γ</button>
                         <button onclick="insertText('<<')">←</button>
                         <button onclick="insertText('^|')">bx</button>
                         <button onclick="insertText('>>')">→</button>
@@ -224,27 +224,26 @@ sin(10x+time/100)/10</textarea>
             </details>
             <details style="word-wrap:break-word">
                 <summary style="font-size:20px;font-weight:bold;">简要说明</summary>
-                <p>本程序正在开发中，可能会有很多bug。开发者：烧风
-                    <br>支持的算符，请参考：https://mathjs.org/docs/expressions/syntax.html
-                    <br>支持的常量，请参考：https://mathjs.org/docs/reference/constants.html
-                    <br>支持的函数，请参考：https://mathjs.org/docs/reference/functions.html
-                    <br>图像的绘制范围初始在区间[-1,1]中，在画布上滚动鼠标滚轮可以缩放画布
-                    <br>表达式计算得到数字、布尔值、复数、矩阵都可以绘制图像
-                    <br>在脚本里可以写javascript脚本，修改color数组可以修改绘制的色彩
-                    <br>回车换行输入可绘制多个图像，使用 help() 获取参考，例 help(pi) help(erf)
-                    <br>
-                    <br> ● 支持绘制多种函数曲线，例 sin(x) x^x e^x Γ(10x)/10 x%0.5
-                    <br> ● 特点：多种函数绘图，例 isPrime(x) x=sin(pi*y) ρ=cos(2θ) θ=ρ^ρ
-                    <br> ● 支持分段函数，使用三元运算符 x&lt;0?x:x^2-x 或者 min() max() 等
-                    <br> ● 支持参数方程（参数k从0到1），例 k+k*i [k,k^2]/2-0.25 ρθ(k,k) xy(k,k)
-                    <br> ● 支持输入不等式绘制平面区域（支持与或运算），例 sin(x)&lt;y and y&lt;-0.2
-                    <br> ● 支持极坐标绘制曲线或者平面区域（使用ρ和θ），例 ρ&lt;0.5 ρ&lt;θ ρ-0.1
-                    <br> ● 使用 time 返回当前时间戳，一般的使用方法是 sin(time/1000)
-                    <br> ● 使用 frame 返回帧数。使用 mp 返回光标位置，例 (x-mp[1])^2+mp[2]
-                    <br> ● 1×N矩阵绘制柱状图（N=1或N>3），例 [-0.1,0.4,-0.2,0.4,0.6,0.7]
-                    <br> ● 1×3矩阵进行着色，例 [x,y^2,x*y] 255*rgb(ρ,x,y) 或参考下面的实例
-                    <br> ● X×Y矩阵绘制灰度图，例 [0.1,0.2;0.3,0.4] identity(4) zeros(2,2)
-                    <br> ● X×Y×3矩阵绘制RGB图，例 [[1,0,0];[0,1,0];[0,0,1]] zeros(2,2,3)
+                <br>支持的算符，请参考：https://mathjs.org/docs/expressions/syntax.html
+                <br>支持的常量，请参考：https://mathjs.org/docs/reference/constants.html
+                <br>支持的函数，请参考：https://mathjs.org/docs/reference/functions.html
+                <br>图像的绘制范围初始在区间[-1,1]中，在画布上滚动鼠标滚轮可以缩放画布
+                <br>表达式计算得到数字、布尔值、复数、矩阵都可以绘制图像
+                <br>在脚本里可以写javascript脚本，修改color数组可以修改绘制的色彩
+                <br>回车换行输入可绘制多个图像，使用 help() 获取参考，例 help(pi) help(erf)
+                <br>
+                <br> ● 支持绘制多种函数曲线，例 sin(x) x^x e^x Γ(10x)/10 x%0.5
+                <br> ● 特点：多种函数绘图，例 isPrime(x) x=sin(pi*y) ρ=cos(2θ) θ=ρ^ρ
+                <br> ● 支持分段函数，使用三元运算符 x&lt;0?x:x^2-x 或者 min() max() 等
+                <br> ● 支持参数方程（参数k从0到1），例 k+k*i [k,k^2]/2-0.25 ρθ(k,k) xy(k,k)
+                <br> ● 支持输入不等式绘制平面区域（支持与或运算），例 sin(x)&lt;y and y&lt;-0.2
+                <br> ● 支持极坐标绘制曲线或者平面区域（使用ρ和θ），例 ρ&lt;0.5 ρ&lt;θ ρ-0.1
+                <br> ● 使用 time 返回当前时间戳，一般的使用方法是 sin(time/1000)
+                <br> ● 使用 frame 返回帧数。使用 mp 返回光标位置，例 (x-mp[1])^2+mp[2]
+                <br> ● 1×N矩阵绘制柱状图（N=1或N>3），例 [-0.1,0.4,-0.2,0.4,0.6,0.7]
+                <br> ● 1×3矩阵进行着色，例 [x,y^2,x*y] 255*rgb(ρ,x,y) 或参考下面的实例
+                <br> ● X×Y矩阵绘制灰度图，例 [0.1,0.2;0.3,0.4] identity(4) zeros(2,2)
+                <br> ● X×Y×3矩阵绘制RGB图，例 [[1,0,0];[0,1,0];[0,0,1]] zeros(2,2,3)
                 </p>
             </details>
             <details style="word-wrap:break-word">
@@ -368,13 +367,23 @@ return math.matrix([c, c, c]);
 
 Q(x,y,frame)</pre>
             </details>
+            <details style="word-wrap:break-word">
+                <summary style="font-size:20px;font-weight:bold;">关于</summary>
+                <p>本程序正在开发中，可能会有一些bug。开发者：烧风
+                    <br>本程序已开源 https://github.com/HK-SHAO/Plotter
+                    <br>欢迎帮忙提交bug和提交可行的建议，也欢迎一起开发此程序
+                    <br>欢迎加入此企鹅群（957225573）一起讨论
+                    <br>我以后有时间的话会写这个程序的使用帮助文档
+                    <br>我有意向以后将这个程序移植到Android平台（Web移植特别容易）
+                </p>
+            </details>
         </div>
         <div class="out">
             <h2 style="font-size:24px;font-weight:bold;margin-top: 20px;">输出</h2>
             <h3 id="outm" style="word-wrap:break-word;font-family: Consolas"></h3>
         </div>
     </div>
-    <h3 id="fpsm"></h3>
+    <h3 id="fpsm" style="display: none;"></h3>
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.6.1/math.min.js"></script>

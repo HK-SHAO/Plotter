@@ -74,7 +74,7 @@ function insertText(str) {
             tmpStr = ined.value;
         ined.value = tmpStr.substring(0, startPos) + str + tmpStr.substring(endPos, tmpStr.length);
         cursorPos += str.length;
-        ined.selectionStart = ined.selectionEnd = cursorPos;
+        ined.selectionStart = ined.selectionEnd = cursorPos + ((str[str.length - 1] === ')') ? -1 : 0);
     } else {
         ined.value += str;
     }
@@ -273,6 +273,9 @@ math.import({
             totalHeight += f(i);
         }
         return totalHeight * inc;
+    },
+    Limit: function (f, mx) {
+        return f(mx);
     }
 });
 
@@ -296,7 +299,7 @@ const customLaTeX = {
         let n2tex = node.args[2].toTex(options);
         let index = n2tex.indexOf(":=");
         if (index === -1) {
-            return "\\sum_{" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + n2tex + "}";
+            return "\\sum_{k=" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + n2tex + "(k)}";
         } else {
             return "\\sum_{" + node.args[2].params[0] + "=" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + n2tex.substring(index + 2) + "}";
         }
@@ -305,7 +308,7 @@ const customLaTeX = {
         let n2tex = node.args[2].toTex(options);
         let index = n2tex.indexOf(":=");
         if (index === -1) {
-            return "\\prod_{" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + n2tex + "}";
+            return "\\prod_{k=" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + n2tex + "(k)}";
         } else {
             return "\\prod_{" + node.args[2].params[0] + "=" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + n2tex.substring(index + 2) + "}";
         }
@@ -314,7 +317,7 @@ const customLaTeX = {
         let n2tex = node.args[0].toTex(options);
         let index = n2tex.indexOf(":=");
         if (index === -1) {
-            return undefined;
+            return "\\left.\\dfrac{\\mathrm{d}" + n2tex + "(x)}{\\mathrm{d}x}\\right|_{x=" + node.args[1].toTex(options) + "}";
         }
         else {
             return "\\left.\\dfrac{\\mathrm{d}" + n2tex.substring(index + 2) + "}{\\mathrm{d}" + node.args[0].params[0] + "}\\right|_{" + node.args[0].params[0] + "=" + node.args[1].toTex(options) + "}";
@@ -324,10 +327,20 @@ const customLaTeX = {
         let n2tex = node.args[2].toTex(options);
         let index = n2tex.indexOf(":=");
         if (index === -1) {
-            return undefined;
+            return "\\int_{" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + n2tex + "(x)}\\mathrm{d}x";
         }
         else {
             return "\\int_{" + node.args[0].toTex(options) + "}^{" + node.args[1].toTex(options) + "}{" + n2tex.substring(index + 2) + "}\\mathrm{d}" + node.args[2].params[0];
+        }
+    },
+    'Limit': function (node, options) {
+        let n2tex = node.args[0].toTex(options);
+        let index = n2tex.indexOf(":=");
+        if (index === -1) {
+            return "\\lim_{x\\to " + node.args[1].toTex(options) + "}{" + n2tex + "(x)}";
+        }
+        else {
+            return "\\lim_{" + node.args[0].params[0] + " \\to " + node.args[1].toTex(options) + "}{" + n2tex.substring(index + 2) + "}";
         }
     }
 };
@@ -740,7 +753,9 @@ function splot(exs) {
 function showLaTeX(str) {
     if (img.alt !== str) {
         img.alt = str;
-        let s = str.replace(/\\;\\;/g, "\\\\").replace(/\\cdot/g, '\\times');
+        let s = str.replace(/\\;\\;/g, "\\\\").replace(/\\frac\{(.*)\}\{\\left\((.*)\\right\)\}/g, '\\frac{$1}{$2}')
+            .replace(/\^\{\\left\((.*)\\right\)\}/g, '^{$1}').replace(/Infinity/g, '\\infty')
+            .replace(/\\cdot\\left\(/g, '\\left(').replace(/\\cdot/g, '\\times');
         img.src = "https://www.zhihu.com/equation?tex=" + encodeURIComponent(s);
     }
 }
