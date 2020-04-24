@@ -244,27 +244,27 @@ math.import({
                 return v * Math.sin(f * x / 20 + t / 1000);
         }
     },
-    Write: function (text, p, color = "black", fontsize = "18px") {
-        ctx.font = fontsize + " bold MathFont, Georgia, serif";
+    Write: function (text, p, color = "black", sc = 1) {
+        ctx.font = 18 * sc / scale + "px bold MathFont, Georgia, serif";
         ctx.fillStyle = color;
         ctx.textAlign = "left";
         ctx.textBaseline = "bottom";
-        ctx.fillText(text, ctransX(p._data[0]), ctransY(p._data[1]));
+        ctx.fillText(text, ctransX(p._data[0] / scale), ctransY(p._data[1] / scale));
         return "文本绘制完成";
     },
-    write: function (text, p, color = "black", fontsize = "18px") {
-        ctx.font = fontsize + " bold MathFont, Georgia, serif";
+    write: function (text, p, color = "black", sc = 1) {
+        ctx.font = 18 * sc / scale + "px bold MathFont, Georgia, serif";
         ctx.fillStyle = color;
         ctx.textAlign = "left";
         ctx.textBaseline = "bottom";
-        ctx.fillText(text, ctransX(p._data[0]), ctransY(p._data[1]));
+        ctx.fillText(text, ctransX(p._data[0] / scale), ctransY(p._data[1] / scale));
         return 0;
     },
     Tex: function (tex, p, sc = 1) {
         let cimg = new Image();
         cimg.src = "https://www.zhihu.com/equation?tex=" + encodeURIComponent(tex);
         cimg.onload = function () {
-            ctx.drawImage(this, ctransX(p._data[0]), ctransY(p._data[1]), this.width * sc, this.height * sc);
+            ctx.drawImage(this, ctransX(p._data[0] / scale), ctransY(p._data[1] / scale), this.width * sc / scale, this.height * sc / scale);
         }
         return "TeX绘制完成";
     },
