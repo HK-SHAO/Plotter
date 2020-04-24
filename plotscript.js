@@ -1,34 +1,29 @@
-function exportCanvas() {
-    let MIME_TYPE = "image/png";
-    let imgURL = canv.toDataURL(MIME_TYPE);
+function download(name, url) {
     let a = document.createElement('a');
-    a.download = "Plotter_Image.png";
-    a.href = imgURL;
-    a.dataset.downloadurl = [MIME_TYPE, a.download, a.href].join(':');
+    a.download = name;
+    a.href = url;
     a.style.display = 'none';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
 }
 
+function exportCanvas() {
+    download("Plotter_Image.png", canv.toDataURL("image/png"));
+}
+
 mediaRecord = undefined;
 function createRecord() {
-    let chunks = [];
+    let chunks = new Set();
     mediaRecord = new MediaRecorder(canv.captureStream(fps), {
         videoBitsPerSecond: 8500000
     });
     mediaRecord.ondataavailable = function (e) {
-        chunks.push(e.data);
+        chunks.add(e.data);
     }
     mediaRecord.onstop = function () {
-        let a = document.createElement('a');
-        a.href = window.URL.createObjectURL(new Blob(chunks, { 'type': 'video/webm' }));
+        download("Plotter_Record.webm", window.URL.createObjectURL(new Blob(chunks, { 'type': 'video/webm' })));
         chunks = [];
-        a.download = 'Plotter_Record.webm';
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
     }
 }
 
@@ -120,6 +115,14 @@ function Logistic(u, x0, n = 100) {
         x *= u * (1 - x);
     }
     return x;
+}
+
+function ctransX(px) {
+    return (px + 1) / 2 * size - 1;
+}
+
+function ctransY(py) {
+    return (1 - py) * size / 2 - 1;
 }
 
 math.import({
@@ -240,6 +243,30 @@ math.import({
             default:
                 return v * Math.sin(f * x / 20 + t / 1000);
         }
+    },
+    Write: function (text, p, color = "black", fontsize = "18px") {
+        ctx.font = fontsize + " bold MathFont, Georgia, serif";
+        ctx.fillStyle = color;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "bottom";
+        ctx.fillText(text, ctransX(p._data[0]), ctransY(p._data[1]));
+        return "文本绘制完成";
+    },
+    write: function (text, p, color = "black", fontsize = "18px") {
+        ctx.font = fontsize + " bold MathFont, Georgia, serif";
+        ctx.fillStyle = color;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "bottom";
+        ctx.fillText(text, ctransX(p._data[0]), ctransY(p._data[1]));
+        return 0;
+    },
+    Tex: function (tex, p, sc = 1) {
+        let cimg = new Image();
+        cimg.src = "https://www.zhihu.com/equation?tex=" + encodeURIComponent(tex);
+        cimg.onload = function () {
+            ctx.drawImage(this, ctransX(p._data[0]), ctransY(p._data[1]), this.width * sc, this.height * sc);
+        }
+        return "TeX绘制完成";
     },
     Julia,
     Mandelbrot,
@@ -488,7 +515,7 @@ function plot(ex, exc, outeval, type, sc) {
                 continue;
             }
             let py = 0.004 * size * ls;
-            ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
+            ctx.fillRect(ctransX(tx), ctransY(ty), py, py);
         }
     } else if (ins2 === "ρ=") {
         let pmp = 2 * p_n * size;
@@ -509,7 +536,7 @@ function plot(ex, exc, outeval, type, sc) {
                 continue;
             }
             let py = 0.004 * size * ls;
-            ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
+            ctx.fillRect(ctransX(tx), ctransY(ty), py, py);
         }
     } else if (ins2 === "θ=") {
         let pmp = 2 * p_n * size;
@@ -530,7 +557,7 @@ function plot(ex, exc, outeval, type, sc) {
                 continue;
             }
             let py = 0.004 * size * ls;
-            ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
+            ctx.fillRect(ctransX(tx), ctransY(ty), py, py);
         }
     } else if (ins2 === "y=" || type === "number") {
         let pmp = p_n * size;
@@ -549,7 +576,7 @@ function plot(ex, exc, outeval, type, sc) {
                 continue;
             }
             let py = 0.004 * size * ls;
-            ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
+            ctx.fillRect(ctransX(tx), ctransY(ty), py, py);
         }
     } else if (type === "boolean") {
         let jd = size / p_b;
@@ -591,7 +618,7 @@ function plot(ex, exc, outeval, type, sc) {
                     continue;
                 }
                 let py = 0.004 * size * ls;
-                ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
+                ctx.fillRect(ctransX(tx), ctransY(ty), py, py);
             }
         } else if (outeval._data !== undefined) {
             if ((outeval._data.length === 1 || outeval._data.length > 3) && outeval._data[0].length === undefined) {
@@ -654,7 +681,7 @@ function plot(ex, exc, outeval, type, sc) {
                         continue;
                     }
                     let py = 0.004 * size * ls;
-                    ctx.fillRect((tx + 1) / 2 * size - 1, (1 - ty) * size / 2 - 1, py, py);
+                    ctx.fillRect(ctransX(tx), ctransY(ty), py, py);
                 }
             } else if (outeval._data.length === 3 && outeval._data[0].length === undefined) {
                 let jd = size / p_b;
@@ -751,13 +778,10 @@ function splot(exs) {
 }
 
 function showLaTeX(str) {
-    if (img.alt !== str) {
-        img.alt = str;
-        let s = str.replace(/\\;\\;/g, "\\\\").replace(/\\frac\{(.*)\}\{\\left\((.*)\\right\)\}/g, '\\frac{$1}{$2}')
-            .replace(/\^\{\\left\((.*)\\right\)\}/g, '^{$1}').replace(/Infinity/g, '\\infty')
-            .replace(/\\cdot\\left\(/g, '\\left(').replace(/\\cdot/g, '\\times');
-        img.src = "https://www.zhihu.com/equation?tex=" + encodeURIComponent(s);
-    }
+    img.alt = str.replace(/\\;\\;/g, "\\\\").replace(/\\frac\{(.*)\}\{\\left\((.*)\\right\)\}/g, '\\frac{$1}{$2}')
+        .replace(/\^\{\\left\((.*)\\right\)\}/g, '^{$1}').replace(/Infinity/g, '\\infty')
+        .replace(/\\cdot\\left\(/g, '\\left(').replace(/\\cdot/g, '\\times').replace(/\\mathrm\{Tex\}\\left\(.*\\right\)/g, '\\mathrm{Tex}()');
+    img.src = "https://www.zhihu.com/equation?tex=" + encodeURIComponent(img.alt);
 }
 
 function changefm(str) {
