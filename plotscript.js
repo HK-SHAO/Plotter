@@ -24,6 +24,7 @@ function createRecord() {
     mediaRecord.onstop = function () {
         download("Plotter_Record.webm", window.URL.createObjectURL(new Blob(chunks, { 'type': 'video/webm' })));
         delete chunks;
+        chunks = new Set();
     }
 }
 
@@ -778,7 +779,8 @@ function splot(exs) {
 }
 
 function showLaTeX(str) {
-    img.alt = str.replace(/\\;\\;/g, "\\\\").replace(/\\frac\{(.*)\}\{\\left\((.*)\\right\)\}/g, '\\frac{$1}{$2}')
+    img.alt = str.replace(/\\;\\;/g, "\\\\").replace(/\\frac\{\\left\((.*)\\right\)\}\{(.*)\}/g, '\\frac{$1}{$2}')
+        .replace(/\\frac\{(.*)\}\{\\left\((.*)\\right\)\}/g, '\\frac{$1}{$2}')
         .replace(/\^\{\\left\((.*)\\right\)\}/g, '^{$1}').replace(/Infinity/g, '\\infty')
         .replace(/\\cdot\\left\(/g, '\\left(').replace(/\\cdot/g, '\\times').replace(/\\mathrm\{Tex\}\\left\(.*\\right\)/g, '\\mathrm{Tex}()');
     img.src = "https://www.zhihu.com/equation?tex=" + encodeURIComponent(img.alt);
