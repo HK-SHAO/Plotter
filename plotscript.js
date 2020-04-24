@@ -23,7 +23,7 @@ function createRecord() {
     }
     mediaRecord.onstop = function () {
         download("Plotter_Record.webm", window.URL.createObjectURL(new Blob(chunks, { 'type': 'video/webm' })));
-        chunks = [];
+        delete chunks;
     }
 }
 
@@ -245,7 +245,7 @@ math.import({
         }
     },
     Write: function (text, p, color = "black", sc = 1) {
-        ctx.font = 18 * sc / scale + "px bold MathFont, Georgia, serif";
+        ctx.font = 18 * sc / scale + "px MathFont, Georgia, serif";
         ctx.fillStyle = color;
         ctx.textAlign = "left";
         ctx.textBaseline = "bottom";
@@ -253,7 +253,7 @@ math.import({
         return "文本绘制完成";
     },
     write: function (text, p, color = "black", sc = 1) {
-        ctx.font = 18 * sc / scale + "px bold MathFont, Georgia, serif";
+        ctx.font = 18 * sc / scale + "px MathFont, Georgia, serif";
         ctx.fillStyle = color;
         ctx.textAlign = "left";
         ctx.textBaseline = "bottom";
