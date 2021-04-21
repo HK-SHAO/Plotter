@@ -4,7 +4,7 @@
 
   　　Plotter 是一个现代化的全平台图形计算系统，它基于游戏引擎 [Cocos Creator](https://www.cocos.com/) 和数学计算库 [math.js](https://github.com/josdejong/mathjs) 开发。Plotter 安卓APP的下载链接🔗：https://www.coolapk.com/apk/284166
 
-  ![xsinx](DOCS\jietu.png)
+  ![xsinx](DOCS/jietu.png)
 
   #### 简要介绍
 
