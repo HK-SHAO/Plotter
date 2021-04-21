@@ -1,0 +1,544 @@
+// construction functions
+
+
+  boolean
+
+  complex
+
+  createUnit
+
+  fraction
+
+  index
+
+  matrix
+
+  number
+
+  sparse
+
+  splitUnit
+
+  string
+
+  unit
+// constants
+
+
+  E
+
+  false
+
+  i
+
+  Infinity
+
+  LN2
+
+  LN10
+
+  LOG2E
+
+  LOG10E
+
+  NaN
+
+  null
+
+  pi
+
+  PI
+
+  phi
+
+  SQRT1_2
+
+  SQRT2
+
+  tau
+
+  true
+
+  version
+// physical constants
+
+// TODO: more detailed docs for physical constants
+
+
+  gravitationConstant
+
+  planckConstant
+
+  reducedPlanckConstant
+
+  magneticConstant
+
+  electricConstant
+
+  vacuumImpedance
+
+  coulomb
+
+  elementaryCharge
+
+  bohrMagneton
+
+  conductanceQuantum
+
+  inverseConductanceQuantum
+// josephson: {description: 'Josephson constant', examples: ['josephson']},
+
+
+  nuclearMagneton
+
+  klitzing
+
+  bohrRadius
+
+  classicalElectronRadius
+
+  electronMass
+
+  fermiCoupling
+
+  fineStructure
+
+  hartreeEnergy
+
+  protonMass
+
+  deuteronMass
+
+  neutronMass
+
+  quantumOfCirculation
+
+  rydberg
+
+  thomsonCrossSection
+
+  weakMixingAngle
+
+  efimovFactor
+
+  atomicMass
+
+  avogadro
+
+  boltzmann
+
+  faraday
+
+  firstRadiation
+
+  loschmidt
+
+  gasConstant
+
+  molarPlanckConstant
+
+  molarVolume
+
+  sackurTetrode
+
+  secondRadiation
+
+  stefanBoltzmann
+
+  wienDisplacement
+// spectralRadiance: {description: 'First radiation constant for spectral radiance', examples: ['spectralRadiance']},
+
+
+  molarMass
+
+  molarMassC12
+
+  gravity
+
+  planckLength
+
+  planckMass
+
+  planckTime
+
+  planckCharge
+
+  planckTemperature
+// functions - algebra
+
+
+  lsolve
+
+  lsolveAll
+
+  lup
+
+  lusolve
+
+  simplify
+
+  rationalize
+
+  slu
+
+  usolve
+
+  usolveAll
+
+  qr
+// functions - arithmetic
+
+
+  add
+
+  cbrt
+
+  ceil
+
+  cube
+
+  divide
+
+  dotDivide
+
+  dotMultiply
+
+  dotPow
+
+  exp
+
+  expm
+
+  expm1
+
+  fix
+
+  floor
+
+  gcd
+
+  hypot
+
+  lcm
+
+  log
+
+  log2
+
+  log1p
+
+  log10
+
+  mod
+
+  multiply
+
+  norm
+
+  nthRoot
+
+  nthRoots
+
+  pow
+
+  round
+
+  sign
+
+  sqrt
+
+  sqrtm
+
+  square
+
+  subtract
+
+  unaryMinus
+
+  unaryPlus
+
+  xgcd
+// functions - bitwise
+
+
+  bitNot
+
+  bitOr
+
+  bitXor
+
+  leftShift
+
+  rightArithShift
+
+  rightLogShift
+// functions - combinatorics
+
+
+  catalan
+
+  composition
+
+  stirlingS2
+// functions - core
+
+
+  import
+
+  typed
+// functions - complex
+
+
+  conj
+
+  re
+
+  im
+// functions - expression
+
+
+  help
+// functions - geometry
+
+
+  intersect
+// functions - logical
+
+
+  not
+
+  or
+
+  xor
+// functions - matrix
+
+
+  cross
+
+  column
+
+  ctranspose
+
+  det
+
+  diag
+
+  diff
+
+  dot
+
+  getMatrixDataType
+
+  identity
+
+  filter
+
+  flatten
+
+  forEach
+
+  inv
+
+  eigs
+
+  kron
+
+  map
+
+  ones
+
+  partitionSelect
+
+  range
+
+  resize
+
+  reshape
+
+  rotate
+
+  rotationMatrix
+
+  row
+
+  size
+
+  sort
+
+  squeeze
+
+  subset
+
+  trace
+
+  transpose
+
+  zeros
+// functions - probability
+
+
+  combinationsWithRep
+// distribution: distributionDocs,
+
+
+  gamma
+
+  kldivergence
+
+  multinomial
+
+  permutations
+
+  pickRandom
+
+  random
+
+  randomInt
+// functions - relational
+
+
+  compareNatural
+
+  compareText
+
+  deepEqual
+
+  equal
+
+  equalText
+
+  larger
+
+  largerEq
+
+  smaller
+
+  smallerEq
+
+  unequal
+// functions - set
+
+
+  setDifference
+
+  setDistinct
+
+  setIntersect
+
+  setIsSubset
+
+  setMultiplicity
+
+  setPowerset
+
+  setSize
+
+  setSymDifference
+
+  setUnion
+// functions - special
+
+// functions - statistics
+
+
+  max
+
+  mean
+
+  median
+
+  min
+
+  mode
+
+  prod
+
+  quantileSeq
+
+  std
+
+  sum
+
+  variance
+// functions - trigonometry
+
+
+  acosh
+
+  acot
+
+  acoth
+
+  acsc
+
+  acsch
+
+  asec
+
+  asech
+
+  asin
+
+  asinh
+
+  atan
+
+  atanh
+
+  atan2
+
+  cos
+
+  cosh
+
+  cot
+
+  coth
+
+  csc
+
+  csch
+
+  sec
+
+  sech
+
+  sin
+
+  sinh
+
+  tan
+
+  tanh
+// functions - units
+
+// functions - utils
+
+
+  format
+
+  bin
+
+  oct
+
+  hex
+
+  isNaN
+
+  isInteger
+
+  isNegative
+
+  isNumeric
+
+  hasNumericValue
+
+  isPositive
+
+  isPrime
+
+  isZero
+// print: printDocs // TODO: add documentation for print as soon as the parser supports objects.
+
+
+  numeric

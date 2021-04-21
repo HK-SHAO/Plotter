@@ -1,0 +1,8 @@
+{
+  "engine": "cocos2d-html5",
+  "packages": "packages",
+  "version": "2.4.4",
+  "name": "Plotter",
+  "id": "c2007edf-4d7a-48e2-a6ec-a48939c2dda1",
+  "isNew": false
+}
