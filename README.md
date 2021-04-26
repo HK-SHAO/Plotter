@@ -25,7 +25,7 @@ The features of Plotter make it aimed at users such as:
   - Unit-based operations allow researchers to perform calculations with units, convert values with units at any time, and ensure that there are no errors in scaling when calculating data.
 - The introduction of high-precision unitary constants such as Planck's constant, Avogadro's constant, etc., at any time
 
-##### Q&A
+#### Q&A
 
 **Q:** Educators already have specialist software like Desmos and Geogebra, different engineers have specialist software for their fields and researchers have specialist tools like MATLAB, Mathematica and Python, what is the point of Plotter?
 
@@ -41,7 +41,8 @@ Stephen Wolfram, a computer scientist and particle physicist, has mentioned that
 
 Plotter is not that big, it is merely light, portable and offline, but its vision is still to make scientific computing simpler and easier.
 
-##### A brief introduction
+#### A brief introduction
+
 　　Plotter supports a very wide range of plotting methods
 
 　　For example, plotting rectangular functions, polar functions, series, iterations, parametric equations, implicit functions, plane regions and histograms, scatterplots, line plots etc.
@@ -66,7 +67,8 @@ Plotter is not that big, it is merely light, portable and offline, but its visio
 
 　　Plotter is also a compiler and interpreter for scientific computing languages.
 
-The main interface
+#### The main interface
+
 　　The main interface of Plotter is very simple.
 
 　　At the top are the menu buttons, where you can open the settings page, go to the help page, adjust the vibration, restart the calculation engine, etc.
@@ -83,12 +85,14 @@ The main interface
 
 　　The bottom left hand corner shows the coordinates of the current axis collimator.
 
-Settings page
+#### Settings page
+
 　　In the settings page you can make various settings for the calculation engine, which are effective immediately.
 
 　　Plotter will later open up more settings options and provide more interfaces to allow a high degree of customisation.
 
-Support us
+#### Support us
+
 　　Plotter is the product of weeks of hard work by first year students at South China Normal University and is supported on all platforms. This includes Windows, Android, IOS, web and WeChat applets.
 
 　　Plotter is paid software, but the free version has no feature limitations, no account registration and no ads.
