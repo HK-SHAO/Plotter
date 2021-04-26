@@ -6,25 +6,24 @@ Plotter is a modern, full-platform graphical computing system based on the game 
 
 ![xsinx](DOCS/jietu.png)
 
-Let's start with what Plotter is: a lightweight, cross-platform, web-independent, portable scientific computing software. In fact Plotter is not a game, but a very hardcore, very few people want to do it, or do it well - numerical modelling software/calculators.
+Let's start with what Plotter is: a lightweight, cross-platform, web-independent, portable scientific computing software. In fact Plotter is not a game, but **a very hardcore**, very few people want to do it, or do it well - numerical modelling software/calculators.
 
 The features of Plotter make it aimed at users such as:
 
-- Primary and secondary school students: four operations with units, simple function plotting, combinatorial operations, statistical operations
+- **Primary and secondary school students:** four operations with units, simple function plotting, combinatorial operations, statistical operations
 
-- university students: vector/matrix operations, numerical calculus, extrema of multivariate functions, etc.
+- **university students:** vector/matrix operations, numerical calculus, extrema of multivariate functions, etc.
 
-- Educators: bring deeper concepts to students through imagery and more visualised operations
+- **Educators:** bring deeper concepts to students through imagery and more visualised operations
 
-- Engineers: all platforms, regardless of the device, and can be run offline
+- **Engineers:** all platforms, regardless of the device, and can be run offline
 
-- Programmers: conversions and operations between various bases, ultra-high precision floating point or large integer operations
+- **Programmers:** conversions and operations between various bases, ultra-high precision floating point or large integer operations
 
-- Researchers
-
-  - Portability allows the device to be taken out for calculations and experiments whenever and wherever inspiration strikes
-- Unit-based operations allow researchers to perform calculations with units, convert values with units at any time, and ensure that there are no errors in scaling when calculating data.
-  - The introduction of high-precision unitary constants such as Planck's constant, Avogadro's constant, etc., at any time
+- **Researchers:**
+- Portability allows the device to be taken out for calculations and experiments whenever and wherever inspiration strikes
+  - Unit-based operations allow researchers to perform calculations with units, convert values with units at any time, and ensure that there are no errors in scaling when calculating data.
+- The introduction of high-precision unitary constants such as Planck's constant, Avogadro's constant, etc., at any time
 
 ##### Q&A
 
