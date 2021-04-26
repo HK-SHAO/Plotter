@@ -21,9 +21,12 @@ The features of Plotter make it aimed at users such as:
 - **Programmers:** conversions and operations between various bases, ultra-high precision floating point or large integer operations
 
 - **Researchers:**
-- Portability allows the device to be taken out for calculations and experiments whenever and wherever inspiration strikes
+
+  - Portability allows the device to be taken out for calculations and experiments whenever and wherever inspiration strikes
+
   - Unit-based operations allow researchers to perform calculations with units, convert values with units at any time, and ensure that there are no errors in scaling when calculating data.
-- The introduction of high-precision unitary constants such as Planck's constant, Avogadro's constant, etc., at any time
+
+  - The introduction of high-precision unitary constants such as Planck's constant, Avogadro's constant, etc., at any time
 
 #### Q&A
 
