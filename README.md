@@ -1,5 +1,117 @@
 - Hi~ o(*￣▽￣*)ブ
 
+I'm HK-SHAO and welcome to use Plotter!
+
+Plotter is a modern, full-platform graphical computing system based on the game engine [Cocos Creator](https://www.cocos.com/) and the mathematical computing library [math.js](https://github.com/josdejong/mathjs). Download link for the Plotter Android App 🔗: https://www.coolapk.com/apk/284166
+
+![xsinx](DOCS/jietu.png)
+
+Let's start with what Plotter is: a lightweight, cross-platform, web-independent, portable scientific computing software. In fact Plotter is not a game, but a very hardcore, very few people want to do it, or do it well - numerical modelling software/calculators.
+
+The features of Plotter make it aimed at users such as:
+
+- Primary and secondary school students: four operations with units, simple function plotting, combinatorial operations, statistical operations
+
+- university students: vector/matrix operations, numerical calculus, extrema of multivariate functions, etc.
+
+- Educators: bring deeper concepts to students through imagery and more visualised operations
+
+- Engineers: all platforms, regardless of the device, and can be run offline
+
+- Programmers: conversions and operations between various bases, ultra-high precision floating point or large integer operations
+
+- Researchers
+
+  - Portability allows the device to be taken out for calculations and experiments whenever and wherever inspiration strikes
+- Unit-based operations allow researchers to perform calculations with units, convert values with units at any time, and ensure that there are no errors in scaling when calculating data.
+  - The introduction of high-precision unitary constants such as Planck's constant, Avogadro's constant, etc., at any time
+
+##### Q&A
+
+**Q:** Educators already have specialist software like Desmos and Geogebra, different engineers have specialist software for their fields and researchers have specialist tools like MATLAB, Mathematica and Python, what is the point of Plotter?
+
+**A:** Plotter's vision is to make scientific computing simpler and easier; it encapsulates functionality that can be used in a variety of fields, making it accessible to a wide audience.
+
+**Q:** What can be achieved by making scientific computing simpler and easier?
+
+**A:** The rapid advances in modern science and technology have been made possible by the creation of computers. Both the sequencing of DNA and the simulation of protein structures have allowed modern biology to advance to a new stage, giving rise to bioinformatics. In the same way that the simulation of neurons in the brain has advanced brain science, the analysis of medical data has led to scientific discoveries that have benefited countless people suffering from disease. Finite element analysis has enabled us to simulate physical processes on computers and is widely used in industry. Simulation of the orbits of celestial bodies has led to what is now known as astronomy and astronautics. Simulation of the movement of chemical molecules has led to the discovery of new catalysts ...... I wonder how many scientists use MATLAB to analyse experimental data and how many mathematicians use Mathematica to perform symbolic operations.
+
+So it can be said: new scientific discoveries are made in scientific computing driven by human ingenuity.
+
+Stephen Wolfram, a computer scientist and particle physicist, has mentioned that computation itself is a new science and that pure computation may also discover the laws of the universe ......
+
+Plotter is not that big, it is merely light, portable and offline, but its vision is still to make scientific computing simpler and easier.
+
+##### A brief introduction
+　　Plotter supports a very wide range of plotting methods
+
+　　For example, plotting rectangular functions, polar functions, series, iterations, parametric equations, implicit functions, plane regions and histograms, scatterplots, line plots etc.
+
+　　Plotter is fully 3D and will later support the plotting of spatial surfaces and curves.
+
+　　Plotter supports complex numbers, matrices, units and symbols.
+
+　　Plotter has 200+ built-in functions and nearly 100 mathematical and chemical constants
+
+　　Functions for: algebra, arithmetic, trigonometry, bitwise operations, combinatorics, complex numbers, geometry, logic, matrices, probability statistics, relations, sets, strings, units, arrays and other system operations
+
+　　Constants include: most unitless mathematical constants, physical constants with units and chemical constants
+
+　　The physical constants include: cosmological constants, electromagnetic constants, atomic and nuclear constants, and physical-chemical constants.
+
+　　The functions and constants supported by Plotter can be viewed by typing help() in the expression input box
+
+　　Type help (the name of the function or constant) and you will find a detailed description of it and how to use it.
+
+　　Plotter's features allow almost any data to be put into a matrix, not only does it support and most matrix operations in the same way as MATLAB
+
+　　Plotter is also a compiler and interpreter for scientific computing languages.
+
+The main interface
+　　The main interface of Plotter is very simple.
+
+　　At the top are the menu buttons, where you can open the settings page, go to the help page, adjust the vibration, restart the calculation engine, etc.
+
+　　At the bottom is a list of registers to which variables generated during operations are added, which you can click to expand and refer to any of the lists in the registers at any time
+
+　　In the middle are the function image axes and collimators, you can move the axes with one finger and scale them with two fingers. The buttons above the axes allow you to scale the axes or restore them.
+
+　　Below the axes are the results of the operations, which you can expand by clicking on them.
+
+　　Further down are the expression input box and the Calculate button, where you can enter an expression and it will be calculated immediately, and click on the Calculate button to store the result in a register.
+
+　　By clicking on the up arrow button at the bottom, you can expand the keyboard and slide the input box to move the cursor.
+
+　　The bottom left hand corner shows the coordinates of the current axis collimator.
+
+Settings page
+　　In the settings page you can make various settings for the calculation engine, which are effective immediately.
+
+　　Plotter will later open up more settings options and provide more interfaces to allow a high degree of customisation.
+
+Support us
+　　Plotter is the product of weeks of hard work by first year students at South China Normal University and is supported on all platforms. This includes Windows, Android, IOS, web and WeChat applets.
+
+　　Plotter is paid software, but the free version has no feature limitations, no account registration and no ads.
+
+　　If you support the development of Plotter, you can sponsor the developer (WechatID: HK-SHAO) to help the developer continue to improve the software's features.
+
+　　After appreciating the developer, you will receive the following benefits.
+
+　　　　★ Receive a licence to use the software and a licence ID
+
+　　　　★ Customise and compile and package a copy of the software for you
+
+　　　　★ Access to software packages and licenses for other platforms
+
+　　　　★ Be added to the thank you list in subsequent updates
+
+　　　　★ Contact the developers and join the official discussion QQ group
+
+### CN
+
+- Hi~ o(*￣▽￣*)ブ
+
   　　我是 HK-SHAO ，欢迎你使用 Plotter ！
 
     　　Plotter 是一个现代化的全平台图形计算系统，它基于游戏引擎 [Cocos Creator](https://www.cocos.com/) 和数学计算库 [math.js](https://github.com/josdejong/mathjs) 开发。Plotter 安卓APP的下载链接🔗：https://www.coolapk.com/apk/284166
