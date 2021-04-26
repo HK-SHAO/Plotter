@@ -247,7 +247,7 @@ export default class Graph extends cc.Component {
         let prec = 2 + Math.log10(this.scale);
         if (prec < 2) prec = 2;
         if (prec > 13) prec = 13;
-        this.coord_label.string = `(${coord_x.toFixed(prec)}, ${coord_y.toFixed(prec)})`;
+        this.coord_label.string = `(${coord_x.toFixed(prec)}, ${coord_y.toFixed(prec)}, ${this.scale.toPrecision(2)})`;
 
         this.update_axis();
         this.update_curve();

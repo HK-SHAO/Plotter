@@ -4,6 +4,8 @@ import Setting from './Setting';
 import { Tip } from './Interpreter/Tip';
 import Utils from './Utils';
 import Graph from './Graph';
+import { typed } from 'mathjs';
+import TexMain from './TeXmain';
 
 const pt = new PlotterKernel();
 
@@ -108,8 +110,32 @@ export default class MainPlotter extends cc.Component {
     @property(cc.SpriteFrame)
     lower_frame: cc.SpriteFrame = null;
 
+    @property(cc.Widget)
+    topLayout: cc.Widget = null;
+
+    @property(cc.Widget)
+    coord_widget: cc.Widget = null;
+
     @property(Graph)
     graph_script: Graph = null;
+
+    @property(cc.Sprite)
+    auto_btn_sprite: cc.Sprite = null;
+
+    @property(cc.SpriteFrame)
+    auto_frame: cc.SpriteFrame = null;
+
+    @property(cc.SpriteFrame)
+    manual_frame: cc.SpriteFrame = null;
+
+    @property(cc.Node)
+    doc_node: cc.Node = null;
+
+    @property(cc.Node)
+    tex_node: cc.Node = null;
+
+    @property(TexMain)
+    tex_main_script: TexMain = null;
 
     scope_node: Map<string, cc.Node> = new Map();
 
@@ -119,28 +145,59 @@ export default class MainPlotter extends cc.Component {
     key_scrolling_anim = true;
 
     setting_opened = false;
+    tex_opened = false;
     help_opened = false;
+    doc_opened = false;
     vibrate_switch = true;
+
+    auto_cal = true;
 
     upper_key = false;
 
     onLoad() {
+        pt.scope = JSON.parse(cc.sys.localStorage.getItem('cal_scope'));
+        pt.cnt_ans = JSON.parse(cc.sys.localStorage.getItem('cal_scope_cnt'));
+        if (pt.scope === null) {
+            pt.scope = {};
+        } else {
+            this.refresh_scope_node();
+        }
+
         const that = this;
         pt.math.import({
             restart: function () {
                 pt.math['clear']();
                 pt.math['clear_cache']();
                 that.edit_expr.string = "";
-                that.edit_change();
+                that.button_cal_on_click();
                 that.graph_script.recover();
                 return new Tip("Restart", `Plotter has been restarted`);
-            }
-        });
+            },
+            help: typed('help', {
+                'number': function () {
+                    that.btn_doc_click();
+                    that.edit_expr.blur();
+                    return new Tip("Help", `The document page has been opened`);
+                }
+            })
+        }, { override: true });
         let setting_script = this.setting_node.getComponent(Setting);
         setting_script.pt = pt;
-        this.setting_node.height = cc.winSize.height;
-        this.help_node.height = cc.winSize.height;
+        this.setting_node.height = this.help_node.height = this.doc_node.height = cc.winSize.height;
+
+        // 适应不同尺寸屏幕
+        if (this.topLayout.node.y > cc.winSize.height / 2 - 100) {
+            this.topLayout.isAlignVerticalCenter = true;
+            this.topLayout.verticalCenter = -360;
+        }
+
+        if (this.coord_widget.node.y < -cc.winSize.height / 2 + 60) {
+            this.coord_widget.isAlignVerticalCenter = true;
+            this.coord_widget.verticalCenter = 560;
+            this.coord_widget.node.getComponent(cc.Label).horizontalAlign = cc.Label.HorizontalAlign.RIGHT;
+        }
     }
+
 
     start() {
         // init logic
@@ -209,11 +266,36 @@ export default class MainPlotter extends cc.Component {
                 case cc.macro.KEY.pagedown:
                     this.graph_script.zoomOut();
                     break;
-                default:
+                case cc.macro.KEY.back:
+                case cc.macro.KEY.backspace:
+                    if (this.doc_opened) {
+                        this.btn_doc_click();
+                        break;
+                    }
+                    if (this.help_opened) {
+                        this.btn_help_click();
+                        break;
+                    }
+                    if (this.setting_opened) {
+                        this.btn_setting_click();
+                        break;
+                    }
+                    if (this.tex_opened) {
+                        this.btn_tex_click();
+                        break;
+                    }
                     if (this.key_opened) {
                         this.button_key_on_click();
+                        break;
                     }
-                    this.edit_expr.focus();
+                    if (this.ans_opened) {
+                        this.button_ans_on_click();
+                        break;
+                    }
+                    if (this.def_opened) {
+                        this.button_define_on_click();
+                        break;
+                    }
                     break;
             }
         }, this);
@@ -283,20 +365,7 @@ export default class MainPlotter extends cc.Component {
             this.label_ans.string = this.cal_expr(this.edit_expr.string, pt.scope, callback);
 
             this.ans_scroll.scrollToTop(1);
-            for (let symbol in pt.scope) {
-                if (this.scope_node.get(symbol) !== undefined) {
-                    continue;
-                }
-                this.scope_node.set(symbol, pt.scope[symbol]);
-                let new_item = cc.instantiate(this.prefab_item_def);
-                let item_script = new_item.getComponent(ItemDef);
-                item_script.symbol_name = symbol;
-                item_script.pt = pt;
-                item_script.main = this;
-                this.def_content.addChild(new_item);
-                this.def_content.y -= this.def_first_item.height / 2;
-                this.def_scroll.scrollToBottom(1);
-            }
+            this.refresh_scope_node();
         }
 
         if (this.vibrate_switch) {
@@ -304,10 +373,28 @@ export default class MainPlotter extends cc.Component {
         }
     }
 
+    refresh_scope_node() {
+        for (let symbol in pt.scope) {
+            if (this.scope_node.get(symbol) !== undefined) {
+                continue;
+            }
+            this.scope_node.set(symbol, pt.scope[symbol]);
+            let new_item = cc.instantiate(this.prefab_item_def);
+            let item_script = new_item.getComponent(ItemDef);
+            item_script.symbol_name = symbol;
+            item_script.pt = pt;
+            item_script.main = this;
+            this.def_content.addChild(new_item);
+        }
+        this.def_scroll.scrollToBottom(1);
+    }
+
     edit_change() {
-        this.scheduleOnce(() => {
-            this.cal_edit_expr();
-        });
+        if (this.auto_cal) {
+            this.scheduleOnce(() => {
+                this.cal_edit_expr();
+            });
+        }
     }
 
     edit_begin() {
@@ -337,6 +424,21 @@ export default class MainPlotter extends cc.Component {
             pt.scope[`_${pt.cnt_ans}`] = value;
             pt.cnt_ans++;
         });
+
+        this.save_scope();
+    }
+
+    save_scope() {
+        cc.sys.localStorage.setItem('cal_scope', JSON.stringify(pt.scope));
+        cc.sys.localStorage.setItem('cal_scope_cnt', pt.cnt_ans);
+    }
+
+    btn_save_click() {
+        this.save_scope();
+
+        if (this.vibrate_switch) {
+            Utils.vibrate();
+        }
     }
 
     button_ans_on_click() {
@@ -521,6 +623,27 @@ export default class MainPlotter extends cc.Component {
         }
     }
 
+    btn_tex_click() {
+        if (this.tex_opened) {
+            cc.tween(this.tex_node).to(0.5, { x: 1080 }, { easing: "circOut" })
+                .call(() => {
+                    this.tex_node.active = false;
+                })
+                .start();
+        } else {
+            this.tex_node.active = true;
+            cc.tween(this.tex_node).to(0.4, { x: 0 }, { easing: "circOut" }).start();
+            if (this.edit_expr.string.length !== 0) {
+                this.tex_main_script.show(this.edit_expr.string.replace('¦', ''));
+            }
+        }
+        this.tex_opened = !this.tex_opened;
+
+        if (this.vibrate_switch) {
+            Utils.vibrate();
+        }
+    }
+
     btn_help_click() {
         if (this.help_opened) {
             cc.tween(this.help_node).to(0.5, { x: -1080 }, { easing: "circOut" })
@@ -537,6 +660,46 @@ export default class MainPlotter extends cc.Component {
                 .start();
         }
         this.help_opened = !this.help_opened;
+
+        if (this.vibrate_switch) {
+            Utils.vibrate();
+        }
+    }
+
+    btn_doc_click() {
+        if (this.doc_opened) {
+            cc.tween(this.doc_node).to(0.5, { y: -cc.winSize.height }, { easing: "circOut" })
+                .call(() => {
+                    this.doc_node.active = false;
+                })
+                .start();
+        } else {
+            this.doc_node.active = true;
+            cc.tween(this.doc_node).to(0.4, { y: 0 }, { easing: "circOut" }).start();
+        }
+        this.doc_opened = !this.doc_opened;
+
+        if (this.vibrate_switch) {
+            Utils.vibrate();
+        }
+    }
+
+    btn_auto_click() {
+        if (this.auto_cal) {
+            this.auto_btn_sprite.spriteFrame = this.manual_frame;
+        } else {
+            this.auto_btn_sprite.spriteFrame = this.auto_frame;
+        }
+        this.auto_cal = !this.auto_cal;
+
+        if (this.vibrate_switch) {
+            Utils.vibrate();
+        }
+    }
+
+    btn_copy_click() {
+        let str = Utils.debark(this.label_ans.string);
+        Utils.copy(str);
 
         if (this.vibrate_switch) {
             Utils.vibrate();

@@ -1,0 +1,26 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <div id="svg-div" style="width: 100%;height: 100%;"></div>
+
+    <script>
+        const div = document.getElementById("svg-div");
+
+        function show(tex) {
+            let svg = MathJax.tex2svg(tex);
+            let html = MathJax.startup.adaptor.outerHTML(svg);
+            div.innerHTML = html;
+            div.style.display = '';
+        }
+
+        function hide() {
+            div.style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

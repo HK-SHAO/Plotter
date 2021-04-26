@@ -1,6 +1,9 @@
-import { create, all, EvalFunction, MathNode, typed, Matrix } from 'mathjs'
-import Docs from './Docs';
+import { create, all, EvalFunction, MathNode, typed, Matrix, Complex, complex } from 'mathjs'
 import { Tip, Ans } from './Tip';
+
+import * as numbers from 'numbers'
+import * as numeric from 'numeric'
+import Utils from '../Utils';
 
 export class PlotterKernel {
     math = create(all, {
@@ -34,18 +37,6 @@ export class PlotterKernel {
             _cnt: function () {
                 return that.cnt_ans;
             },
-            help: typed('help', {
-                '': function () {
-                    let list = [
-                        '\n<size=50><color=#00bfa5>Functions</color>:</size>',
-                        `<size=40>${Docs.functions.join(', ')}</size>`,
-                        '<size=50><color=#00bfa5>Constants</color>:</size>',
-                        `<size=40>${Docs.constants.join(', ')}</size>`,
-                        `<color=#f57c00>See also: help(help)</color>\n`
-                    ]
-                    return list.join('\n');
-                }
-            }),
             delete: function (nodes: MathNode[]) {
                 if (nodes.length === 0) {
                     return new Tip("Delete", `Please enter the symbol you want to delete`);
@@ -89,25 +80,6 @@ export class PlotterKernel {
                 that.simp_cache.clear();
                 return new Tip("ClearCache", `All calculation caches have been deleted`);
             },
-
-            // START 面向对象支持
-            obj_get: function (a: Object, b: string) {
-                return a[b];
-            },
-            obj_set: function (a: Object, b: string, c: any) {
-                if (a !== undefined && b !== undefined && c !== undefined) {
-                    a[b] = c;
-                    return new Tip("Warning", `You set its ${b} to ${c}, which may cause some problems`);
-                }
-                return new Tip("Warning", `This method is not recommended`);
-            },
-            obj_keys: function (obj: Object) {
-                return Object.keys(obj);
-            },
-            obj_values: function (obj: Object) {
-                return Object.values(obj);
-            },
-            // END 面向对象支持
             // START 高级权限：操作系统底层
             sys_eval_cache: function () {
                 return that.eval_cache;
@@ -180,7 +152,7 @@ export class PlotterKernel {
                 return nodes[0];
             },
             // START 自定义数据类型的构造函数
-            Array: function (...args: any[]) {
+            List: function (...args: any[]) {
                 return args;
             },
             Map: typed('Map', {
@@ -195,53 +167,148 @@ export class PlotterKernel {
                 }
             }),
             Set: function (...args: any[]) {
-                return new Set<any>(args);
+                return Array.from(new Set<any>(args));
             },
             // END 自定义数据类型的构造函数
-            Union: function (...sets: Set<any>[]) {
-                // 集合的广义并
-                let new_set = new Set<any>();
-                for (let set of sets) {
-                    set.forEach((key) => {
-                        new_set.add(key);
-                    });
-                }
-                return new_set;
-            },
-            Intersection: function (...sets: Set<any>[]) {
-                // 集合的广义交
-                let new_set = new Set<any>(sets[0]);
-                for (let set of sets.slice(1)) {
-                    let tmp_set = new Set<any>();
-                    new_set.forEach((key) => {
-                        if (set.has(key)) {
-                            tmp_set.add(key);
-                        }
-                    });
-                    new_set = tmp_set;
-                }
-                return new_set;
-            },
-            Difference: function (set: Set<any>, ...sets: Set<any>[]) {
-                // 集合的广义差
-                let new_set = new Set<any>();
-                set.forEach((key) => {
-                    let flag = true;
-                    for (let k of sets) {
-                        if (k.has(key)) {
-                            flag = false;
-                            break;
-                        }
-                    }
-                    if (flag) {
-                        new_set.add(key);
-                    }
-                });
-                return new_set;
-            },
             pickRandom: typed('pickRandom', {
                 'string': function (str: string) {
                     return that.math.pickRandom(str.split(''));
+                }
+            }),
+            fmin: typed('fmin', {
+                'function': function (f: Function) {
+                    return numeric.uncmin((x: number[]) => f(...x), new Array<number>(that.cal_fn_num(f)).fill(0));
+                },
+                'function, Matrix': function (f: Function, mat: Matrix) {
+                    return numeric.uncmin((x: number[]) => f(...x), <any>mat.toArray());
+                },
+                'function, Array': function (f: Function, arr: Array<any>) {
+                    return numeric.uncmin((x: number[]) => f(...x), arr);
+                },
+                'function, number': function (f: Function, n: number) {
+                    return numeric.uncmin((x: number[]) => f(...x), [n]);
+                }
+            }),
+            fzero: typed('fzero', {
+                'function, Array': function (f: Function, arr: Array<any>) {
+                    let ans = numeric.uncmin((x: number[]) => f(...x) ** 2, arr);
+                    if (ans.f > (<any>that.math.config).epsilon) {
+                        ans.message = "May not find the zero, try change initial point or use 'cfzero'";
+                    }
+                    return ans;
+                },
+                'function': function (f: Function) {
+                    return import_scope.fzero(f, new Array<number>(that.cal_fn_num(f)).fill(0));
+                },
+                'function, Matrix': function (f: Function, mat: Matrix) {
+                    return import_scope.fzero(f, <any>mat.toArray());
+                },
+                'function, number': function (f: Function, n: number) {
+                    return import_scope.fzero(f, [n]);
+                }
+            }),
+            solveEq: typed('solveEq', {
+                'function, Array': function (f: Function, x0: number[]) {
+                    let ans = numeric.uncmin((x: number[]) => {
+                        let sum = 0;
+                        f(...x).forEach((value: number) => {
+                            sum += value ** 2;
+                        });
+                        return sum;
+                    }, x0);
+                    if (ans.f > (<any>that.math.config).epsilon) {
+                        ans.message = "May not find the solve of the Equations, try change initial point or use 'csolveEq'";
+                    }
+                    return ans;
+                },
+                'function, Matrix': function (f: Function, x0: Matrix) {
+                    return import_scope.solveEq(f, x0.toArray());
+                },
+                'function': function (f: Function) {
+                    return import_scope.solveEq(f, new Array<number>(that.cal_fn_num(f)).fill(0));
+                }
+            }),
+            cfzero: typed('cfzero', {
+                'function, Array': function (f: Function, arr: Array<Complex>) {
+                    let re_arr = [];
+                    let im_arr = [];
+                    for (let c of arr) {
+                        re_arr.push(c.re);
+                        im_arr.push(c.im);
+                    }
+
+                    let ans = numeric.uncmin((x: number[]) => {
+                        let c = <Complex[]>[];
+                        for (let i = 0, len = x.length / 2; i < len; i++) {
+                            c.push(complex(x[i], x[len + i]));
+                        }
+                        let fv = f(...c);
+                        return fv.re ** 2 + fv.im ** 2;
+                    }, [...re_arr, ...im_arr]);
+
+                    ans.solution = Utils.vecs2comps(ans.solution);
+                    ans.gradient = Utils.vecs2comps(ans.gradient);
+                    let new_inv = [];
+                    for (let k of ans.invHessian) {
+                        new_inv.push(Utils.vecs2comps(k));
+                    }
+                    ans.invHessian = new_inv;
+
+                    if (ans.f > (<any>that.math.config).epsilon) {
+                        ans.message = "May not find the zero, try change initial point";
+                    }
+                    return ans;
+                },
+                'function': function (f: Function) {
+                    return import_scope.cfzero(f, new Array<Complex>(that.cal_fn_num(f)).fill(complex(0, 0)));
+                },
+                'function, Matrix': function (f: Function, mat: Matrix) {
+                    return import_scope.cfzero(f, <any>mat.toArray());
+                },
+                'function, number': function (f: Function, n: number) {
+                    return import_scope.cfzero(f, [n]);
+                }
+            }),
+            csolveEq: typed('csolveEq', {
+                'function, Array': function (f: Function, arr: Array<Complex>) {
+                    let re_arr = [];
+                    let im_arr = [];
+                    for (let c of arr) {
+                        re_arr.push(c.re);
+                        im_arr.push(c.im);
+                    }
+
+                    let ans = numeric.uncmin((x: number[]) => {
+                        let c = <Complex[]>[];
+                        for (let i = 0, len = x.length / 2; i < len; i++) {
+                            c.push(complex(x[i], x[len + i]));
+                        }
+                        let sum = 0;
+                        f(...c).forEach((value: Complex) => {
+                            sum += value.re ** 2 + value.im ** 2;
+                        });
+                        return sum;
+                    }, [...re_arr, ...im_arr]);
+
+
+                    ans.solution = Utils.vecs2comps(ans.solution);
+                    ans.gradient = Utils.vecs2comps(ans.gradient);
+                    let new_inv = [];
+                    for (let k of ans.invHessian) {
+                        new_inv.push(Utils.vecs2comps(k));
+                    }
+                    ans.invHessian = new_inv;
+
+                    if (ans.f > (<any>that.math.config).epsilon) {
+                        ans.message = "May not find the solve of the Equations, try change initial point";
+                    }
+                    return ans;
+                },
+                'function': function (f: Function) {
+                    return import_scope.csolveEq(f, new Array<Complex>(that.cal_fn_num(f)).fill(complex(0, 0)));
+                },
+                'function, Matrix': function (f: Function, mat: Matrix) {
+                    return import_scope.csolveEq(f, <any>mat.toArray());
                 }
             })
         };
@@ -250,6 +317,8 @@ export class PlotterKernel {
         import_scope.$['rawArgs'] = true;
 
         this.math.import(import_scope);
+        this.math.import(numeric, { wrap: true, silent: true });
+        this.math.import(numbers, { wrap: true, silent: true });
     }
 
     expr_fomat(expr: string): string {
@@ -353,7 +422,7 @@ export class PlotterKernel {
                 str = `<color=#fb8c00>${value}</color>`;
                 break;
             default:
-                str = `<color=#b0bec5>${this.math.format(value, this.math.config())}</color>`;
+                str = this.math.format(value, this.math.config());
                 break;
         };
 
@@ -363,6 +432,9 @@ export class PlotterKernel {
     type(value: any): string {
         let type: string = typeof value;
         if (type === "object") {
+            if (value === null) {
+                return "Null";
+            }
             type = value.type;
             if (type === undefined && value.constructor !== undefined) {
                 type = value.constructor.name;

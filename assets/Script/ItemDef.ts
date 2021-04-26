@@ -1,5 +1,6 @@
 import MainPlotter from "./Main";
 import { PlotterKernel } from "./Interpreter/PlotterKernel";
+import Utils from "./Utils";
 
 const { ccclass, property } = cc._decorator;
 
@@ -48,8 +49,7 @@ export default class ItemDef extends cc.Component {
                 return;
             }
 
-            let value_string = this.pt.ans_format(value).str
-                .replace(/<\/*(color|size).*?>/g, '');
+            let value_string = Utils.debark(this.pt.ans_format(value).str);
             let delta = this.label_symbol.string.length + value_string.length - 28;
             if (delta > 0) {
                 this.label_value.string = value_string.slice(0, -delta - 2).replace('\n', '') + "...";
