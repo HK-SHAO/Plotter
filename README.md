@@ -162,7 +162,7 @@ Plotter is not that big, it is merely light, portable and offline, but its visio
 
   　　Plotter 支持复数的运算、矩阵的运算、单位的运算和符号的运算
 
-  　　Plotter 内置了200+种函数和近百种数理化常数
+  　　Plotter 内置了400+种函数和近百种数理化常数
 
   　　函数包括了：代数、算数、三角学、位运算、组合学、复数、几何、逻辑、矩阵、概率统计、关系、集合、字符串、单位、数组和其它系统操作的函数
 
