@@ -54,7 +54,7 @@ Plotter is not that big, it is merely light, portable and offline, but its visio
 
 　　Plotter supports complex numbers, matrices, units and symbols.
 
-　　Plotter has 200+ built-in functions and nearly 100 mathematical and chemical constants
+　　Plotter has 400+ built-in functions and nearly 100 mathematical and chemical constants
 
 　　Functions for: algebra, arithmetic, trigonometry, bitwise operations, combinatorics, complex numbers, geometry, logic, matrices, probability statistics, relations, sets, strings, units, arrays and other system operations
 
