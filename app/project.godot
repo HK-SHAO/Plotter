@@ -1,0 +1,59 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="PlotterApp"
+config/description="A visualization tool for math, physics, information, data, art, etc."
+run/main_scene="res://application/activity/boot/boot_scene.tscn"
+config/features=PackedStringArray("4.0", "Mobile")
+run/low_processor_mode=true
+boot_splash/image="res://shared/image/boot_splash.png"
+boot_splash/bg_color=Color(0.301961, 0.301961, 0.301961, 1)
+config/icon="res://icon.svg"
+
+[audio]
+
+driver/enable_input=true
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/energy_saving/keep_screen_on=false
+window/subwindows/embed_subwindows=false
+
+[input_devices]
+
+pen_tablet/driver.windows="wintab"
+buffering/agile_event_flushing=true
+
+[internationalization]
+
+locale/fallback="zh_Hans_CN"
+rendering/text_driver="ICU / HarfBuzz / Graphite (Built-in)"
+
+[physics]
+
+2d/run_on_separate_thread=true
+3d/run_on_separate_thread=true
+common/physics_ticks_per_second=90
+
+[rendering]
+
+renderer/rendering_method="mobile"
+driver/threads/thread_model=2
+shading/overrides/force_vertex_shading=true
+shading/overrides/force_lambert_over_burley=true
+anti_aliasing/quality/msaa_2d=1
+anti_aliasing/quality/msaa_3d=1
+anti_aliasing/quality/screen_space_aa=1
+anti_aliasing/quality/use_debanding=true
+occlusion_culling/use_occlusion_culling=true
