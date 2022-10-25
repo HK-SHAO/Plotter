@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://bippok5oanbsa"]
+
+[ext_resource type="Shader" path="res://test/shader_widget/shader_widget.gdshader" id="1_ij7w8"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y0fov"]
+shader = ExtResource("1_ij7w8")
+
+[node name="ColorRect" type="ColorRect"]
+material = SubResource("ShaderMaterial_y0fov")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

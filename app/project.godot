@@ -17,7 +17,7 @@ config/features=PackedStringArray("4.0", "Mobile")
 run/low_processor_mode=true
 boot_splash/image="res://shared/image/boot_splash.png"
 boot_splash/bg_color=Color(0.301961, 0.301961, 0.301961, 1)
-config/icon="res://icon.svg"
+config/icon="res://shared/image/icon.svg"
 
 [audio]
 
@@ -42,8 +42,6 @@ rendering/text_driver="ICU / HarfBuzz / Graphite (Built-in)"
 
 [physics]
 
-2d/run_on_separate_thread=true
-3d/run_on_separate_thread=true
 common/physics_ticks_per_second=90
 
 [rendering]

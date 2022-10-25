@@ -49,7 +49,7 @@ License: Expat
 
 Files: ./app/shared/font/katex_fonts/*
 Comment: KaTeX's fonts
-Copyright: 2013-2020, Khan Academy and other contributors
+Copyright: 2013-2020, Khan Academy and other contributors.
 License: Expat
 
 
