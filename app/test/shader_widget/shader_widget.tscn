@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://3hupxiejxy8c"]
+[gd_scene load_steps=3 format=3 uid="uid://cixuw8cilmavb"]
 
-[ext_resource type="Shader" path="res://test/shader_widget/shaders/basic_sdf_3d.gdshader" id="1_pyv6r"]
+[ext_resource type="Shader" path="res://test/shader_widget/shaders/cube_4d.gdshader" id="1_yjdug"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y0fov"]
-shader = ExtResource("1_pyv6r")
+shader = ExtResource("1_yjdug")
 
 [node name="ColorRect" type="ColorRect"]
 material = SubResource("ShaderMaterial_y0fov")
