@@ -1,14 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://bippok5oanbsa"]
+[gd_scene load_steps=3 format=3 uid="uid://3hupxiejxy8c"]
 
-[ext_resource type="Shader" path="res://test/shader_widget/shader_widget.gdshader" id="1_ij7w8"]
+[ext_resource type="Shader" path="res://test/shader_widget/shaders/basic_sdf_3d.gdshader" id="1_pyv6r"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y0fov"]
-shader = ExtResource("1_ij7w8")
+shader = ExtResource("1_pyv6r")
 
 [node name="ColorRect" type="ColorRect"]
 material = SubResource("ShaderMaterial_y0fov")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -360.0
+offset_right = 360.0
+offset_bottom = 360.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6

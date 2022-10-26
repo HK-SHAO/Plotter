@@ -1,6 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://t8ackmoancn5"]
-
-[ext_resource type="PackedScene" uid="uid://bippok5oanbsa" path="res://test/shader_widget/shader_widget.tscn" id="1_54nqx"]
+[gd_scene format=3 uid="uid://t8ackmoancn5"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -9,6 +7,3 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="ColorRect" parent="." instance=ExtResource("1_54nqx")]
-layout_mode = 1
