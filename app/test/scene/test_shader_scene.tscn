@@ -1,8 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://ce75mp8l7d5cc"]
+[gd_scene load_steps=5 format=3 uid="uid://cb3iuw62ks3os"]
 
 [ext_resource type="Script" path="res://shared/script/always/always_full_max_center.gd" id="2_3mk4d"]
 [ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="2_g5dwt"]
-[ext_resource type="Shader" path="res://test/shader_widget/shaders/cube_4d.gdshader" id="2_oybln"]
+[ext_resource type="Shader" path="res://test/shader/cube_4d.gdshader" id="2_oybln"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y0fov"]
 shader = ExtResource("2_oybln")
