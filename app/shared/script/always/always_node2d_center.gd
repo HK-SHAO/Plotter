@@ -1,14 +1,23 @@
 extends Node
 
+var node: Node2D
+var parent: Control
+
 
 func _ready() -> void:
-	get_viewport().size_changed.connect(on_size_changed)
+	node = get_parent() as Node2D
+	parent = node.get_parent() as Control
+
+	parent.resized.connect(on_size_changed)
+	action()
+
+
+func action() -> void:
+	on_size_changed()
 
 
 func on_size_changed() -> void:
-	var size = get_viewport().size
-	var node = get_parent() as Node2D
+	var size = parent.size
 
 	node.position.x = size.x / 2
 	node.position.y = size.y / 2
-

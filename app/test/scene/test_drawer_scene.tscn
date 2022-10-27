@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cpv7ae05x66xf"]
+[gd_scene load_steps=4 format=3 uid="uid://cpv7ae05x66xf"]
 
 [ext_resource type="Script" path="res://shared/script/always/always_node2d_center.gd" id="2_3qj1q"]
 [ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="2_g5dwt"]
+[ext_resource type="Script" path="res://test/script/draw_board.gd" id="3_04od2"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -24,6 +25,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="Node2D" type="Node2D" parent="."]
+visible = false
 position = Vector2(640, 360)
 
 [node name="always_node2d_center" type="Node" parent="Node2D"]
@@ -37,10 +39,21 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -45.5
+offset_left = -91.0
 offset_top = -15.5
-offset_right = 45.5
+offset_right = 91.0
 offset_bottom = 15.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "123456789"
+text = "123456"
+
+[node name="DrawBoard" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_04od2")
+
+[node name="Lines" type="Node" parent="DrawBoard"]

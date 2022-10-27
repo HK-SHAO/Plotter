@@ -1,8 +1,19 @@
 extends Node
 
+var node: Control
+var parent: Control
+
 
 func _ready() -> void:
-	get_viewport().size_changed.connect(on_size_changed)
+	node = get_parent() as Control
+	parent = node.get_parent() as Control
+
+	parent.resized.connect(on_size_changed)
+	action()
+
+
+func action() -> void:
+	on_size_changed()
 
 
 func on_size_changed() -> void:

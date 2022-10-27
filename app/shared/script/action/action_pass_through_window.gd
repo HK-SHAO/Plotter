@@ -8,4 +8,5 @@ func _ready() -> void:
 
 
 func action(polygon: PackedVector2Array) -> void:
+	# 设置窗口形状
 	DisplayServer.window_set_mouse_passthrough(polygon)
