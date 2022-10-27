@@ -1,11 +1,15 @@
 [gd_scene load_steps=5 format=3 uid="uid://cb3iuw62ks3os"]
 
 [ext_resource type="Script" path="res://shared/script/always/always_full_max_center.gd" id="2_3mk4d"]
+[ext_resource type="Shader" path="res://test/shader/camera_cube_4d.gdshader" id="2_byxqx"]
 [ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="2_g5dwt"]
-[ext_resource type="Shader" path="res://test/shader/cube_4d.gdshader" id="2_oybln"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y0fov"]
-shader = ExtResource("2_oybln")
+shader = ExtResource("2_byxqx")
+shader_parameter/camera_position = null
+shader_parameter/camera_theta = null
+shader_parameter/global_transform = null
+shader_parameter/target_position = null
 
 [node name="Control" type="Control"]
 layout_mode = 3

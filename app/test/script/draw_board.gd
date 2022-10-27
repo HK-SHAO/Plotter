@@ -35,6 +35,7 @@ func _input_event_mouse_button(event: InputEventMouseButton) -> void:
 	pass
 
 func _input_event_key(event: InputEventKey) -> void:
+
 	pass
 
 func add_line2d() -> Line2D:
@@ -43,5 +44,6 @@ func add_line2d() -> Line2D:
 	return line2d
 
 func add_point(point: Vector2) -> void:
-	cur_line_2d and cur_line_2d.add_point(point)
+	if cur_line_2d:
+		cur_line_2d.add_point(point)
 	pass

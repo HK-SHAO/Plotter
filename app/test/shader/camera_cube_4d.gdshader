@@ -1,5 +1,10 @@
 shader_type canvas_item;
 
+uniform mat4 global_transform;
+uniform vec3 camera_position = vec3( 3.8, 2.0, 4.3 );
+uniform vec3 target_position = vec3( 0.0, 0.0, 0.0 );
+uniform float camera_theta = 0.0;
+
 // Created by inigo quilez - iq/2018
 // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0
 
@@ -245,11 +250,12 @@ void fragment()
                        transform(vec4( 1, 1, 1,-1)),
                        transform(vec4( 1, 1, 1, 1)));
     
-    // camera (static)
-    vec3 ro = vec3( 3.8, 2.0, 4.3 );
-    vec3 ta = vec3( 0.0,-0.4, 0.0 );
+	vec3 ro = camera_position;
+	vec3 ta = target_position;
+	float cr = camera_theta;
+
     // camera-to-world transformation
-    mat3 ca = setCamera( ro, ta, 0.0 );
+    mat3 ca = setCamera( ro, ta, cr );
 
     vec4 tot = vec4(0.0);
    

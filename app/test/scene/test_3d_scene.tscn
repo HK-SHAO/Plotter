@@ -1,0 +1,59 @@
+[gd_scene load_steps=6 format=3 uid="uid://y5b5bhrk35ap"]
+
+[ext_resource type="Script" path="res://shared/script/FreeCamera3D.gd" id="1_tik5w"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_g3jck"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_qorqu"]
+sky_material = SubResource("ProceduralSkyMaterial_g3jck")
+
+[sub_resource type="Environment" id="Environment_6npiw"]
+background_color = Color(0, 0, 0, 0)
+background_energy_multiplier = 0.0
+sky = SubResource("Sky_qorqu")
+ambient_light_source = 2
+ambient_light_color = Color(0.4, 0.4, 0.4, 1)
+tonemap_mode = 2
+ssr_enabled = true
+ssao_enabled = true
+glow_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_wx3p6"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_6npiw")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0.495413, -0.675515, 0.546118, -0.0675989, 0.596805, 0.799534, -0.0490079, 3.70377, 0)
+shadow_enabled = true
+
+[node name="Node3D" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D"]
+mesh = SubResource("BoxMesh_wx3p6")
+
+[node name="FreeCamera3D" type="Camera3D" parent="Node3D"]
+transform = Transform3D(0.807486, -0.351854, 0.473461, -1.9865e-08, 0.80263, 0.596477, -0.589887, -0.481647, 0.648112, 2.11781, 2.06904, 2.4111)
+script = ExtResource("1_tik5w")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Node3D/FreeCamera3D"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Node3D/FreeCamera3D/HBoxContainer"]
+layout_mode = 2
+offset_top = 7.0
+offset_right = 60.0
+offset_bottom = 33.0
+text = "velocity"
+
+[node name="Label2" type="Label" parent="Node3D/FreeCamera3D/HBoxContainer"]
+layout_mode = 2
+offset_left = 64.0
+offset_top = 8.0
+offset_right = 65.0
+offset_bottom = 31.0

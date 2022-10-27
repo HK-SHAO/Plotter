@@ -8,6 +8,16 @@
 
 config_version=5
 
+_global_script_classes=[{
+"base": "Camera3D",
+"class": &"FreeCamera3D",
+"language": &"GDScript",
+"path": "res://shared/script/FreeCamera3D.gd"
+}]
+_global_script_class_icons={
+"FreeCamera3D": ""
+}
+
 [application]
 
 config/name="PlotterApp"
@@ -49,10 +59,9 @@ common/physics_ticks_per_second=90
 
 [rendering]
 
-renderer/rendering_method="mobile"
-driver/threads/thread_model=2
 shading/overrides/force_vertex_shading=true
 shading/overrides/force_lambert_over_burley=true
+environment/defaults/default_clear_color=Color(0.301961, 0.301961, 0.301961, 0)
 anti_aliasing/quality/msaa_2d=1
 anti_aliasing/quality/msaa_3d=1
 anti_aliasing/quality/screen_space_aa=1
