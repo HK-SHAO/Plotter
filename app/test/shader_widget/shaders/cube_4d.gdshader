@@ -90,7 +90,7 @@ vec3 nCapsule( in vec3 p, in vec3 a, in vec3 b, in float r )
 
 //-------------------------------------------------------------------
 
-const float rad = 0.06;
+const float rad = 0.08;
 
 float intersect( in vec3 ro, in vec3 rd, in vec3 v[16], out ivec2 oObject )
 {

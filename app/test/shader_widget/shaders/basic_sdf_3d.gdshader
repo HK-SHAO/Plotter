@@ -5,18 +5,13 @@ shader_type canvas_item;
 #define RAYMARCH_TIME 128
 #define PRECISION 0.001
 
-float sdBoxFrame( vec3 p, vec3 b, float e )
+float sdSphere( vec3 p, float s )
 {
-       p = abs(p  )-b;
-  vec3 q = abs(p+e)-e;
-  return min(min(
-      length(max(vec3(p.x,q.y,q.z),0.0))+min(max(p.x,max(q.y,q.z)),0.0),
-      length(max(vec3(q.x,p.y,q.z),0.0))+min(max(q.x,max(p.y,q.z)),0.0)),
-      length(max(vec3(q.x,q.y,p.z),0.0))+min(max(q.x,max(q.y,p.z)),0.0));
+  return length(p)-s;
 }
 
 float sdf3d(vec3 p) {
-	float d = sdBoxFrame(p, vec3(3.0), 0.5);
+	float d = sdSphere(p, 1.0);
 	
 	return d;
 }
@@ -60,7 +55,7 @@ mat3 setCamera(vec3 ta, vec3 ro, float cr) {
 vec4 render(vec2 uv) {
     vec4 color = vec4(1.0);
 
-    vec3 ro = vec3(10. * cos(TIME), 10.0 * sin(TIME), 10. * sin(TIME));
+    vec3 ro = vec3(2. * cos(TIME), 2.0 * cos(TIME), 2. * sin(TIME));
 	
 	vec3 ta = vec3(0.);
     mat3 cam = setCamera(ta, ro, 0.);
@@ -75,10 +70,10 @@ vec4 render(vec2 uv) {
 	vec3 p = ro + t * rd;
 	vec3 n = calcNormal(p);
 	
-	vec3 light = vec3(2. * cos(TIME - 2.0), 1., 2. * sin(TIME - 2.0));
+	vec3 light = vec3(3. * cos(TIME), 1., 3. * sin(TIME - 2.0));
 	
 	float dif = clamp(dot(normalize(light - p), n), 0., 1.);
-	float amb = 0.8 + 0.2 * dot(n, vec3(0., 1., 0.));
+	float amb = 0.5 + 0.5 * dot(n, vec3(0., 1., 0.));
 	color.rgb = amb * vec3(0.2) + dif * vec3(0.8);
 	
 	color = sqrt(color);

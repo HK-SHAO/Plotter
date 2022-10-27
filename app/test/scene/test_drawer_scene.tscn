@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://dj36x3itmunur"]
+
+[ext_resource type="Script" path="res://shared/script/always/always_full_max_center.gd" id="2_3mk4d"]
+[ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="2_g5dwt"]
+[ext_resource type="Shader" path="res://test/shader_widget/shaders/cube_4d.gdshader" id="2_oybln"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y0fov"]
+shader = ExtResource("2_oybln")
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="action_transparent_background" type="Node" parent="."]
+script = ExtResource("2_g5dwt")
+
+[node name="BlackBack" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_y0fov")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -360.0
+offset_right = 360.285
+offset_bottom = 360.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="always_full_max_center" type="Node" parent="ColorRect"]
+script = ExtResource("2_3mk4d")
