@@ -1,15 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://cb3iuw62ks3os"]
+[gd_scene load_steps=5 format=3 uid="uid://bgstwdmg8aklv"]
 
-[ext_resource type="Script" path="res://shared/script/always/always_full_max_center.gd" id="2_3mk4d"]
-[ext_resource type="Shader" path="res://test/shader/camera_cube_4d.gdshader" id="2_byxqx"]
 [ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="2_g5dwt"]
+[ext_resource type="Shader" path="res://test/shader/cube_4d.gdshader" id="2_nkf0y"]
+[ext_resource type="Script" path="res://shared/script/tool/tool_shader_ratio.gd" id="3_k83jq"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y0fov"]
-shader = ExtResource("2_byxqx")
-shader_parameter/camera_position = null
-shader_parameter/camera_theta = null
-shader_parameter/global_transform = null
-shader_parameter/target_position = null
+shader = ExtResource("2_nkf0y")
+shader_parameter/ratio = 0.5625
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -24,6 +21,7 @@ script = ExtResource("2_g5dwt")
 
 [node name="BlackBack" type="ColorRect" parent="."]
 visible = false
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -33,19 +31,14 @@ color = Color(0, 0, 0, 1)
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_y0fov")
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -360.0
-offset_top = -360.0
-offset_right = 360.285
-offset_bottom = 360.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
 
-[node name="always_full_max_center" type="Node" parent="ColorRect"]
-script = ExtResource("2_3mk4d")
+[node name="tool_shader_ratio" type="Node" parent="ColorRect"]
+script = ExtResource("3_k83jq")

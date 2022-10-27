@@ -1,12 +1,17 @@
-[gd_scene load_steps=10 format=3 uid="uid://blqbg8ixvwo6u"]
+[gd_scene load_steps=11 format=3 uid="uid://c6p8wsdhwtruk"]
 
-[ext_resource type="Script" path="res://shared/script/always/always_full_max_center.gd" id="2_3mk4d"]
 [ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="2_g5dwt"]
-[ext_resource type="Shader" path="res://test/shader/cube_4d.gdshader" id="2_oybln"]
+[ext_resource type="Shader" path="res://test/shader/camera_cube_4d.gdshader" id="2_laei2"]
+[ext_resource type="Script" path="res://shared/script/always/always_shader_camera_pos.gd" id="4_afk03"]
+[ext_resource type="Script" path="res://shared/script/tool/tool_shader_ratio.gd" id="4_dksk0"]
 [ext_resource type="Script" path="res://shared/script/FreeCamera3D.gd" id="4_jf8nd"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y0fov"]
-shader = ExtResource("2_oybln")
+shader = ExtResource("2_laei2")
+shader_parameter/camera_position = null
+shader_parameter/camera_theta = null
+shader_parameter/ratio = 0.5625
+shader_parameter/target_position = null
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7cbur"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -38,6 +43,7 @@ script = ExtResource("2_g5dwt")
 
 [node name="BlackBack" type="ColorRect" parent="."]
 visible = false
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -47,22 +53,21 @@ color = Color(0, 0, 0, 1)
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_y0fov")
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -360.0
-offset_top = -360.0
-offset_right = 360.285
-offset_bottom = 360.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
 
-[node name="always_full_max_center" type="Node" parent="ColorRect"]
-script = ExtResource("2_3mk4d")
+[node name="tool_shader_ratio" type="Node" parent="ColorRect"]
+script = ExtResource("4_dksk0")
+
+[node name="always_shader_camera_pos" type="Node" parent="ColorRect" node_paths=PackedStringArray("camera")]
+script = ExtResource("4_afk03")
+camera = NodePath("../../Node3D/FreeCamera3D")
 
 [node name="Node3D" type="Node3D" parent="."]
 

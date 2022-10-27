@@ -1,14 +1,16 @@
+@tool
+
 extends Node
 
 var node: Control
-var parent: Control
+var control: Control
 
 
 func _ready() -> void:
 	node = get_parent() as Control
-	parent = node.get_parent() as Control
+	control = node.get_parent() as Control
 
-	parent.resized.connect(on_size_changed)
+	control.resized.connect(on_size_changed)
 	action()
 
 

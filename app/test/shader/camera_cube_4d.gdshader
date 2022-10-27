@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-uniform mat4 global_transform;
+uniform float ratio = 1.0;
 uniform vec3 camera_position = vec3( 3.8, 2.0, 4.3 );
 uniform vec3 target_position = vec3( 0.0, 0.0, 0.0 );
 uniform float camera_theta = 0.0;
@@ -224,14 +224,18 @@ vec3 transform( in vec4 p )
     #endif
 }
 
-vec2 fixedUV(vec2 uv, vec2 screenPixelSize) {
-	uv.y = 1.0 - uv.y;
-	uv = 2.0 * (uv - 0.5);
-	return uv;
+vec2 fixedUV(vec2 uv, float r) {
+	vec2 p = 2.0*vec2(uv.x, 1.0 - uv.y) - 1.0;
+	if (r > 1.0){
+		p = vec2(p.x, p.y*r);
+	} else {
+		p = vec2(p.x/r, p.y);
+	}
+	return p;
 }
 
-void fragment()
-{
+void fragment() {
+	vec2 uv = fixedUV(UV, ratio);
     // rotate 4D cube
     vec3 v[16] = vec3[16]( transform(vec4(-1,-1,-1,-1)),
                        transform(vec4(-1,-1,-1, 1)),
@@ -259,11 +263,12 @@ void fragment()
 
     vec4 tot = vec4(0.0);
    
-    vec2 p = fixedUV(UV.xy, SCREEN_PIXEL_SIZE);
+    vec2 p = uv;
+	
     float seed =  FRAGCOORD.x + FRAGCOORD.y*131.1 + TIME;
 
         // ray direction
-        vec3 rd = ca * normalize( vec3(p.xy,2.0) );
+        vec3 rd = ca * normalize( vec3(p.xy, 2.0) );
 
         // render	
         vec4 col = render( ro, rd, seed, v );

@@ -39,21 +39,3 @@ mesh = SubResource("BoxMesh_wx3p6")
 [node name="FreeCamera3D" type="Camera3D" parent="Node3D"]
 transform = Transform3D(0.807486, -0.351854, 0.473461, -1.9865e-08, 0.80263, 0.596477, -0.589887, -0.481647, 0.648112, 2.11781, 2.06904, 2.4111)
 script = ExtResource("1_tik5w")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Node3D/FreeCamera3D"]
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Label" type="Label" parent="Node3D/FreeCamera3D/HBoxContainer"]
-layout_mode = 2
-offset_top = 7.0
-offset_right = 60.0
-offset_bottom = 33.0
-text = "velocity"
-
-[node name="Label2" type="Label" parent="Node3D/FreeCamera3D/HBoxContainer"]
-layout_mode = 2
-offset_left = 64.0
-offset_top = 8.0
-offset_right = 65.0
-offset_bottom = 31.0

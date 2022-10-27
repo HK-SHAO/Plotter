@@ -1,5 +1,7 @@
 shader_type canvas_item;
 
+uniform float ratio = 1.0;
+
 #define TMIN 0.1
 #define TMAX 20.0
 #define RAYMARCH_TIME 128
@@ -14,12 +16,6 @@ float sdf3d(vec3 p) {
 	float d = sdSphere(p, 1.0);
 	
 	return d;
-}
-
-vec2 fixedUV(vec2 uv, vec2 screenPixelSize) {
-	uv.y = 1.0 - uv.y;
-	uv = 2.0 * (uv - 0.5);
-	return uv;
 }
 
 float rayMarch(in vec3 ro, in vec3 rd) {
@@ -80,8 +76,18 @@ vec4 render(vec2 uv) {
 	return color;
 }
 
+vec2 fixedUV(vec2 uv, float r) {
+	vec2 p = 2.0*vec2(uv.x, 1.0 - uv.y) - 1.0;
+	if (r > 1.0){
+		p = vec2(p.x, p.y*r);
+	} else {
+		p = vec2(p.x/r, p.y);
+	}
+	return p;
+}
+
 void fragment() {
-	vec2 uv = fixedUV(UV, SCREEN_PIXEL_SIZE);
+	vec2 uv = fixedUV(UV, ratio);
 	vec4 color = vec4(0.0);
 	
 	color = render(uv);

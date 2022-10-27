@@ -1,14 +1,16 @@
+@tool
+
 extends Node
 
 var node: Node2D
-var parent: Control
+var control: Control
 
 
 func _ready() -> void:
 	node = get_parent() as Node2D
-	parent = node.get_parent() as Control
+	control = node.get_parent() as Control
 
-	parent.resized.connect(on_size_changed)
+	control.resized.connect(on_size_changed)
 	action()
 
 
@@ -17,7 +19,7 @@ func action() -> void:
 
 
 func on_size_changed() -> void:
-	var size = parent.size
+	var size = control.size
 
 	node.position.x = size.x / 2
 	node.position.y = size.y / 2
