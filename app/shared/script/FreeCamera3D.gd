@@ -27,6 +27,7 @@ func _input(event: InputEvent):
 		if event is InputEventMouseMotion:
 			_rotation.y -= event.relative.x / 1000 * sensitivity
 			_rotation.x -= event.relative.y / 1000 * sensitivity
+			_rotation.x = clamp(_rotation.x, PI/-2, PI/2)
 
 	if event is InputEventMouseButton:
 		match event.button_index:

@@ -17,7 +17,6 @@ script = ExtResource("2_g5dwt")
 
 [node name="BlackBack" type="ColorRect" parent="."]
 visible = false
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -29,7 +28,7 @@ color = Color(0, 0, 0, 1)
 visible = false
 position = Vector2(640, 360)
 
-[node name="always_node2d_center" type="Node" parent="Node2D"]
+[node name="tool_node2d_center" type="Node" parent="Node2D"]
 script = ExtResource("2_3qj1q")
 
 [node name="Line2D" type="Line2D" parent="Node2D"]
@@ -49,7 +48,7 @@ grow_vertical = 2
 text = "123456"
 
 [node name="DrawBoard" type="Control" parent="."]
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

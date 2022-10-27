@@ -9,9 +9,8 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y0fov"]
 shader = ExtResource("2_laei2")
 shader_parameter/camera_position = null
-shader_parameter/camera_theta = null
+shader_parameter/camera_rotation = null
 shader_parameter/ratio = 0.5625
-shader_parameter/target_position = null
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7cbur"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -82,5 +81,5 @@ shadow_enabled = true
 mesh = SubResource("BoxMesh_dulmk")
 
 [node name="FreeCamera3D" type="Camera3D" parent="Node3D"]
-transform = Transform3D(0.807486, -0.351854, 0.473461, -1.9865e-08, 0.80263, 0.596477, -0.589887, -0.481647, 0.648112, 2.11781, 2.06904, 2.4111)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("4_jf8nd")

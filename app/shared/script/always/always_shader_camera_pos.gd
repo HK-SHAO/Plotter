@@ -10,8 +10,13 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	material.set_shader_parameter(
-		"camera_position", camera.global_position)
+
+	var camera_position = camera.transform.origin
+	var camera_rotation = camera.transform.basis
+
 
 	material.set_shader_parameter(
-		"camera_theta", 0.0)
+		"camera_position", camera_position)
+
+	material.set_shader_parameter(
+		"camera_rotation", camera_rotation)

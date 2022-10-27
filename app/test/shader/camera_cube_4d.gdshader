@@ -2,8 +2,7 @@ shader_type canvas_item;
 
 uniform float ratio = 1.0;
 uniform vec3 camera_position = vec3( 3.8, 2.0, 4.3 );
-uniform vec3 target_position = vec3( 0.0, 0.0, 0.0 );
-uniform float camera_theta = 0.0;
+uniform mat3 camera_rotation;
 
 // Created by inigo quilez - iq/2018
 // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0
@@ -194,15 +193,6 @@ vec4 render( in vec3 ro, in vec3 rd, in float seed, in vec3 v[16] )
     return col;
 }
 
-mat3 setCamera( in vec3 ro, in vec3 ta, float cr )
-{
-    vec3 cw = normalize(ta-ro);
-    vec3 cp = vec3(sin(cr), cos(cr),0.0);
-    vec3 cu = normalize( cross(cw,cp) );
-    vec3 cv =          ( cross(cu,cw) );
-    return mat3( cu, cv, cw );
-}
-
 mat2 rot( float a )
 {
     float c = cos(a);
@@ -234,52 +224,72 @@ vec2 fixedUV(vec2 uv, float r) {
 	return p;
 }
 
+vec4 Grid(vec3 ro, vec3 rd) {
+	float d = -ro.y/rd.y;
+    
+    if (d <= 0.0) return vec4(0.0);
+    
+   	vec2 p = (ro.xz + rd.xz*d);
+    
+    vec2 e = min(vec2(2.0), fwidth(p));
+    
+    vec2 l = smoothstep(vec2(1.0), 1.0 - e, fract(p)) + smoothstep(vec2(0.0), e, fract(p)) - (1.0 - e);
+
+    return mix(vec4(vec3(0.4), 1.0), vec4(vec3(0.8), 1.0) * (l.x + l.y) * 0.5, exp(-d*0.01));
+}
+
 void fragment() {
 	vec2 uv = fixedUV(UV, ratio);
     // rotate 4D cube
-    vec3 v[16] = vec3[16]( transform(vec4(-1,-1,-1,-1)),
-                       transform(vec4(-1,-1,-1, 1)),
-                       transform(vec4(-1,-1, 1,-1)),
-                       transform(vec4(-1,-1, 1, 1)),
-                       transform(vec4(-1, 1,-1,-1)),
-                       transform(vec4(-1, 1,-1, 1)),
-                       transform(vec4(-1, 1, 1,-1)),
-                       transform(vec4(-1, 1, 1, 1)),
-                       transform(vec4( 1,-1,-1,-1)),
-                       transform(vec4( 1,-1,-1, 1)),
-                       transform(vec4( 1,-1, 1,-1)),
-                       transform(vec4( 1,-1, 1, 1)),
-                       transform(vec4( 1, 1,-1,-1)),
-                       transform(vec4( 1, 1,-1, 1)),
-                       transform(vec4( 1, 1, 1,-1)),
-                       transform(vec4( 1, 1, 1, 1)));
+    vec3 v[16] = vec3[16](
+							transform(vec4(-1,-1,-1,-1)),
+							transform(vec4(-1,-1,-1, 1)),
+							transform(vec4(-1,-1, 1,-1)),
+							transform(vec4(-1,-1, 1, 1)),
+							transform(vec4(-1, 1,-1,-1)),
+							transform(vec4(-1, 1,-1, 1)),
+							transform(vec4(-1, 1, 1,-1)),
+							transform(vec4(-1, 1, 1, 1)),
+							transform(vec4( 1,-1,-1,-1)),
+							transform(vec4( 1,-1,-1, 1)),
+							transform(vec4( 1,-1, 1,-1)),
+							transform(vec4( 1,-1, 1, 1)),
+							transform(vec4( 1, 1,-1,-1)),
+							transform(vec4( 1, 1,-1, 1)),
+							transform(vec4( 1, 1, 1,-1)),
+							transform(vec4( 1, 1, 1, 1))
+						);
     
 	vec3 ro = camera_position;
-	vec3 ta = target_position;
-	float cr = camera_theta;
+	ro.z = -ro.z;
 
-    // camera-to-world transformation
-    mat3 ca = setCamera( ro, ta, cr );
+    mat3 ca = camera_rotation;
 
     vec4 tot = vec4(0.0);
-   
+
     vec2 p = uv;
-	
+
+
     float seed =  FRAGCOORD.x + FRAGCOORD.y*131.1 + TIME;
 
-        // ray direction
-        vec3 rd = ca * normalize( vec3(p.xy, 2.0) );
+    // ray direction
+    vec3 rd = ca * normalize( vec3(p.xy, 1.0) );
 
-        // render	
-        vec4 col = render( ro, rd, seed, v );
+    // render	
+    vec4 col = render( ro, rd, seed, v );
 
-        // gamma
-        col.rgb = pow( col.rgb, vec3(0.4545) );
+    // gamma
+    col.rgb = pow( col.rgb, vec3(0.4545) );
 
-        tot += col;
+	tot += Grid(ro, rd);
+
+	if (col.a > 0.01) {
+		tot = col;
+	}
 
     // cheap dither to remove banding from background
     tot.rgb += 0.5*sin(FRAGCOORD.x)*sin(FRAGCOORD.y)/256.0;
-    
+
+
     COLOR = tot;
 }
