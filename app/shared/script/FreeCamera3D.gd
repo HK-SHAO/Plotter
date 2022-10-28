@@ -41,9 +41,9 @@ func _input(event: InputEvent):
 					Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 			MOUSE_BUTTON_WHEEL_UP: # increase fly velocity
-				velocity = clamp(velocity * speed_scale, min_speed, max_speed)
+				max_speed *= speed_scale
 			MOUSE_BUTTON_WHEEL_DOWN: # decrease fly velocity
-				velocity = clamp(velocity / speed_scale, min_speed, max_speed)
+				max_speed /= speed_scale
 
 func set_rotation(rot: Vector3):
 	rotation = rot
@@ -57,10 +57,10 @@ func _process(delta: float) -> void:
 
 
 	if direction.length() != 0:
-		_velocity += (max_speed - _velocity) * delta * 0.01
+		_velocity += (max_speed - _velocity) * delta * 0.1 * sensitivity
 		_translate = direction * _velocity * delta
 	else:
-		_velocity = velocity;
+		_velocity = min_speed;
 		_translate -= _translate * delta * smooth
 
 

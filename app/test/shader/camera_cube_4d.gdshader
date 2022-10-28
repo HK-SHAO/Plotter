@@ -250,12 +250,11 @@ void fragment() {
 
     vec4 tot = vec4(0.0);
 
-    vec2 p = UV;
 
     float seed =  FRAGCOORD.x + FRAGCOORD.y*131.1 + TIME;
 
     // ray direction
-    vec3 rd = ca * normalize( -vec3(p.xy, 1.0) );
+    vec3 rd = ca * normalize( -vec3(UV.xy, 1.0) );
 
     // render	
     vec4 col = render( ro, rd, seed, v );

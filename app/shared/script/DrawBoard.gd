@@ -2,6 +2,8 @@ class_name DrawBoard
 
 extends Control
 
+@export var default_line: Line2D
+
 @export_range(0, 2) var smooth: float = 0.2
 @export_range(0, 100000) var sensitivity: float = 5000
 
@@ -25,12 +27,10 @@ func _input(event: InputEvent) -> void:
 		_input_event_mouse_button(event)
 	elif event is InputEventKey:
 		_input_event_key(event)
-	pass
 
 func _input_event_mouse_motion(event: InputEventMouseMotion) -> void:
 	if is_left_pressed:
 		brush_position = event.position
-	pass
 
 func _input_event_mouse_button(event: InputEventMouseButton) -> void:
 	var is_pressed := event.is_pressed()
@@ -44,17 +44,19 @@ func _input_event_mouse_button(event: InputEventMouseButton) -> void:
 			brush_position = event.position
 			ink_position = event.position
 			point_position = event.position
-	pass
 
 func _input_event_key(event: InputEventKey) -> void:
 	match event.keycode:
 		KEY_SPACE:
+			# 清空所有线条
 			for line in lines.get_children():
 				line.queue_free()
-	pass
 
 func add_line2d() -> Line2D:
-	var line2d := Line2D.new()
+	var line2d := default_line.duplicate()		\
+			if is_instance_valid(default_line)	\
+			else Line2D.new()
+
 	lines.add_child(line2d)
 	return line2d
 
@@ -63,7 +65,6 @@ func add_point(point: Vector2) -> void:
 		cur_line_2d.add_point(point)
 	else:
 		cur_line_2d = add_line2d()
-	pass
 
 func update_ink(delta: float) -> void:
 	var d := brush_position.distance_squared_to(ink_position)
@@ -78,17 +79,12 @@ func update_ink(delta: float) -> void:
 	ink_position += delta_position * delta
 
 func update_point() -> void:
-	var d = ink_position.distance_squared_to(point_position)
+	var d := ink_position.distance_squared_to(point_position)
 
 	point_position = ink_position
-
-	if d > 0:
-		add_point(point_position)
+	if d > 0: add_point(point_position)
 
 func _process(delta: float) -> void:
 	if is_left_pressed:
-
 		update_ink(delta)
 		update_point()
-
-	pass

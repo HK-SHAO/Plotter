@@ -1,9 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://cnfrgfxr15oog"]
+[gd_scene load_steps=8 format=3 uid="uid://mmb27hhk2jm6"]
 
 [ext_resource type="Script" path="res://shared/script/tool/tool_node2d_center.gd" id="2_3qj1q"]
 [ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="2_g5dwt"]
-[ext_resource type="Script" path="res://test/script/draw_board.gd" id="3_04od2"]
+[ext_resource type="Shader" path="res://test/shader/test_drawer_line.gdshader" id="3_fun8t"]
+[ext_resource type="Script" path="res://shared/script/DrawBoard.gd" id="4_2hhjp"]
 [ext_resource type="Texture2D" uid="uid://dq8b8n1vxlo8" path="res://shared/image/icon.svg" id="4_bjgwy"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lqxjv"]
+shader = ExtResource("3_fun8t")
 
 [sub_resource type="GDScript" id="GDScript_ms0kl"]
 script/source = "extends Node2D
@@ -48,8 +52,6 @@ position = Vector2(640, 360)
 [node name="tool_node2d_center" type="Node" parent="Node2D"]
 script = ExtResource("2_3qj1q")
 
-[node name="Line2D" type="Line2D" parent="Node2D"]
-
 [node name="Button" type="Button" parent="Node2D"]
 anchors_preset = 8
 anchor_left = 0.5
@@ -64,14 +66,22 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "123456"
 
-[node name="DrawBoard" type="Control" parent="."]
+[node name="Line2D" type="Line2D" parent="."]
+material = SubResource("ShaderMaterial_lqxjv")
+width = 20.0
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="DrawBoard" type="Control" parent="." node_paths=PackedStringArray("default_line")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("3_04od2")
+script = ExtResource("4_2hhjp")
+default_line = NodePath("../Line2D")
 
 [node name="Test" type="Node2D" parent="DrawBoard"]
 visible = false

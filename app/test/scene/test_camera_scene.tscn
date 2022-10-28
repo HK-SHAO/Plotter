@@ -154,18 +154,23 @@ camera = NodePath("../../Node3D/FreeCamera3D")
 
 [node name="Node3D" type="Node3D" parent="."]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="Node3D"]
+[node name="Node3D" type="Node3D" parent="Node3D"]
+process_mode = 4
+visible = false
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Node3D/Node3D"]
 environment = SubResource("Environment_dw3fv")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Node3D"]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Node3D/Node3D"]
+transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Node3D"]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 visible = false
 material_override = SubResource("ShaderMaterial_cgygt")
 mesh = SubResource("BoxMesh_782f1")
+skeleton = NodePath("../..")
 
 [node name="FreeCamera3D" type="Camera3D" parent="Node3D"]
 script = ExtResource("6_nof40")

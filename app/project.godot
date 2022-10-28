@@ -12,7 +12,7 @@ _global_script_classes=[{
 "base": "Control",
 "class": &"DrawBoard",
 "language": &"GDScript",
-"path": "res://test/script/draw_board.gd"
+"path": "res://shared/script/DrawBoard.gd"
 }, {
 "base": "Camera3D",
 "class": &"FreeCamera3D",
