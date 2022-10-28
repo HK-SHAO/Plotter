@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://c6p8wsdhwtruk"]
+[gd_scene load_steps=13 format=3 uid="uid://c6p8wsdhwtruk"]
 
 [ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="2_g5dwt"]
 [ext_resource type="Shader" path="res://test/shader/camera_cube_4d.gdshader" id="2_laei2"]
 [ext_resource type="Script" path="res://shared/script/always/always_shader_camera_pos.gd" id="4_afk03"]
 [ext_resource type="Script" path="res://shared/script/tool/tool_shader_ratio.gd" id="4_dksk0"]
 [ext_resource type="Script" path="res://shared/script/FreeCamera3D.gd" id="4_jf8nd"]
+[ext_resource type="Shader" path="res://test/shader/test_standard_material_shader.gdshader" id="5_sxp7c"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y0fov"]
 shader = ExtResource("2_laei2")
@@ -27,7 +28,21 @@ ambient_light_color = Color(0.501961, 0.501961, 0.501961, 1)
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="BoxMesh" id="BoxMesh_dulmk"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cgygt"]
+render_priority = 0
+shader = ExtResource("5_sxp7c")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/metallic = 0.0
+shader_parameter/metallic_texture_channel = Plane(1, 0, 0, 0)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/specular = 0.5
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_eady4"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -49,6 +64,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
+
+[node name="WhiteBack" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.678431, 0.67451, 0.729412, 1)
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_y0fov")
@@ -78,8 +103,10 @@ transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -
 shadow_enabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D"]
-mesh = SubResource("BoxMesh_dulmk")
+visible = false
+material_override = SubResource("ShaderMaterial_cgygt")
+mesh = SubResource("SphereMesh_eady4")
 
 [node name="FreeCamera3D" type="Camera3D" parent="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("4_jf8nd")
+restric = false

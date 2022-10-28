@@ -1,8 +1,22 @@
 shader_type canvas_item;
 
 uniform float ratio = 1.0;
-uniform vec3 camera_position = vec3( 3.8, 2.0, 4.3 );
+uniform vec3 camera_position;
 uniform mat3 camera_rotation;
+
+vec2 fixedUV(vec2 uv, float r) {
+	vec2 p = 2.0*vec2(1. - uv.x, uv.y) - 1.0;
+	if (r > 1.0){
+		p = vec2(p.x, p.y*r);
+	} else {
+		p = vec2(p.x/r, p.y);
+	}
+	return p;
+}
+
+void vertex() {
+	UV = fixedUV(UV, ratio);
+}
 
 // Created by inigo quilez - iq/2018
 // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0
@@ -146,7 +160,7 @@ float calcShadow( in vec3 ro, in vec3 rd, in vec3 v[16] )
         {
             t = min( t, softShadowCapsule( ro, rd, v[a], v[b], rad ) );
         }
-    }    
+    }
 
     return t;
 }
@@ -214,16 +228,6 @@ vec3 transform( in vec4 p )
     #endif
 }
 
-vec2 fixedUV(vec2 uv, float r) {
-	vec2 p = 2.0*vec2(uv.x, 1.0 - uv.y) - 1.0;
-	if (r > 1.0){
-		p = vec2(p.x, p.y*r);
-	} else {
-		p = vec2(p.x/r, p.y);
-	}
-	return p;
-}
-
 vec4 Grid(vec3 ro, vec3 rd) {
 	float d = -ro.y/rd.y;
     
@@ -235,11 +239,11 @@ vec4 Grid(vec3 ro, vec3 rd) {
     
     vec2 l = smoothstep(vec2(1.0), 1.0 - e, fract(p)) + smoothstep(vec2(0.0), e, fract(p)) - (1.0 - e);
 
-    return mix(vec4(vec3(0.4), 1.0), vec4(vec3(0.8), 1.0) * (l.x + l.y) * 0.5, exp(-d*0.01));
+    return mix(vec4(vec3(0.4), 1.0), vec4(vec3(0.8), 0.0) * (l.x + l.y) * 0.5, exp(-d*0.01));
 }
 
 void fragment() {
-	vec2 uv = fixedUV(UV, ratio);
+	vec2 uv = UV;
     // rotate 4D cube
     vec3 v[16] = vec3[16](
 							transform(vec4(-1,-1,-1,-1)),
@@ -261,9 +265,7 @@ void fragment() {
 						);
     
 	vec3 ro = camera_position;
-	ro.z = -ro.z;
-
-    mat3 ca = camera_rotation;
+	mat3 ca = camera_rotation;
 
     vec4 tot = vec4(0.0);
 
@@ -273,7 +275,7 @@ void fragment() {
     float seed =  FRAGCOORD.x + FRAGCOORD.y*131.1 + TIME;
 
     // ray direction
-    vec3 rd = ca * normalize( vec3(p.xy, 1.0) );
+    vec3 rd = ca * normalize( -vec3(p.xy, 1.0) );
 
     // render	
     vec4 col = render( ro, rd, seed, v );

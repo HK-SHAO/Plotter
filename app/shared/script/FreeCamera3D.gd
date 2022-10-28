@@ -8,6 +8,7 @@ extends Camera3D
 @export var max_speed:float = 1000
 @export var min_speed:float = 0.2
 @export_range(0, 100, 0.01) var smooth:float = 10
+@export var restric: bool = true
 
 
 var _translate: Vector3 = Vector3()
@@ -27,7 +28,8 @@ func _input(event: InputEvent):
 		if event is InputEventMouseMotion:
 			_rotation.y -= event.relative.x / 1000 * sensitivity
 			_rotation.x -= event.relative.y / 1000 * sensitivity
-			_rotation.x = clamp(_rotation.x, PI/-2, PI/2)
+			if restric:
+				_rotation.x = clamp(_rotation.x, PI/-2, PI/2)
 
 	if event is InputEventMouseButton:
 		match event.button_index:
