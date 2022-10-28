@@ -27,15 +27,16 @@ func _input_event_mouse_button(event: InputEventMouseButton) -> void:
 	if event.button_index == MOUSE_BUTTON_LEFT:
 		is_left_pressed = is_pressed
 
-		if not cur_line_2d is Line2D:
-			cur_line_2d = add_line2d()
 		if not is_left_pressed:
-			# 释放，释放掉线条
+			# 释放掉当前线条的引用
 			cur_line_2d = null
 	pass
 
 func _input_event_key(event: InputEventKey) -> void:
-
+	match event.keycode:
+		KEY_SPACE:
+			for line in lines.get_children():
+				line.queue_free()
 	pass
 
 func add_line2d() -> Line2D:
@@ -44,6 +45,8 @@ func add_line2d() -> Line2D:
 	return line2d
 
 func add_point(point: Vector2) -> void:
-	if cur_line_2d:
+	if is_instance_valid(cur_line_2d):
 		cur_line_2d.add_point(point)
+	else:
+		cur_line_2d = add_line2d()
 	pass

@@ -78,11 +78,7 @@ vec4 render(vec2 uv) {
 
 vec2 fixedUV(vec2 uv, float r) {
 	vec2 p = 2.0*vec2(uv.x, 1.0 - uv.y) - 1.0;
-	if (r > 1.0){
-		p = vec2(p.x, p.y*r);
-	} else {
-		p = vec2(p.x/r, p.y);
-	}
+	p = r>1.0?vec2(p.x, p.y*r):vec2(p.x/r, p.y);
 	return p;
 }
 

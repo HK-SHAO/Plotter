@@ -1,14 +1,14 @@
 [gd_scene load_steps=16 format=3 uid="uid://c6p8wsdhwtruk"]
 
-[ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="2_g5dwt"]
-[ext_resource type="Shader" path="res://test/shader/camera_cube_4d.gdshader" id="2_laei2"]
-[ext_resource type="Script" path="res://shared/script/always/always_shader_camera_pos.gd" id="4_afk03"]
-[ext_resource type="Script" path="res://shared/script/tool/tool_shader_ratio.gd" id="4_dksk0"]
-[ext_resource type="Script" path="res://shared/script/FreeCamera3D.gd" id="4_jf8nd"]
-[ext_resource type="Shader" path="res://test/shader/test_standard_material_shader.gdshader" id="5_sxp7c"]
+[ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="1_xxkh5"]
+[ext_resource type="Shader" path="res://test/shader/camera_cube_4d.gdshader" id="2_kj3sf"]
+[ext_resource type="Script" path="res://shared/script/tool/tool_shader_ratio.gd" id="3_iguqf"]
+[ext_resource type="Script" path="res://shared/script/always/always_shader_camera_pos.gd" id="4_mg5wx"]
+[ext_resource type="Shader" path="res://test/shader/test_standard_material_shader.gdshader" id="5_xbpog"]
+[ext_resource type="Script" path="res://shared/script/FreeCamera3D.gd" id="6_nof40"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y0fov"]
-shader = ExtResource("2_laei2")
+shader = ExtResource("2_kj3sf")
 shader_parameter/camera_position = null
 shader_parameter/camera_rotation = null
 shader_parameter/ratio = 0.5625
@@ -30,7 +30,7 @@ glow_enabled = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cgygt"]
 render_priority = 0
-shader = ExtResource("5_sxp7c")
+shader = ExtResource("5_xbpog")
 shader_parameter/albedo = Color(1, 1, 1, 1)
 shader_parameter/metallic = 0.0
 shader_parameter/metallic_texture_channel = Plane(1, 0, 0, 0)
@@ -43,6 +43,33 @@ shader_parameter/uv2_offset = Vector3(0, 0, 0)
 shader_parameter/uv2_scale = Vector3(1, 1, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_782f1"]
+
+[sub_resource type="Animation" id="Animation_o42fx"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node3D/FreeCamera3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node3D/FreeCamera3D:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_l5nqi"]
 resource_name = "anim"
@@ -73,33 +100,6 @@ tracks/1/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(-0.595349, 0, 0), Vector3(-0.595157, -0.785398, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_o42fx"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Node3D/FreeCamera3D:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Node3D/FreeCamera3D:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_t5382"]
 _data = {
 "RESET": SubResource("Animation_o42fx"),
@@ -115,11 +115,10 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="action_transparent_background" type="Node" parent="."]
-script = ExtResource("2_g5dwt")
+script = ExtResource("1_xxkh5")
 
 [node name="BlackBack" type="ColorRect" parent="."]
 visible = false
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -129,7 +128,6 @@ color = Color(0, 0, 0, 1)
 
 [node name="WhiteBack" type="ColorRect" parent="."]
 visible = false
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -139,7 +137,6 @@ color = Color(0.678431, 0.67451, 0.729412, 1)
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_y0fov")
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -149,10 +146,10 @@ size_flags_horizontal = 6
 size_flags_vertical = 6
 
 [node name="tool_shader_ratio" type="Node" parent="ColorRect"]
-script = ExtResource("4_dksk0")
+script = ExtResource("3_iguqf")
 
 [node name="always_shader_camera_pos" type="Node" parent="ColorRect" node_paths=PackedStringArray("camera")]
-script = ExtResource("4_afk03")
+script = ExtResource("4_mg5wx")
 camera = NodePath("../../Node3D/FreeCamera3D")
 
 [node name="Node3D" type="Node3D" parent="."]
@@ -171,8 +168,7 @@ material_override = SubResource("ShaderMaterial_cgygt")
 mesh = SubResource("BoxMesh_782f1")
 
 [node name="FreeCamera3D" type="Camera3D" parent="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-script = ExtResource("4_jf8nd")
+script = ExtResource("6_nof40")
 restric = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

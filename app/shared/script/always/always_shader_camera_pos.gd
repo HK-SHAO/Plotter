@@ -9,10 +9,10 @@ func _ready() -> void:
 	material = get_parent().material
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 
-	var camera_position = camera.transform.origin
-	var camera_rotation = camera.transform.basis
+	var camera_position := camera.transform.origin
+	var camera_rotation := camera.transform.basis
 
 	material.set_shader_parameter(
 		"camera_position", camera_position)

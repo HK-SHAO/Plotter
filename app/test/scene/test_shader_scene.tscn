@@ -1,11 +1,11 @@
 [gd_scene load_steps=5 format=3 uid="uid://bgstwdmg8aklv"]
 
 [ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="2_g5dwt"]
-[ext_resource type="Shader" path="res://test/shader/cube_4d.gdshader" id="2_nkf0y"]
+[ext_resource type="Shader" path="res://test/shader/basic_sdf_2d.gdshader" id="2_gd4th"]
 [ext_resource type="Script" path="res://shared/script/tool/tool_shader_ratio.gd" id="3_k83jq"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y0fov"]
-shader = ExtResource("2_nkf0y")
+shader = ExtResource("2_gd4th")
 shader_parameter/ratio = 0.5625
 
 [node name="Control" type="Control"]

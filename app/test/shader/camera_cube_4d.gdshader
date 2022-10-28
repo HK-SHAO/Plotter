@@ -6,11 +6,7 @@ uniform mat3 camera_rotation;
 
 vec2 fixedUV(vec2 uv, float r) {
 	vec2 p = 2.0*vec2(1. - uv.x, uv.y) - 1.0;
-	if (r > 1.0){
-		p = vec2(p.x, p.y*r);
-	} else {
-		p = vec2(p.x/r, p.y);
-	}
+	p = r>1.0?vec2(p.x, p.y*r):vec2(p.x/r, p.y);
 	return p;
 }
 
@@ -229,7 +225,6 @@ vec3 transform( in vec4 p )
 }
 
 void fragment() {
-	vec2 uv = UV;
     // rotate 4D cube
     vec3 v[16] = vec3[16](
 							transform(vec4(-1,-1,-1,-1)),
@@ -255,8 +250,7 @@ void fragment() {
 
     vec4 tot = vec4(0.0);
 
-    vec2 p = uv;
-
+    vec2 p = UV;
 
     float seed =  FRAGCOORD.x + FRAGCOORD.y*131.1 + TIME;
 
