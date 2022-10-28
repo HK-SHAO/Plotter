@@ -15,8 +15,7 @@ func _ready() -> void:
 
 func action() -> void:
 	var ratio := control.size.y / control.size.x
-	material.set_shader_parameter(
-		"ratio", ratio)
+	material.set_shader_parameter("ratio", ratio)
 
 
 func on_size_changed() -> void:

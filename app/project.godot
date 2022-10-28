@@ -9,12 +9,18 @@
 config_version=5
 
 _global_script_classes=[{
+"base": "Control",
+"class": &"DrawBoard",
+"language": &"GDScript",
+"path": "res://test/script/draw_board.gd"
+}, {
 "base": "Camera3D",
 "class": &"FreeCamera3D",
 "language": &"GDScript",
 "path": "res://shared/script/FreeCamera3D.gd"
 }]
 _global_script_class_icons={
+"DrawBoard": "",
 "FreeCamera3D": ""
 }
 

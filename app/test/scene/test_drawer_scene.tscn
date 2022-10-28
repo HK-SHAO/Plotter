@@ -1,8 +1,24 @@
-[gd_scene load_steps=4 format=3 uid="uid://cnfrgfxr15oog"]
+[gd_scene load_steps=6 format=3 uid="uid://cnfrgfxr15oog"]
 
 [ext_resource type="Script" path="res://shared/script/tool/tool_node2d_center.gd" id="2_3qj1q"]
 [ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="2_g5dwt"]
 [ext_resource type="Script" path="res://test/script/draw_board.gd" id="3_04od2"]
+[ext_resource type="Texture2D" uid="uid://dq8b8n1vxlo8" path="res://shared/image/icon.svg" id="4_bjgwy"]
+
+[sub_resource type="GDScript" id="GDScript_ms0kl"]
+script/source = "extends Node2D
+
+@onready var draw_board: DrawBoard = $\"..\"
+@onready var brush:Sprite2D = $Brush
+@onready var ink:Sprite2D = $Ink
+
+
+
+func _process(_delta: float) -> void:
+	brush.position = draw_board.brush_position
+	ink.position = draw_board.ink_position
+	pass
+"
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -57,4 +73,20 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("3_04od2")
 
-[node name="Lines" type="Node" parent="DrawBoard"]
+[node name="Test" type="Node2D" parent="DrawBoard"]
+visible = false
+script = SubResource("GDScript_ms0kl")
+
+[node name="Brush" type="Sprite2D" parent="DrawBoard/Test"]
+modulate = Color(0.0431373, 0, 1, 1)
+position = Vector2(97, 116)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_bjgwy")
+
+[node name="Ink" type="Sprite2D" parent="DrawBoard/Test"]
+modulate = Color(1, 0, 0.513726, 1)
+position = Vector2(282, 141)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_bjgwy")
+
+[node name="Lines" type="Node2D" parent="DrawBoard"]
