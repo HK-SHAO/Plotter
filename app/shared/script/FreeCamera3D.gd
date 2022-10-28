@@ -6,11 +6,12 @@ extends Camera3D
 @export_range(0, 1000, 0.1) var velocity:float = 5
 @export_range(0, 10, 0.01) var speed_scale:float = 1.17
 @export var max_speed:float = 1000
-@export var min_speed:float = 0.2
+@export var min_speed:float = 0.0
 @export_range(0, 100, 0.01) var smooth:float = 10
 @export var restric: bool = true
 
 
+var _velocity: float = 0.0;
 var _translate: Vector3 = Vector3()
 var _rotation: Vector3 = Vector3()
 var _tmp_rotation: Vector3 = Vector3()
@@ -33,7 +34,7 @@ func _input(event: InputEvent):
 
 	if event is InputEventMouseButton:
 		match event.button_index:
-			MOUSE_BUTTON_RIGHT:
+			MOUSE_BUTTON_LEFT:
 				if event.pressed:
 					Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 				else:
@@ -56,9 +57,13 @@ func _process(delta: float) -> void:
 
 
 	if direction.length() != 0:
-		_translate = direction * velocity * delta + _translate * delta * 50
+		_velocity += (max_speed - _velocity) * delta * 0.01
+		_translate = direction * _velocity * delta
 	else:
+		_velocity = velocity;
 		_translate -= _translate * delta * smooth
+
+
 	translate(_translate)
 
 	_tmp_rotation += (_rotation - _tmp_rotation) * delta * smooth * 1.5

@@ -228,20 +228,6 @@ vec3 transform( in vec4 p )
     #endif
 }
 
-vec4 Grid(vec3 ro, vec3 rd) {
-	float d = -ro.y/rd.y;
-    
-    if (d <= 0.0) return vec4(0.0);
-    
-   	vec2 p = (ro.xz + rd.xz*d);
-    
-    vec2 e = min(vec2(2.0), fwidth(p));
-    
-    vec2 l = smoothstep(vec2(1.0), 1.0 - e, fract(p)) + smoothstep(vec2(0.0), e, fract(p)) - (1.0 - e);
-
-    return mix(vec4(vec3(0.4), 1.0), vec4(vec3(0.8), 0.0) * (l.x + l.y) * 0.5, exp(-d*0.01));
-}
-
 void fragment() {
 	vec2 uv = UV;
     // rotate 4D cube
@@ -283,11 +269,9 @@ void fragment() {
     // gamma
     col.rgb = pow( col.rgb, vec3(0.4545) );
 
-	tot += Grid(ro, rd);
+	// tot += Grid(ro, rd);
 
-	if (col.a > 0.01) {
-		tot = col;
-	}
+	tot = col;
 
     // cheap dither to remove banding from background
     tot.rgb += 0.5*sin(FRAGCOORD.x)*sin(FRAGCOORD.y)/256.0;
