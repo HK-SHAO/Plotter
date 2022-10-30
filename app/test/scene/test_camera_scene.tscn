@@ -153,10 +153,9 @@ script = ExtResource("4_mg5wx")
 camera = NodePath("../../Node3D/FreeCamera3D")
 
 [node name="Node3D" type="Node3D" parent="."]
+visible = false
 
 [node name="Node3D" type="Node3D" parent="Node3D"]
-process_mode = 4
-visible = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Node3D/Node3D"]
 environment = SubResource("Environment_dw3fv")
@@ -167,7 +166,6 @@ shadow_enabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Node3D"]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
-visible = false
 material_override = SubResource("ShaderMaterial_cgygt")
 mesh = SubResource("BoxMesh_782f1")
 skeleton = NodePath("../..")

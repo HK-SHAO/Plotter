@@ -68,7 +68,7 @@ text = "123456"
 
 [node name="Line2D" type="Line2D" parent="."]
 material = SubResource("ShaderMaterial_lqxjv")
-width = 20.0
+width = 30.0
 joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2

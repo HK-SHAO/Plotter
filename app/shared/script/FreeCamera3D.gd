@@ -57,7 +57,7 @@ func _process(delta: float) -> void:
 
 
 	if direction.length() != 0:
-		_velocity += (max_speed - _velocity) * delta * 0.1 * sensitivity
+		_velocity += (max_speed - _velocity) * delta * 0.01 * sensitivity
 		_translate = direction * _velocity * delta
 	else:
 		_velocity = min_speed;

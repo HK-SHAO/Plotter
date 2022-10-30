@@ -4,8 +4,8 @@ extends Control
 
 @export var default_line: Line2D
 
-@export_range(0, 2) var smooth: float = 0.2
-@export_range(0, 100000) var sensitivity: float = 5000
+@export_range(0, 2) var smooth: float = 0.5
+@export_range(0, 10000) var sensitivity: float = 5000
 
 @onready var lines: Node2D = $Lines
 
@@ -68,21 +68,20 @@ func add_point(point: Vector2) -> void:
 
 func update_ink(delta: float) -> void:
 	var d := brush_position.distance_squared_to(ink_position)
-	var s := smooth * sensitivity / (sensitivity + d)
+	var s := smooth * sensitivity / (1 + sensitivity + d)
 
-	# ink_position = brush_position
-	var delta_position := brush_position - ink_position
-	# delta = exp(s * log(delta))
-	delta = delta / ( (1 - delta) * s + delta )
+	delta /= ((1 - delta) * s + delta) # delta = exp(s * log(delta))
 	delta = clamp(delta, 0.01, 1)
 
+	var delta_position := brush_position - ink_position
 	ink_position += delta_position * delta
 
 func update_point() -> void:
 	var d := ink_position.distance_squared_to(point_position)
 
-	point_position = ink_position
-	if d > 0: add_point(point_position)
+	if d > 1:
+		add_point(point_position)
+		point_position = ink_position
 
 func _process(delta: float) -> void:
 	if is_left_pressed:
