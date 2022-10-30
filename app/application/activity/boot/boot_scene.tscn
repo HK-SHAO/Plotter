@@ -1,4 +1,19 @@
-[gd_scene format=3 uid="uid://t8ackmoancn5"]
+[gd_scene load_steps=5 format=3 uid="uid://t8ackmoancn5"]
+
+[ext_resource type="Script" path="res://application/activity/boot/boot_application.gd" id="1_mohl2"]
+[ext_resource type="PackedScene" uid="uid://bjo2rsteyk0bf" path="res://test/scene/test_drawer_scene.tscn" id="2_4o1hg"]
+[ext_resource type="PackedScene" uid="uid://c6p8wsdhwtruk" path="res://test/scene/test_camera_scene.tscn" id="3_lsjo1"]
+
+[sub_resource type="GDScript" id="GDScript_rsaxg"]
+script/source = "extends Button
+
+@export var packed_scene: PackedScene
+
+
+func _on_button_up() -> void:
+	if is_instance_valid(packed_scene):
+		get_tree().change_scene_to_packed(packed_scene)
+"
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -7,3 +22,52 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="boot_application" type="Node" parent="."]
+script = ExtResource("1_mohl2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+offset_right = 1280.0
+offset_bottom = 358.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+columns = 2
+
+[node name="TestDrawBoard" type="Button" parent="VBoxContainer/GridContainer"]
+offset_right = 638.0
+offset_bottom = 358.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
+text = "绘画板"
+script = SubResource("GDScript_rsaxg")
+packed_scene = ExtResource("2_4o1hg")
+
+[node name="TestCube4D" type="Button" parent="VBoxContainer/GridContainer"]
+offset_left = 642.0
+offset_right = 1280.0
+offset_bottom = 358.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
+text = "超立方"
+script = SubResource("GDScript_rsaxg")
+packed_scene = ExtResource("3_lsjo1")
+
+[node name="CodeEdit" type="CodeEdit" parent="VBoxContainer"]
+offset_top = 362.0
+offset_right = 1280.0
+offset_bottom = 720.0
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
+
+[connection signal="button_up" from="VBoxContainer/GridContainer/TestDrawBoard" to="VBoxContainer/GridContainer/TestDrawBoard" method="_on_button_up"]
+[connection signal="button_up" from="VBoxContainer/GridContainer/TestCube4D" to="VBoxContainer/GridContainer/TestCube4D" method="_on_button_up"]
