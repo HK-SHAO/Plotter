@@ -1,10 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://bjo2rsteyk0bf"]
+[gd_scene load_steps=9 format=3 uid="uid://dni61c6kyw5c2"]
 
 [ext_resource type="Script" path="res://shared/script/tool/tool_node2d_center.gd" id="2_3qj1q"]
 [ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="2_g5dwt"]
 [ext_resource type="Shader" path="res://test/shader/test_drawer_line.gdshader" id="3_fun8t"]
 [ext_resource type="Script" path="res://shared/script/DrawBoard.gd" id="4_2hhjp"]
-[ext_resource type="Texture2D" uid="uid://dq8b8n1vxlo8" path="res://shared/asset/favicon/icon.svg" id="5_x00c5"]
+[ext_resource type="Texture2D" uid="uid://dq8b8n1vxlo8" path="res://shared/asset/image/icon.svg" id="5_tgwhw"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lqxjv"]
 shader = ExtResource("3_fun8t")
@@ -103,12 +103,12 @@ script = SubResource("GDScript_ms0kl")
 modulate = Color(0.0431373, 0, 1, 1)
 position = Vector2(97, 116)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("5_x00c5")
+texture = ExtResource("5_tgwhw")
 
 [node name="Ink" type="Sprite2D" parent="DrawBoard/Test"]
 modulate = Color(1, 0, 0.513726, 1)
 position = Vector2(282, 141)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("5_x00c5")
+texture = ExtResource("5_tgwhw")
 
 [node name="Lines" type="Node2D" parent="DrawBoard"]
