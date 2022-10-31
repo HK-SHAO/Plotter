@@ -51,7 +51,7 @@ window/subwindows/embed_subwindows=false
 
 [editor]
 
-movie_writer/movie_file="C:/MYD/WORKS/Plotter/app/.tmp/record_video/video.png"
+movie_writer/movie_file="./.tmp/record_video/video.png"
 movie_writer/fps=120
 
 [gui]
@@ -100,11 +100,9 @@ fps_backward={
 [input_devices]
 
 pen_tablet/driver.windows="wintab"
-buffering/agile_event_flushing=true
 
 [internationalization]
 
-locale/fallback="zh_Hans_CN"
 rendering/text_driver="ICU / HarfBuzz / Graphite (Built-in)"
 
 [physics]
@@ -113,8 +111,6 @@ common/physics_ticks_per_second=90
 
 [rendering]
 
-shading/overrides/force_vertex_shading=true
-shading/overrides/force_lambert_over_burley=true
 environment/defaults/default_clear_color=Color(0.301961, 0.301961, 0.301961, 0)
 anti_aliasing/quality/msaa_2d=1
 anti_aliasing/quality/msaa_3d=1

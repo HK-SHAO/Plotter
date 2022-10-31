@@ -11,7 +11,7 @@
 shader = ExtResource("2_kj3sf")
 shader_parameter/camera_position = null
 shader_parameter/camera_rotation = null
-shader_parameter/ratio = nan
+shader_parameter/ratio = 0.5625
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7cbur"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -119,6 +119,7 @@ script = ExtResource("1_xxkh5")
 
 [node name="BlackBack" type="ColorRect" parent="."]
 visible = false
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -128,6 +129,7 @@ color = Color(0, 0, 0, 1)
 
 [node name="WhiteBack" type="ColorRect" parent="."]
 visible = false
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -137,6 +139,7 @@ color = Color(0.678431, 0.67451, 0.729412, 1)
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_y0fov")
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
