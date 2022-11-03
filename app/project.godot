@@ -44,9 +44,7 @@ driver/enable_input=true
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/size/always_on_top=true
-window/size/transparent=true
 window/energy_saving/keep_screen_on=false
-window/per_pixel_transparency/allowed=true
 window/subwindows/embed_subwindows=false
 
 [editor]

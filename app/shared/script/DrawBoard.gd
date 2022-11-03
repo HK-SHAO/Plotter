@@ -70,6 +70,11 @@ func update_ink(delta: float) -> void:
 	var d := brush_position.distance_squared_to(ink_position)
 	var s := smooth * sensitivity / (1 + sensitivity + d)
 
+#	var velocity := sqrt(d) / delta
+#	print(velocity)
+#
+#	Curve
+
 	delta /= ((1 - delta) * s + delta) # delta = exp(s * log(delta))
 	delta = clamp(delta, 0.01, 1)
 

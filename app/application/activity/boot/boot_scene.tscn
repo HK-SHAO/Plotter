@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://t8ackmoancn5"]
+[gd_scene load_steps=6 format=3 uid="uid://t8ackmoancn5"]
 
+[ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="1_eq2wp"]
 [ext_resource type="Script" path="res://application/activity/boot/boot_application.gd" id="1_mohl2"]
 [ext_resource type="PackedScene" uid="uid://dni61c6kyw5c2" path="res://test/scene/test_drawer_scene.tscn" id="2_4o1hg"]
 [ext_resource type="PackedScene" uid="uid://c6p8wsdhwtruk" path="res://test/scene/test_camera_scene.tscn" id="3_lsjo1"]
@@ -23,11 +24,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="action_transparent_background" type="Node" parent="."]
+script = ExtResource("1_eq2wp")
+
 [node name="boot_application" type="Node" parent="."]
 script = ExtResource("1_mohl2")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -35,7 +38,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
-layout_mode = 2
 offset_right = 1280.0
 offset_bottom = 358.0
 grow_horizontal = 2
@@ -44,7 +46,6 @@ size_flags_vertical = 3
 columns = 2
 
 [node name="TestDrawBoard" type="Button" parent="VBoxContainer/GridContainer"]
-layout_mode = 2
 offset_right = 638.0
 offset_bottom = 358.0
 size_flags_horizontal = 3
@@ -55,7 +56,6 @@ script = SubResource("GDScript_rsaxg")
 packed_scene = ExtResource("2_4o1hg")
 
 [node name="TestCube4D" type="Button" parent="VBoxContainer/GridContainer"]
-layout_mode = 2
 offset_left = 642.0
 offset_right = 1280.0
 offset_bottom = 358.0
@@ -67,7 +67,6 @@ script = SubResource("GDScript_rsaxg")
 packed_scene = ExtResource("3_lsjo1")
 
 [node name="CodeEdit" type="CodeEdit" parent="VBoxContainer"]
-layout_mode = 2
 offset_top = 362.0
 offset_right = 1280.0
 offset_bottom = 720.0

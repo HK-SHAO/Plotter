@@ -1,17 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://dni61c6kyw5c2"]
+[gd_scene load_steps=4 format=3 uid="uid://drt41a1sgxu5v"]
 
-[ext_resource type="Script" path="res://shared/script/tool/tool_node2d_center.gd" id="2_3qj1q"]
-[ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="2_g5dwt"]
-[ext_resource type="Shader" path="res://test/shader/test_drawer_line.gdshader" id="3_fun8t"]
 [ext_resource type="Script" path="res://shared/script/DrawBoard.gd" id="4_2hhjp"]
 [ext_resource type="Texture2D" uid="uid://dq8b8n1vxlo8" path="res://shared/asset/image/icon.svg" id="5_tgwhw"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lqxjv"]
-shader = ExtResource("3_fun8t")
-
-[sub_resource type="Curve" id="Curve_32xlh"]
-_data = [Vector2(0, 0.9), 0.0, 0.0, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.9), 0.0, 0.0, 0, 0]
-point_count = 3
 
 [sub_resource type="GDScript" id="GDScript_ms0kl"]
 script/source = "extends Node2D
@@ -36,9 +26,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="action_transparent_background" type="Node" parent="."]
-script = ExtResource("2_g5dwt")
-
 [node name="BlackBack" type="ColorRect" parent="."]
 visible = false
 anchors_preset = 15
@@ -48,37 +35,8 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Node2D" type="Node2D" parent="."]
-visible = false
-position = Vector2(640, 360)
-
-[node name="tool_node2d_center" type="Node" parent="Node2D"]
-script = ExtResource("2_3qj1q")
-
-[node name="Button" type="Button" parent="Node2D"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -91.0
-offset_top = -15.5
-offset_right = 91.0
-offset_bottom = 15.5
-grow_horizontal = 2
-grow_vertical = 2
-text = "123456"
-
 [node name="Line2D" type="Line2D" parent="."]
-material = SubResource("ShaderMaterial_lqxjv")
 width = 30.0
-joint_mode = 2
-begin_cap_mode = 2
-end_cap_mode = 2
-
-[node name="CurveLine2D" type="Line2D" parent="."]
-width = 30.0
-width_curve = SubResource("Curve_32xlh")
 default_color = Color(1, 0, 1, 1)
 joint_mode = 2
 begin_cap_mode = 2
@@ -92,9 +50,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_2hhjp")
-default_line = NodePath("../CurveLine2D")
-smooth = 0.0
-sensitivity = 0.0
+default_line = NodePath("../Line2D")
+smooth = 0.1
 
 [node name="Test" type="Node2D" parent="DrawBoard"]
 visible = false

@@ -61,10 +61,10 @@ func _process(delta: float) -> void:
 		_translate = direction * _velocity * delta
 	else:
 		_velocity = min_speed;
-		_translate -= _translate * delta * smooth
+		_translate -= _translate * clamp(delta * smooth, 0.01, 1);
 
 
 	translate(_translate)
 
-	_tmp_rotation += (_rotation - _tmp_rotation) * delta * smooth * 1.5
+	_tmp_rotation += (_rotation - _tmp_rotation) * clamp(delta * smooth * 1.5, 0.01, 1)
 	set_rotation(_tmp_rotation)
