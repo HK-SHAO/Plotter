@@ -46,7 +46,7 @@ uint base_hash(uvec2 p) {
 
 float hash1(in float seed) {
     uint n = base_hash(floatBitsToUint(vec2(seed+=.1,seed+=.1)));
-    return float(n)/float(0xffffffff);
+    return float(n)/intBitsToFloat(-1);
 }
 
 vec2 hash2(inout float seed) {
@@ -216,13 +216,19 @@ bool world_hit(const in ray r, const in float t_min,
 		hit=true;rec.mat=material(LAMBERTIAN,vec3(.5),0.);
 	}
 
-  	if (hitable_hit(hitable(vec3( 0,1,0),1.),r,t_min,rec.t,rec))        hit=true;rec.mat=material(DIELECTRIC,vec3(0),1.5);
-    if (hitable_hit(hitable(vec3(-4,1,0),1.),r,t_min,rec.t,rec))        hit=true;rec.mat=material(LAMBERTIAN,vec3(.4,.2,.1),0.);
-	if (hitable_hit(hitable(vec3( 4,1,0),1.),r,t_min,rec.t,rec))        hit=true;rec.mat=material(METAL     ,vec3(.7,.6,.5),0.);
+  	if (hitable_hit(hitable(vec3( 0,1,0),1.),r,t_min,rec.t,rec)) {
+		hit=true;rec.mat=material(DIELECTRIC,vec3(0),1.5);
+	}
+    if (hitable_hit(hitable(vec3(-4,1,0),1.),r,t_min,rec.t,rec)) {
+		hit=true;rec.mat=material(LAMBERTIAN,vec3(.4,.2,.1),0.);
+	}
+	if (hitable_hit(hitable(vec3( 4,1,0),1.),r,t_min,rec.t,rec)) {
+		hit=true;rec.mat=material(METAL     ,vec3(.7,.6,.5),0.);
+	}
     
     for (int a = -3; a < 3; a++) {
         for (int b = -3; b < 3; b++) {
-            float m_seed = float(a) + float(b)/100.;
+            float m_seed = float(a) + float(b)/1000.;
             vec3 rand1 = hash3(m_seed);            
             vec3 center = vec3(float(a)+.9*rand1.x,.2,float(b)+.9*rand1.y); 
             float choose_mat = rand1.z;
@@ -311,13 +317,13 @@ ray camera_get_ray(camera c, vec2 uv, float g_seed) {
 
 
 void fragment() {
+	vec2 fragCoord = FRAGCOORD.xy;
+	vec2 resolution = 1. / SCREEN_PIXEL_SIZE.xy;
+
 	vec3 ro = camera_position;
 	mat3 ca = camera_rotation;
 
     vec4 tot = vec4(0.0);
-
-	vec2 fragCoord = FRAGCOORD.xy;
-	vec2 resolution = 1. / SCREEN_PIXEL_SIZE.xy;
 	
 	float g_seed = 1. + TIME;
 	g_seed += float(base_hash(floatBitsToUint(fragCoord)))/float(0xffffffff);
@@ -332,26 +338,15 @@ void fragment() {
 	vec3 lookat = ro + rd;
 	
 	float aspect = resolution.x/resolution.y;
-    camera cam = camera_const(lookfrom, lookat, vec3(0,1,0), 2., aspect, lens_radius, 10.);
+    camera cam = camera_const(lookfrom, lookat, vec3(0,1,0), 1., aspect, lens_radius, 10.);
     
 	vec2 uv = (fragCoord + hash2(g_seed))/resolution.xy;
-	uv.y = 1. - uv.y;
 	
 	ray r = camera_get_ray(cam, uv, g_seed);
 	
 	vec3 col = color(r, g_seed);
-	
-//	if (TIME < 3.0){
-//		tot = vec4(col, 1.0);
-//	} else {
-//		tot = texture(SCREEN_TEXTURE, SCREEN_UV);
-//	}
-	tot = vec4(col, 1.0);
 
-//    // cheap dither to remove banding from background
-//    tot.rgb += 0.5*sin(FRAGCOORD.x)*sin(FRAGCOORD.y)/256.0;
+	tot = vec4(col,1);
 	
-	tot = vec4(sqrt(tot.rgb), 1.0);
-
-    COLOR = tot;
+	COLOR = tot;
 }
