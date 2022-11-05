@@ -4,6 +4,7 @@ extends Camera3D
 
 @export_range(0, 10, 0.01) var sensitivity:float = 3
 @export_range(0, 1000, 0.1) var velocity:float = 5
+@export_range(0, 1, 0.0001) var acceleration:float = 0.01
 @export_range(0, 10, 0.01) var speed_scale:float = 1.17
 @export var max_speed:float = 1000
 @export var min_speed:float = 0.0
@@ -58,11 +59,11 @@ func _process(delta: float) -> void:
 
 
 	if direction.length() != 0:
-		_velocity += (max_speed - _velocity) * delta * 0.01 * sensitivity
+		_velocity += (max_speed - _velocity) * delta * acceleration * sensitivity
 		_translate = direction * _velocity * delta
 	else:
 		_velocity = min_speed;
-		_translate -= _translate * clamp(delta * smooth, 0.01, 1);
+		_translate -= _translate * clamp(delta * smooth, 0, 1);
 
 	translate(_translate)
 
@@ -70,5 +71,5 @@ func _process(delta: float) -> void:
 	_tmp_rotation += _rotate
 	set_rotation(_tmp_rotation)
 
-	var dd := 0.00001 / smooth
+	var dd := 0.00000001
 	moving = _rotate.length_squared() > dd || _translate.length_squared() > dd

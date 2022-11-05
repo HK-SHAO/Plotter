@@ -1,18 +1,11 @@
 shader_type canvas_item;
 
-uniform float ratio = 1.0;
 uniform vec3 camera_position;
 uniform mat3 camera_rotation;
 
-vec2 fixedUV(vec2 uv, float r) {
-	vec2 p = 2.0*vec2(1. - uv.x, uv.y) - 1.0;
-	p = r>1.0?vec2(p.x, p.y*r):vec2(p.x/r, p.y);
-	return p;
-}
-
-void vertex() {
-	UV = fixedUV(UV, ratio);
-}
+uniform float camera_fov = 50.;
+uniform float camera_lens_radius = 0.1;
+uniform float camera_focus_dist = 10.;
 
 // Raytracing in one weekend, chapter 12: Where next? Created by Reinder Nijhoff 2018
 // @reindernijhoff
@@ -127,47 +120,49 @@ struct hit_record {
 
 bool material_scatter(const in ray r_in, const in hit_record rec, out vec3 attenuation, 
                       out ray scattered, float g_seed) {
-    if(rec.mat.type == LAMBERTIAN) {
-        vec3 rd = normalize(rec.normal + random_in_unit_sphere(g_seed));
-        scattered = ray(rec.p, rd);
-        attenuation = rec.mat.albedo;
-        return true;
-    } else if(rec.mat.type == METAL) {
-        vec3 rd = reflect(r_in.direction, rec.normal);
-        scattered = ray(rec.p, normalize(rd + rec.mat.v*random_in_unit_sphere(g_seed)));
-        attenuation = rec.mat.albedo;
-        return true;
-    } else if(rec.mat.type == DIELECTRIC) {
-        vec3 outward_normal, refracted, 
-             reflected = reflect(r_in.direction, rec.normal);
-        float ni_over_nt, reflect_prob, cosine;
-        
-        attenuation = vec3(1);
-        if (dot(r_in.direction, rec.normal) > 0.) {
-            outward_normal = -rec.normal;
-            ni_over_nt = rec.mat.v;
-            cosine = dot(r_in.direction, rec.normal);
-            cosine = sqrt(1. - rec.mat.v*rec.mat.v*(1.-cosine*cosine));
-        } else {
-            outward_normal = rec.normal;
-            ni_over_nt = 1. / rec.mat.v;
-            cosine = -dot(r_in.direction, rec.normal);
-        }
-        
-        if (modified_refract(r_in.direction, outward_normal, ni_over_nt, refracted)) {
-	        reflect_prob = schlick(cosine, rec.mat.v);
-        } else {
-            reflect_prob = 1.;
-        }
-        
-        if (hash1(g_seed) < reflect_prob) {
-            scattered = ray(rec.p, reflected);
-        } else {
-            scattered = ray(rec.p, refracted);
-        }
-        return true;
-    }
-    return false;
+	switch (rec.mat.type) {
+		case LAMBERTIAN: 
+			vec3 rd = normalize(rec.normal + random_in_unit_sphere(g_seed));
+	        scattered = ray(rec.p, rd);
+	        attenuation = rec.mat.albedo;
+	        return true;
+		case METAL: 
+			vec3 rd = reflect(r_in.direction, rec.normal);
+	        scattered = ray(rec.p, normalize(rd + rec.mat.v*random_in_unit_sphere(g_seed)));
+	        attenuation = rec.mat.albedo;
+	        return true;
+		case DIELECTRIC: 
+	        vec3 outward_normal, refracted, 
+	             reflected = reflect(r_in.direction, rec.normal);
+	        float ni_over_nt, reflect_prob, cosine;
+	        
+	        attenuation = vec3(1);
+	        if (dot(r_in.direction, rec.normal) > 0.) {
+	            outward_normal = -rec.normal;
+	            ni_over_nt = rec.mat.v;
+	            cosine = dot(r_in.direction, rec.normal);
+	            cosine = sqrt(1. - rec.mat.v*rec.mat.v*(1.-cosine*cosine));
+	        } else {
+	            outward_normal = rec.normal;
+	            ni_over_nt = 1. / rec.mat.v;
+	            cosine = -dot(r_in.direction, rec.normal);
+	        }
+	        
+	        if (modified_refract(r_in.direction, outward_normal, ni_over_nt, refracted)) {
+		        reflect_prob = schlick(cosine, rec.mat.v);
+	        } else {
+	            reflect_prob = 1.;
+	        }
+	        
+	        if (hash1(g_seed) < reflect_prob) {
+	            scattered = ray(rec.p, reflected);
+	        } else {
+	            scattered = ray(rec.p, refracted);
+	        }
+	        return true;
+		default:
+			return false;
+	}
 }
 
 //
@@ -233,18 +228,21 @@ bool world_hit(const in ray r, const in float t_min,
             vec3 center = vec3(float(a)+.9*rand1.x,.2,float(b)+.9*rand1.y); 
             float choose_mat = rand1.z;
             
-            if (distance(center,vec3(4,.2,0)) > 0.9) {
+            if (distance(center,vec3(0,1,0)) > 1.1) {
                 if (choose_mat < .8) { // diffuse
                     if (hitable_hit(hitable(center,.2),r,t_min,rec.t,rec)) {
-                        hit=true;rec.mat=material(LAMBERTIAN, hash3(m_seed)* hash3(m_seed),0.);
+                        hit=true;
+						rec.mat=material(LAMBERTIAN, hash3(m_seed)* hash3(m_seed),0.);
                     }
                 } else if (choose_mat < 0.95) { // metal
                     if (hitable_hit(hitable(center,.2),r,t_min,rec.t,rec)) {
-                        hit=true;rec.mat=material(METAL,.5*(hash3(m_seed)+1.),.5*hash1(m_seed));
+                        hit=true;
+						rec.mat=material(METAL, vec3(.7,.6,.5),0.);
                     }
                 } else { // glass
                     if (hitable_hit(hitable(center,.2),r,t_min,rec.t,rec)) {
-                        hit=true;rec.mat=material(DIELECTRIC,vec3(0),1.5);
+                        hit=true;
+						rec.mat=material(DIELECTRIC, vec3(0),1.5);
                     }
                 }
             }
@@ -319,34 +317,43 @@ ray camera_get_ray(camera c, vec2 uv, float g_seed) {
 void fragment() {
 	vec2 fragCoord = FRAGCOORD.xy;
 	vec2 resolution = 1. / SCREEN_PIXEL_SIZE.xy;
-
+	
+	float g_seed = TIME + float(base_hash(floatBitsToUint(fragCoord)))/float(0xffffffff);
+	
+	// camera
+	float lens_radius = camera_lens_radius;
+	float fov = camera_fov;
+	float focus_dist = camera_focus_dist;
+	
 	vec3 ro = camera_position;
 	mat3 ca = camera_rotation;
 
-    vec4 tot = vec4(0.0);
-	
-	float g_seed = 1. + TIME;
-	g_seed += float(base_hash(floatBitsToUint(fragCoord)))/float(0xffffffff);
-
-	// ray direction
-    vec3 rd = ca * normalize( -vec3(UV.xy, 1.0) );
-
-	// blur
-	float lens_radius = (1. + sin(TIME * 0.0)) / 50.;
-	
 	vec3 lookfrom = ro;
-	vec3 lookat = ro + rd;
+	vec3 lookat = ro + ca * vec3(0., 0., -1.);
 	
 	float aspect = resolution.x/resolution.y;
-    camera cam = camera_const(lookfrom, lookat, vec3(0,1,0), 1., aspect, lens_radius, 10.);
-    
+	camera cam = camera_const(lookfrom,
+		lookat, vec3(0,-1,0), fov, aspect, lens_radius, focus_dist);
+	
 	vec2 uv = (fragCoord + hash2(g_seed))/resolution.xy;
+	uv.x = 1. - uv.x;
 	
 	ray r = camera_get_ray(cam, uv, g_seed);
-	
 	vec3 col = color(r, g_seed);
+	
+//	const float N = 100.;
+//	for (float i = 1.111; i < N; i++){
+//		g_seed += 10.0*i + sin(i);
+//		uv = (fragCoord + hash2(g_seed))/resolution.xy;
+//		uv.x = 1. - uv.x;
+//		r = camera_get_ray(cam, uv, g_seed);
+//		col += color(r, g_seed);
+//	}
+//	col = col / N;
 
-	tot = vec4(col,1);
+	vec4 tot = vec4(0.0);
+
+	tot = vec4(col, 1.0);
 	
 	COLOR = tot;
 }

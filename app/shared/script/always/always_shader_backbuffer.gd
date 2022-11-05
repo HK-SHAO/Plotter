@@ -19,6 +19,8 @@ func _process(_delta: float) -> void:
 	if is_instance_valid(camera):
 		if camera.moving:
 			frame = 0
+	if Input.is_action_pressed("ui_accept"):
+		frame = 0
 
 	frame += 1
 

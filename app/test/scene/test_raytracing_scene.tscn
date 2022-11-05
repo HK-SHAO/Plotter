@@ -1,8 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://bcujf0tef3jv7"]
+[gd_scene load_steps=13 format=3 uid="uid://bcujf0tef3jv7"]
 
 [ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="1_xxkh5"]
 [ext_resource type="Shader" path="res://test/shader/camera_raytracing.gdshader" id="2_vj3lo"]
-[ext_resource type="Script" path="res://shared/script/tool/tool_shader_ratio.gd" id="3_iguqf"]
 [ext_resource type="Script" path="res://shared/script/always/always_shader_camera_pos.gd" id="4_mg5wx"]
 [ext_resource type="Shader" path="res://test/shader/test_gamma.gdshader" id="5_8ao1x"]
 [ext_resource type="Shader" path="res://test/shader/test_backbuffer.gdshader" id="5_q4lqq"]
@@ -10,14 +9,14 @@
 [ext_resource type="Script" path="res://shared/script/always/always_shader_backbuffer.gd" id="6_pdm25"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y0fov"]
-resource_local_to_scene = true
 shader = ExtResource("2_vj3lo")
+shader_parameter/camera_focus_dist = null
+shader_parameter/camera_fov = 50.0
+shader_parameter/camera_lens_radius = 0.05
 shader_parameter/camera_position = null
 shader_parameter/camera_rotation = null
-shader_parameter/ratio = 0.5625
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qpsq3"]
-resource_local_to_scene = true
 shader = ExtResource("5_q4lqq")
 shader_parameter/frame = null
 
@@ -92,9 +91,6 @@ size_flags_vertical = 6
 script = ExtResource("4_mg5wx")
 camera = NodePath("../../../../Node3D/FreeCamera3D")
 
-[node name="tool_shader_ratio" type="Node" parent="RayTracing/SubViewport/ColorRect"]
-script = ExtResource("3_iguqf")
-
 [node name="BackBuffer" type="SubViewportContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -151,10 +147,8 @@ grow_vertical = 2
 texture = SubResource("ViewportTexture_7cs1b")
 
 [node name="Node3D" type="Node3D" parent="."]
-visible = false
 
 [node name="FreeCamera3D" type="Camera3D" parent="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 0.852522, 0.522692, 0, -0.522692, 0.852522, 0, 1.0405, 1.51262)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 0.947031, 0.321142, 0, -0.321142, 0.947031, 0, 2.25205, 2.99805)
 script = ExtResource("6_nof40")
 restric = false
