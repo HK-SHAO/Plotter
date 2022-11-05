@@ -10,6 +10,7 @@ extends Camera3D
 @export_range(0, 100, 0.01) var smooth:float = 10
 @export var restric: bool = true
 
+var moving: bool = false
 
 var _velocity: float = 0.0;
 var _translate: Vector3 = Vector3()
@@ -49,7 +50,7 @@ func set_rotation(rot: Vector3):
 	rotation = rot
 
 func _process(delta: float) -> void:
-	var direction = Vector3(
+	var direction := Vector3(
 		float(Input.get_action_strength("fps_right") - Input.get_action_strength("fps_left")),
 		float(Input.get_action_strength("fps_up") - Input.get_action_strength("fps_down")),
 		float(Input.get_action_strength("fps_backward") - Input.get_action_strength("fps_forward"))
@@ -63,8 +64,11 @@ func _process(delta: float) -> void:
 		_velocity = min_speed;
 		_translate -= _translate * clamp(delta * smooth, 0.01, 1);
 
-
 	translate(_translate)
 
-	_tmp_rotation += (_rotation - _tmp_rotation) * clamp(delta * smooth * 1.5, 0.01, 1)
+	var _rotate := (_rotation - _tmp_rotation) * (clamp(delta * smooth * 1.5, 0.01, 1.0) as float)
+	_tmp_rotation += _rotate
 	set_rotation(_tmp_rotation)
+
+	var dd := 0.00001 / smooth
+	moving = _rotate.length_squared() > dd || _translate.length_squared() > dd

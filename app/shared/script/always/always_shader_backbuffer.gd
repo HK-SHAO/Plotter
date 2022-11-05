@@ -1,11 +1,14 @@
 extends Node
 
-@export var viewport: SubViewport
+@export var camera: FreeCamera3D
 
 var material: ShaderMaterial
 var textureRect: TextureRect
 
 var image: Image
+
+var frame: float = 0
+
 
 func _ready() -> void:
 	textureRect = get_parent()
@@ -13,9 +16,11 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	if is_instance_valid(camera):
+		if camera.moving:
+			frame = 0
 
-	if (is_instance_valid(image)):
-		material.set_shader_parameter(
-			"backbuffer", ImageTexture.create_from_image(image))
+	frame += 1
 
-	image = viewport.get_texture().get_image()
+	material.set_shader_parameter(
+		"frame", frame)

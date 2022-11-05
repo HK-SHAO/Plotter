@@ -332,7 +332,7 @@ void fragment() {
     vec3 rd = ca * normalize( -vec3(UV.xy, 1.0) );
 
 	// blur
-	float lens_radius = (1. + sin(TIME)) / 50.;
+	float lens_radius = (1. + sin(TIME * 0.0)) / 50.;
 	
 	vec3 lookfrom = ro;
 	vec3 lookat = ro + rd;

@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://t8ackmoancn5"]
+[gd_scene load_steps=7 format=3 uid="uid://t8ackmoancn5"]
 
 [ext_resource type="Script" path="res://shared/script/action/action_transparent_background.gd" id="1_eq2wp"]
 [ext_resource type="Script" path="res://application/activity/boot/boot_application.gd" id="1_mohl2"]
 [ext_resource type="PackedScene" uid="uid://dni61c6kyw5c2" path="res://test/scene/test_drawer_scene.tscn" id="2_4o1hg"]
 [ext_resource type="PackedScene" uid="uid://c6p8wsdhwtruk" path="res://test/scene/test_camera_scene.tscn" id="3_lsjo1"]
+[ext_resource type="PackedScene" uid="uid://bcujf0tef3jv7" path="res://test/scene/test_raytracing_scene.tscn" id="5_du42y"]
 
 [sub_resource type="GDScript" id="GDScript_rsaxg"]
 script/source = "extends Button
@@ -47,7 +48,7 @@ columns = 2
 
 [node name="TestDrawBoard" type="Button" parent="VBoxContainer/GridContainer"]
 offset_right = 638.0
-offset_bottom = 358.0
+offset_bottom = 177.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 32
@@ -58,11 +59,34 @@ packed_scene = ExtResource("2_4o1hg")
 [node name="TestCube4D" type="Button" parent="VBoxContainer/GridContainer"]
 offset_left = 642.0
 offset_right = 1280.0
-offset_bottom = 358.0
+offset_bottom = 177.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 32
 text = "超立方"
+script = SubResource("GDScript_rsaxg")
+packed_scene = ExtResource("3_lsjo1")
+
+[node name="TestRayTracing" type="Button" parent="VBoxContainer/GridContainer"]
+offset_top = 181.0
+offset_right = 638.0
+offset_bottom = 358.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
+text = "光线追踪"
+script = SubResource("GDScript_rsaxg")
+packed_scene = ExtResource("5_du42y")
+
+[node name="TestCamera" type="Button" parent="VBoxContainer/GridContainer"]
+offset_left = 642.0
+offset_top = 181.0
+offset_right = 1280.0
+offset_bottom = 358.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
+text = "测试摄像机"
 script = SubResource("GDScript_rsaxg")
 packed_scene = ExtResource("3_lsjo1")
 
@@ -75,3 +99,5 @@ theme_override_font_sizes/font_size = 32
 
 [connection signal="button_up" from="VBoxContainer/GridContainer/TestDrawBoard" to="VBoxContainer/GridContainer/TestDrawBoard" method="_on_button_up"]
 [connection signal="button_up" from="VBoxContainer/GridContainer/TestCube4D" to="VBoxContainer/GridContainer/TestCube4D" method="_on_button_up"]
+[connection signal="button_up" from="VBoxContainer/GridContainer/TestRayTracing" to="VBoxContainer/GridContainer/TestRayTracing" method="_on_button_up"]
+[connection signal="button_up" from="VBoxContainer/GridContainer/TestCamera" to="VBoxContainer/GridContainer/TestCamera" method="_on_button_up"]
